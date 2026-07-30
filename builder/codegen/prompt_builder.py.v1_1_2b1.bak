@@ -1,0 +1,133 @@
+from dataclasses import dataclass
+from builder.providers.chat import Message
+
+
+@dataclass(slots=True)
+class PromptSections:
+    system: str
+    objective: str
+    repository: str
+    additional: str = ""
+
+
+class PromptBuilder:
+
+    DEFAULT_CONTEXT_BUDGET = 12000
+
+    def build(
+        self,
+        *,
+        system_prompt: str,
+        objective: str,
+        repository_context: str,
+        additional_context: str = "",
+        context_budget: int | None = None,
+    ):
+
+        budget = (
+            context_budget
+            if context_budget is not None
+            else self.DEFAULT_CONTEXT_BUDGET
+        )
+
+        repository_context = self._trim(
+            repository_context,
+            budget,
+        )
+
+        audit_rules = ""
+
+        if "audit" in objective.lower():
+            audit_rules = """
+
+AUDIT REQUIREMENTS
+==================
+Audit ONLY the supplied repository context.
+
+Do NOT invent files, modules, APIs, dependencies, security issues, or architectural problems.
+
+Every finding MUST contain:
+
+Evidence:
+- One or more repository file paths from the supplied context.
+
+Risk:
+- Explain the engineering impact.
+
+Recommendation:
+- A concrete improvement.
+
+Confidence:
+- High / Medium / Low.
+
+If the supplied repository context is insufficient, state:
+
+Insufficient evidence.
+
+Never speculate beyond the supplied repository context.
+"""
+
+        user = f"""ENGINEERING OBJECTIVE
+=====================
+{objective}
+{audit_rules}
+
+REPOSITORY CONTEXT
+==================
+{repository_context}
+"""
+
+        if additional_context.strip():
+            user += f"""
+
+ADDITIONAL CONTEXT
+==================
+{additional_context}
+"""
+
+        return [
+            Message(
+                role="system",
+                content=system_prompt,
+            ),
+            Message(
+                role="user",
+                content=user.strip(),
+            ),
+        ]
+
+    def estimate_size(self, text: str) -> int:
+        return len(text.encode("utf-8"))
+
+    def fits_budget(
+        self,
+        text: str,
+        budget: int,
+    ) -> bool:
+        return self.estimate_size(text) <= budget
+
+    def _trim(
+        self,
+        text: str,
+        budget: int,
+    ) -> str:
+
+        if self.fits_budget(text, budget):
+            return text
+
+        marker = "\n\n...[repository context truncated]..."
+
+        available = max(
+            0,
+            budget - len(marker.encode("utf-8")),
+        )
+
+        trimmed = text.encode("utf-8")[:available].decode(
+            "utf-8",
+            errors="ignore",
+        )
+
+        return trimmed + marker
+
+
+builder = PromptBuilder()

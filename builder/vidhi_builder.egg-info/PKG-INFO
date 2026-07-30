@@ -1,0 +1,27 @@
+Metadata-Version: 2.4
+Name: vidhi-builder
+Version: 0.1.0
+Summary: Production AI Software Engineering Platform
+Author: Shravan
+License: Proprietary
+Requires-Python: >=3.12
+Description-Content-Type: text/markdown
+Requires-Dist: typer>=0.16
+Requires-Dist: rich>=14.0
+Requires-Dist: pydantic>=2.11
+Requires-Dist: pydantic-settings>=2.10
+Requires-Dist: networkx>=3.5
+Requires-Dist: watchfiles>=1.1
+Requires-Dist: sqlalchemy>=2.0
+Requires-Dist: alembic>=1.16
+Requires-Dist: orjson>=3.11
+Requires-Dist: httpx>=0.28
+Requires-Dist: python-dotenv>=1.1
+Requires-Dist: loguru>=0.7
+Requires-Dist: pyyaml>=6.0
+
+# Vidhi Builder
+
+Production AI Software Engineering Platform.
+
+Status: Stage 1 - Builder Kernel

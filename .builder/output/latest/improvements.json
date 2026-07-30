@@ -1,0 +1,98 @@
+[
+  {
+    "target": "/data/data/com.termux/files/home/Projects/BOB/builder/builder/execution/executor.py",
+    "issue": "Pass statement found",
+    "proposal": "Resolve: Pass statement found",
+    "priority": 1
+  },
+  {
+    "target": "/data/data/com.termux/files/home/Projects/BOB/builder/builder/execution/timeout.py",
+    "issue": "Pass statement found",
+    "proposal": "Resolve: Pass statement found",
+    "priority": 1
+  },
+  {
+    "target": "/data/data/com.termux/files/home/Projects/BOB/builder/builder/execution/cancellation.py",
+    "issue": "Pass statement found",
+    "proposal": "Resolve: Pass statement found",
+    "priority": 1
+  },
+  {
+    "target": "/data/data/com.termux/files/home/Projects/BOB/builder/builder/codegen/prompts.py",
+    "issue": "TODO found",
+    "proposal": "Resolve: TODO found",
+    "priority": 1
+  },
+  {
+    "target": "/data/data/com.termux/files/home/Projects/BOB/builder/builder/ast/symbols.py",
+    "issue": "Pass statement found",
+    "proposal": "Resolve: Pass statement found",
+    "priority": 1
+  },
+  {
+    "target": "/data/data/com.termux/files/home/Projects/BOB/builder/builder/ast/cache.py",
+    "issue": "Pass statement found",
+    "proposal": "Resolve: Pass statement found",
+    "priority": 1
+  },
+  {
+    "target": "/data/data/com.termux/files/home/Projects/BOB/builder/builder/patch/engine.py",
+    "issue": "Pass statement found",
+    "proposal": "Resolve: Pass statement found",
+    "priority": 1
+  },
+  {
+    "target": "/data/data/com.termux/files/home/Projects/BOB/builder/builder/validation/engine.py",
+    "issue": "Pass statement found",
+    "proposal": "Resolve: Pass statement found",
+    "priority": 1
+  },
+  {
+    "target": "/data/data/com.termux/files/home/Projects/BOB/builder/builder/self_improvement/analyzer.py",
+    "issue": "TODO found",
+    "proposal": "Resolve: TODO found",
+    "priority": 1
+  },
+  {
+    "target": "/data/data/com.termux/files/home/Projects/BOB/builder/builder/context/cache.py",
+    "issue": "Pass statement found",
+    "proposal": "Resolve: Pass statement found",
+    "priority": 1
+  },
+  {
+    "target": "/data/data/com.termux/files/home/Projects/BOB/builder/builder/planning/analyzer.py",
+    "issue": "Pass statement found",
+    "proposal": "Resolve: Pass statement found",
+    "priority": 1
+  },
+  {
+    "target": "/data/data/com.termux/files/home/Projects/BOB/builder/builder/planning/executor.py",
+    "issue": "Pass statement found",
+    "proposal": "Resolve: Pass statement found",
+    "priority": 1
+  },
+  {
+    "target": "/data/data/com.termux/files/home/Projects/BOB/builder/builder/output/engine.py",
+    "issue": "Pass statement found",
+    "proposal": "Resolve: Pass statement found",
+    "priority": 1
+  },
+  {
+    "target": "/data/data/com.termux/files/home/Projects/BOB/builder/builder/review/engine.py",
+    "issue": "Pass statement found",
+    "proposal": "Resolve: Pass statement found",
+    "priority": 1
+  },
+  {
+    "target": "/data/data/com.termux/files/home/Projects/BOB/builder/builder/codegen/parser/json.py",
+    "issue": "Pass statement found",
+    "proposal": "Resolve: Pass statement found",
+    "priority": 1
+  },
+  {
+    "target": "/data/data/com.termux/files/home/Projects/BOB/builder/builder/codegen/parser/extractor.py",
+    "issue": "Pass statement found",
+    "proposal": "Resolve: Pass statement found",
+    "priority": 1
+  }
+]

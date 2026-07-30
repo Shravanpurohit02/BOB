@@ -1,0 +1,38 @@
+from __future__ import annotations
+
+from enum import StrEnum
+
+
+class EventLevel(StrEnum):
+    INFO = "INFO"
+    WARNING = "WARNING"
+    ERROR = "ERROR"
+    RECOVERY = "RECOVERY"
+    CHECKPOINT = "CHECKPOINT"
+    VALIDATION = "VALIDATION"
+    TESTING = "TESTING"
+    EXECUTION = "EXECUTION"
+    RUNTIME = "RUNTIME"
+
+
+INFO = EventLevel.INFO
+WARNING = EventLevel.WARNING
+ERROR = EventLevel.ERROR
+RECOVERY = EventLevel.RECOVERY
+CHECKPOINT = EventLevel.CHECKPOINT
+VALIDATION = EventLevel.VALIDATION
+TESTING = EventLevel.TESTING
+EXECUTION = EventLevel.EXECUTION
+RUNTIME = EventLevel.RUNTIME
+
+ALL_EVENT_LEVELS = {
+    INFO,
+    WARNING,
+    ERROR,
+    RECOVERY,
+    CHECKPOINT,
+    VALIDATION,
+    TESTING,
+    EXECUTION,
+    RUNTIME,
+}

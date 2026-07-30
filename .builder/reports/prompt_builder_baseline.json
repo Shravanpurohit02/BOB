@@ -1,0 +1,74 @@
+[
+  {
+    "objective": "Analyze repository",
+    "messages": 2,
+    "roles": [
+      "system",
+      "user"
+    ],
+    "user_preview": "ENGINEERING OBJECTIVE\n=====================\nAnalyze repository\n\n\nREPOSITORY CONTEXT\n==================\nsample.py"
+  },
+  {
+    "objective": "Audit security",
+    "messages": 2,
+    "roles": [
+      "system",
+      "user"
+    ],
+    "user_preview": "ENGINEERING OBJECTIVE\n=====================\nAudit security\n\n\nAUDIT REQUIREMENTS\n==================\nAudit ONLY the supplied repository context.\n\nDo NOT invent files, modules, APIs, dependencies, security issues, or architectural problems.\n\nEvery finding MUST contain:\n\nEvidence:\n- One or more reposito"
+  },
+  {
+    "objective": "Repair failing tests",
+    "messages": 2,
+    "roles": [
+      "system",
+      "user"
+    ],
+    "user_preview": "ENGINEERING OBJECTIVE\n=====================\nRepair failing tests\n\n\nREPOSITORY CONTEXT\n==================\nsample.py"
+  },
+  {
+    "objective": "Fix provider runtime",
+    "messages": 2,
+    "roles": [
+      "system",
+      "user"
+    ],
+    "user_preview": "ENGINEERING OBJECTIVE\n=====================\nFix provider runtime\n\n\nREPOSITORY CONTEXT\n==================\nsample.py"
+  },
+  {
+    "objective": "Refactor execution engine",
+    "messages": 2,
+    "roles": [
+      "system",
+      "user"
+    ],
+    "user_preview": "ENGINEERING OBJECTIVE\n=====================\nRefactor execution engine\n\n\nREPOSITORY CONTEXT\n==================\nsample.py"
+  },
+  {
+    "objective": "Implement authentication",
+    "messages": 2,
+    "roles": [
+      "system",
+      "user"
+    ],
+    "user_preview": "ENGINEERING OBJECTIVE\n=====================\nImplement authentication\n\n\nREPOSITORY CONTEXT\n==================\nsample.py"
+  },
+  {
+    "objective": "Create REST API",
+    "messages": 2,
+    "roles": [
+      "system",
+      "user"
+    ],
+    "user_preview": "ENGINEERING OBJECTIVE\n=====================\nCreate REST API\n\n\nREPOSITORY CONTEXT\n==================\nsample.py"
+  },
+  {
+    "objective": "Review code quality",
+    "messages": 2,
+    "roles": [
+      "system",
+      "user"
+    ],
+    "user_preview": "ENGINEERING OBJECTIVE\n=====================\nReview code quality\n\n\nREPOSITORY CONTEXT\n==================\nsample.py"
+  }
+]

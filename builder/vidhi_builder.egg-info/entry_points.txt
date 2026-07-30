@@ -1,0 +1,2 @@
+[console_scripts]
+vidhi-builder = builder.__main__:main
