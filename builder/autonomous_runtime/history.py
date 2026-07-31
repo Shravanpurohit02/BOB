@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from datetime import datetime
+from datetime import datetime, UTC
 
 
 @dataclass(slots=True)
@@ -17,7 +17,7 @@ class RuntimeHistory:
     def add(self, stage: str, status: str = "completed"):
         self._events.append(
             RuntimeEvent(
-                timestamp=datetime.utcnow().isoformat(),
+                timestamp=datetime.now(UTC).isoformat(),
                 stage=stage,
                 status=status,
             )

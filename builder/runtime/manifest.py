@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import asdict, dataclass, field
-from datetime import datetime
+from datetime import datetime, UTC
 from typing import Any
 
 
@@ -16,7 +16,7 @@ class RuntimeManifest:
     version: str = "1.0"
 
     created_at: str = field(
-        default_factory=lambda: datetime.utcnow().isoformat()
+        default_factory=lambda: datetime.now(UTC).isoformat()
     )
 
     workspace: str = ""

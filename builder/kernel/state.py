@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import asdict, dataclass, field
-from datetime import datetime
+from datetime import datetime, UTC
 from typing import Any
 
 
@@ -14,11 +14,11 @@ class KernelState:
     status: str = "idle"
 
     started_at: str = field(
-        default_factory=lambda: datetime.utcnow().isoformat()
+        default_factory=lambda: datetime.now(UTC).isoformat()
     )
 
     updated_at: str = field(
-        default_factory=lambda: datetime.utcnow().isoformat()
+        default_factory=lambda: datetime.now(UTC).isoformat()
     )
 
     values: dict[str, Any] = field(
@@ -69,7 +69,7 @@ class KernelState:
     ) -> None:
 
         self.updated_at = (
-            datetime.utcnow().isoformat()
+            datetime.now(UTC).isoformat()
         )
 
     def to_dict(

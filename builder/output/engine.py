@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, UTC
 from pathlib import Path
 from uuid import uuid4
 
@@ -29,7 +29,7 @@ class OutputEngine:
             "builder_version": "0.1.0-alpha.1",
             "objective": objective,
             "workspace": workspace,
-            "created_at": datetime.utcnow().isoformat(),
+            "created_at": datetime.now(UTC).isoformat(),
         }
 
         if metadata:

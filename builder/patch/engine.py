@@ -1,7 +1,7 @@
 import hashlib
 import py_compile
 import tempfile
-from datetime import datetime
+from datetime import datetime, UTC
 from pathlib import Path
 
 from builder.patch.applier import applier
@@ -137,7 +137,7 @@ class PatchEngine:
         )
 
         patch.committed = True
-        patch.committed_at = datetime.utcnow().isoformat()
+        patch.committed_at = datetime.now(UTC).isoformat()
 
         return patch
 
@@ -156,7 +156,7 @@ class PatchEngine:
             )
 
         patch.rolled_back = True
-        patch.rolled_back_at = datetime.utcnow().isoformat()
+        patch.rolled_back_at = datetime.now(UTC).isoformat()
 
         return patch
 

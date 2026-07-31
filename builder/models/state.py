@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from datetime import datetime
+from datetime import datetime, UTC
 from typing import Any
 from uuid import uuid4
 
@@ -9,7 +9,7 @@ from uuid import uuid4
 @dataclass(slots=True)
 class BuilderState:
     id: str = field(default_factory=lambda: uuid4().hex)
-    created_at: str = field(default_factory=lambda: datetime.utcnow().isoformat())
+    created_at: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
 
     boot_count: int = 0
 

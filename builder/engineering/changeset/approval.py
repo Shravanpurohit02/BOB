@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import datetime, UTC
 
 
 @dataclass(slots=True)
@@ -19,4 +19,4 @@ class Approval:
 
         self.approved_by = administrator
 
-        self.approved_at = datetime.utcnow().isoformat()
+        self.approved_at = datetime.now(UTC).isoformat()

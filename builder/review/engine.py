@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, UTC
 from pathlib import Path
 
 from builder.review.models import ReviewTask
@@ -55,7 +55,7 @@ class ReviewEngine:
                 task.status = "approved"
                 task.reviewer = reviewer
                 task.reviewed_at = (
-                    datetime.utcnow().isoformat()
+                    datetime.now(UTC).isoformat()
                 )
 
                 storage.save(tasks)
@@ -79,7 +79,7 @@ class ReviewEngine:
                 task.status = "rejected"
                 task.reviewer = reviewer
                 task.reviewed_at = (
-                    datetime.utcnow().isoformat()
+                    datetime.now(UTC).isoformat()
                 )
 
                 storage.save(tasks)

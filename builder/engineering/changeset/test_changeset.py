@@ -2,13 +2,13 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[3]
-sys.path.insert(0, str(ROOT))
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
 
 from builder.engineering.changeset import engine
 
 
-def main():
-
+def run():
     ecs = engine.create(
         objective="Engineering Context Integration Test",
         workspace=str(ROOT.parent),
@@ -38,12 +38,13 @@ def main():
 
     engine.save(ecs)
 
-    print("CHANGESET :", ecs.id)
-    print("PROJECT   :", ecs.repository.project)
-    print("MODULES   :", len(ecs.repository.modules))
-    print("FILES     :", len(ecs.repository.modules))
-    print("RISKS     :", len(ecs.risks))
+    return (
+        bool(ecs.id)
+        and ecs.repository is not None
+        and len(ecs.repository.modules) >= 0
+        and len(ecs.risks) == 1
+    )
 
 
-if __name__ == "__main__":
-    main()
+def test_changeset():
+    assert run()

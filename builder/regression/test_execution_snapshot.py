@@ -2,7 +2,6 @@ from builder.execution.snapshot import engine, recovery
 
 
 def run():
-
     snapshot = engine.create(
         transaction_id="tx-regression",
         execution_id="exec-regression",
@@ -42,7 +41,8 @@ def run():
         snapshot.id,
     )
 
-    return (
-        deleted
-        and engine.load(snapshot.id) is None
-    )
+    return deleted and engine.load(snapshot.id) is None
+
+
+def test_execution_snapshot():
+    assert run()

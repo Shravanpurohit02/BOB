@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from datetime import datetime
+from datetime import datetime, UTC
 from uuid import uuid4
 
 
@@ -20,7 +20,7 @@ class Patch:
     updated_hash: str = ""
 
     created_at: str = field(
-        default_factory=lambda: datetime.utcnow().isoformat()
+        default_factory=lambda: datetime.now(UTC).isoformat()
     )
 
     committed_at: str | None = None
