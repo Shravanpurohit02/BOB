@@ -1,0 +1,1 @@
+Create a Python package named mathlib containing __init__.py, arithmetic.py, geometry.py and statistics.py. Implement common arithmetic, area, perimeter, mean, median and mode functions. Ensure __init__.py exports all public functions.
