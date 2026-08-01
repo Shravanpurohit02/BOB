@@ -4,7 +4,6 @@ from time import monotonic
 
 @dataclass(slots=True)
 class Timeout:
-
     seconds: float = 300.0
 
     def __post_init__(self):
@@ -28,6 +27,4 @@ class TimeoutError(RuntimeError):
 def ensure(timeout: Timeout):
 
     if timeout.expired:
-        raise TimeoutError(
-            f"Execution timeout after {timeout.seconds:.2f}s"
-        )
+        raise TimeoutError(f"Execution timeout after {timeout.seconds:.2f}s")

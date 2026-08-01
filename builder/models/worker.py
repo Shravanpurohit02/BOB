@@ -1,6 +1,7 @@
 from dataclasses import dataclass, field
-from datetime import datetime, UTC
+from datetime import UTC, datetime
 from uuid import uuid4
+
 
 @dataclass(slots=True)
 class Worker:

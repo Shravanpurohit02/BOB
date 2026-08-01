@@ -20,7 +20,6 @@ class EngineeringContext:
 
 
 class EngineeringContextBuilder:
-
     MAX_RELATED = 10
 
     def build(self, workspace: str):
@@ -61,9 +60,7 @@ class EngineeringContextBuilder:
             resolved.prefix,
             resolved.contains,
         ):
-
             for symbol in group:
-
                 if symbol.id in seen:
                     continue
 
@@ -75,11 +72,7 @@ class EngineeringContextBuilder:
         # Semantic Search (fallback)
         # --------------------------------------------------
 
-        if (
-            not ctx.resolved_files
-            and not ctx.resolved_symbols
-        ):
-
+        if not ctx.resolved_files and not ctx.resolved_symbols:
             related = semantic_search.search(
                 query,
                 limit=self.MAX_RELATED,
@@ -88,7 +81,6 @@ class EngineeringContextBuilder:
             seen = set()
 
             for symbol in related:
-
                 if symbol.id in seen:
                     continue
 
@@ -102,21 +94,13 @@ class EngineeringContextBuilder:
 
         processed = set()
 
-        for symbol in (
-            ctx.resolved_symbols +
-            ctx.related_symbols
-        ):
-
+        for symbol in ctx.resolved_symbols + ctx.related_symbols:
             if symbol.id in processed:
                 continue
 
             processed.add(symbol.id)
 
-            ctx.impacts.append(
-                impact_analyzer.analyze(
-                    symbol.name
-                )
-            )
+            ctx.impacts.append(impact_analyzer.analyze(symbol.name))
 
         return ctx
 

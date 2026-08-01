@@ -3,7 +3,6 @@ from builder.review import engine as review_engine
 
 
 class ReviewApplier:
-
     def apply(
         self,
         task_id: str,
@@ -13,22 +12,15 @@ class ReviewApplier:
         tasks = review_engine.list()
 
         task = next(
-            (
-                t for t in tasks
-                if t.id == task_id
-            ),
+            (t for t in tasks if t.id == task_id),
             None,
         )
 
         if task is None:
-            raise RuntimeError(
-                "Review task not found."
-            )
+            raise RuntimeError("Review task not found.")
 
         if task.status != "approved":
-            raise RuntimeError(
-                "Review task is not approved."
-            )
+            raise RuntimeError("Review task is not approved.")
 
         patch = patch_engine.create(
             task.target,

@@ -1,5 +1,4 @@
 class CrossReferenceEngine:
-
     def build(
         self,
         repository_graph,
@@ -9,7 +8,6 @@ class CrossReferenceEngine:
         references = {}
 
         for module, node in repository_graph.items():
-
             refs = set()
 
             refs.update(
@@ -30,7 +28,6 @@ class CrossReferenceEngine:
                 "references",
                 [],
             ):
-
                 refs.update(
                     symbol_graph["definitions"].get(
                         symbol,
@@ -66,7 +63,6 @@ class CrossReferenceEngine:
         stack = list(modules)
 
         while stack:
-
             current = stack.pop()
 
             if current in affected:

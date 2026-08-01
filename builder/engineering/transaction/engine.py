@@ -3,6 +3,8 @@ from __future__ import annotations
 import time
 from datetime import UTC, datetime
 
+from builder.events import engine as events
+
 from .events import (
     CHECKPOINT,
     ERROR,
@@ -16,13 +18,11 @@ from .events import (
 from .models import EngineeringTransaction
 from .recovery import recovery
 from .serializer import serializer
-from .storage import storage
 from .snapshot import engine as snapshots
-from builder.events import engine as events
+from .storage import storage
 
 
 class TransactionEngine:
-
     def begin(
         self,
         objective: str,
@@ -54,11 +54,7 @@ class TransactionEngine:
 
     def save(self, tx):
 
-        storage.save(
-            serializer.loads(
-                serializer.dumps(tx)
-            )
-        )
+        storage.save(serializer.loads(serializer.dumps(tx)))
 
         return tx
 
@@ -72,9 +68,7 @@ class TransactionEngine:
         message="Checkpoint",
     ):
 
-        tx.metadata["last_checkpoint"] = (
-            datetime.now(UTC).isoformat()
-        )
+        tx.metadata["last_checkpoint"] = datetime.now(UTC).isoformat()
 
         self.add_event(
             tx,
@@ -110,13 +104,9 @@ class TransactionEngine:
         )
 
         s.status = "running"
-        s.started_at = (
-            datetime.now(UTC).isoformat()
-        )
+        s.started_at = datetime.now(UTC).isoformat()
 
-        s.metadata["_timer"] = (
-            time.perf_counter()
-        )
+        s.metadata["_timer"] = time.perf_counter()
 
         events.publish(
             "transaction.stage.started",
@@ -144,9 +134,7 @@ class TransactionEngine:
         )
 
         s.status = status
-        s.completed_at = (
-            datetime.now(UTC).isoformat()
-        )
+        s.completed_at = datetime.now(UTC).isoformat()
 
         timer = s.metadata.pop(
             "_timer",
@@ -284,8 +272,6 @@ class TransactionEngine:
 
         self.save(tx)
 
-    
-
     def snapshot_file(
         self,
         tx,
@@ -298,7 +284,6 @@ class TransactionEngine:
         )
 
         if snap is not None:
-
             tx.metadata.setdefault(
                 "snapshots",
                 [],
@@ -324,37 +309,30 @@ class TransactionEngine:
 
         s = tx.stage(stage)
 
-        return (
-            s is not None
-            and s.status == "completed"
-        )
-
-
+        return s is not None and s.status == "completed"
 
     def commit(
-            self,
+        self,
+        tx,
+    ):
+
+        tx.status = "completed"
+        tx.completed_at = datetime.now(UTC).isoformat()
+
+        self.add_event(
             tx,
-        ):
+            INFO,
+            "transaction",
+            "Committed",
+        )
 
-            tx.status = "completed"
-            tx.completed_at = (
-                datetime.now(UTC).isoformat()
-            )
+        events.publish(
+            "transaction.completed",
+            source="transaction",
+            payload={"id": tx.id},
+        )
 
-            self.add_event(
-                tx,
-                INFO,
-                "transaction",
-                "Committed",
-            )
-
-            events.publish(
-                "transaction.completed",
-                source="transaction",
-                payload={"id": tx.id},
-            )
-
-            self.save(tx)
+        self.save(tx)
 
     def rollback(
         self,
@@ -367,7 +345,6 @@ class TransactionEngine:
             [],
         ):
             try:
-
                 report = snapshots.verify(
                     manifest,
                 )
@@ -440,13 +417,11 @@ class TransactionEngine:
 
         return recovery.resume_latest()
 
-
     def recover_active(self):
 
         recovered = []
 
         for tx in storage.list():
-
             if tx.get("status") != "running":
                 continue
 
@@ -461,9 +436,7 @@ class TransactionEngine:
 
             tx["metadata"]["crash_recovered"] = True
 
-            tx["metadata"]["recovery_reason"] = (
-                "Unexpected process termination"
-            )
+            tx["metadata"]["recovery_reason"] = "Unexpected process termination"
 
             storage.save(tx)
 

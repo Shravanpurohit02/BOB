@@ -13,9 +13,7 @@ class Context:
     Builder subsystems during execution.
     """
 
-    values: dict[str, Any] = field(
-        default_factory=dict
-    )
+    values: dict[str, Any] = field(default_factory=dict)
 
     def set(
         self,
@@ -70,9 +68,7 @@ class Context:
         self,
     ) -> list[str]:
 
-        return sorted(
-            self.values.keys()
-        )
+        return sorted(self.values.keys())
 
     def to_dict(
         self,
@@ -84,7 +80,7 @@ class Context:
     def from_dict(
         cls,
         data: dict[str, Any],
-    ) -> "Context":
+    ) -> Context:
 
         context = cls()
 
@@ -96,5 +92,3 @@ class Context:
         )
 
         return context
-
-

@@ -7,9 +7,9 @@ from .base import (
 )
 
 __all__ = [
+    "BootstrapError",
     "BuilderError",
     "ConfigurationError",
-    "BootstrapError",
-    "WorkspaceError",
     "ValidationError",
+    "WorkspaceError",
 ]

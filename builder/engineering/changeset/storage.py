@@ -1,16 +1,10 @@
 import json
 from pathlib import Path
 
-STATE = (
-    Path.cwd()
-    / ".builder"
-    / "state"
-    / "changesets"
-)
+STATE = Path.cwd() / ".builder" / "state" / "changesets"
 
 
 class Storage:
-
     def __init__(self):
 
         STATE.mkdir(
@@ -50,9 +44,7 @@ class Storage:
 
         result = []
 
-        for file in sorted(
-            STATE.glob("*.json")
-        ):
+        for file in sorted(STATE.glob("*.json")):
             result.append(
                 json.loads(
                     file.read_text(

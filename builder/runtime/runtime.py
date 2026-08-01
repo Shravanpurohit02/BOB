@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from datetime import datetime, UTC
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -14,9 +14,7 @@ class Runtime:
 
     workspace: str
 
-    started_at: str = field(
-        default_factory=lambda: datetime.now(UTC).isoformat()
-    )
+    started_at: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
 
     version: str = "1.0"
 
@@ -72,7 +70,7 @@ class Runtime:
     def from_dict(
         cls,
         data: dict[str, Any],
-    ) -> "Runtime":
+    ) -> Runtime:
 
         runtime = cls(
             workspace=data["workspace"],
@@ -98,14 +96,8 @@ class Runtime:
             "",
         )
 
-        runtime.state.update(
-            data.get("state", {})
-        )
+        runtime.state.update(data.get("state", {}))
 
-        runtime.metadata.update(
-            data.get("metadata", {})
-        )
+        runtime.metadata.update(data.get("metadata", {}))
 
         return runtime
-
-

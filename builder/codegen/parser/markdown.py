@@ -1,7 +1,7 @@
 import re
 
-class MarkdownParser:
 
+class MarkdownParser:
     def extract(self, text: str) -> str:
 
         blocks = re.findall(
@@ -14,5 +14,6 @@ class MarkdownParser:
             return "\n\n".join(blocks).strip()
 
         return text.strip()
+
 
 parser = MarkdownParser()

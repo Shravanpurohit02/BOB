@@ -6,6 +6,7 @@ from builder.models.plan import Plan
 
 PLAN_FILE = Path(".builder/state/plans.json")
 
+
 class PlanManager:
     def __init__(self):
         self._plans = {}
@@ -15,9 +16,7 @@ class PlanManager:
         if PLAN_FILE.exists():
             self._plans = {
                 p["id"]: Plan(**p)
-                for p in json.loads(
-                    PLAN_FILE.read_text(encoding="utf-8")
-                )
+                for p in json.loads(PLAN_FILE.read_text(encoding="utf-8"))
             }
 
     def _save(self):
@@ -50,5 +49,6 @@ class PlanManager:
 
     def all(self):
         return list(self._plans.values())
+
 
 plans = PlanManager()

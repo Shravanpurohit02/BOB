@@ -6,6 +6,7 @@ from builder.models.checkpoint import Checkpoint
 
 CHECKPOINT_DIR = Path(".builder/checkpoints")
 
+
 def create_checkpoint(name: str, description: str = "") -> Checkpoint:
     CHECKPOINT_DIR.mkdir(parents=True, exist_ok=True)
 

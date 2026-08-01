@@ -14,7 +14,6 @@ class EngineeringTask:
 
 
 class TaskDecomposer:
-
     VERBS = (
         "create",
         "modify",
@@ -43,16 +42,13 @@ class TaskDecomposer:
 
         parts = [
             p.strip()
-            for p in text.replace(" then ", ",")
-                         .replace(" and ", ",")
-                         .split(",")
+            for p in text.replace(" then ", ",").replace(" and ", ",").split(",")
             if p.strip()
         ]
 
         tasks = []
 
         for index, part in enumerate(parts, start=1):
-
             complexity = max(
                 1,
                 min(

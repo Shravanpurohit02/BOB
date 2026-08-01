@@ -7,26 +7,20 @@ from builder.validation import engine as validator
 
 
 class TestingEngine:
-
     def _run(self, validation_callable, workspace_check):
 
         tests = [
-
             TestCase(
                 "python_validation",
                 validation_callable,
             ),
-
             TestCase(
                 "workspace_exists",
                 workspace_check,
             ),
-
         ]
 
-        return report.create(
-            runner.run(tests)
-        )
+        return report.create(runner.run(tests))
 
     def execute(
         self,
@@ -39,9 +33,9 @@ class TestingEngine:
                 workspace,
                 transaction=transaction,
             ),
-            lambda: Path(workspace).exists()
-            or (_ for _ in ()).throw(
-                RuntimeError("Workspace missing")
+            lambda: (
+                Path(workspace).exists()
+                or (_ for _ in ()).throw(RuntimeError("Workspace missing"))
             ),
         )
 

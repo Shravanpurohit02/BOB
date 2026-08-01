@@ -3,7 +3,6 @@ from builder.autonomous.planner import planner
 
 
 class Controller:
-
     MAX_ATTEMPTS = 3
 
     def run(
@@ -23,7 +22,6 @@ class Controller:
         result = None
 
         while attempt < self.MAX_ATTEMPTS:
-
             attempt += 1
 
             task.context["attempt"] = attempt

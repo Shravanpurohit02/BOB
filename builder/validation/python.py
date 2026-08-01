@@ -5,7 +5,6 @@ from builder.validation.result import ValidationResult
 
 
 class PythonValidator:
-
     def validate(self, path: Path):
 
         try:
@@ -19,7 +18,6 @@ class PythonValidator:
             path_str = str(path).replace("\\", "/")
 
             for node in ast.walk(tree):
-
                 if isinstance(node, ast.Import):
                     names = [n.name for n in node.names]
 
@@ -51,7 +49,6 @@ class PythonValidator:
             )
 
         except Exception as exc:
-
             return ValidationResult(
                 path=str(path),
                 success=False,

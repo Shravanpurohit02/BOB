@@ -1,4 +1,5 @@
 from __future__ import annotations
+from typing import ClassVar
 
 import ast
 from pathlib import Path
@@ -26,7 +27,7 @@ class APIValidator(BaseValidator):
     name = "api"
     priority = 70
 
-    PYTHON_SUFFIXES = {".py", ".pyi"}
+    PYTHON_SUFFIXES: ClassVar = {".py", ".pyi"}
 
     def validate(
         self,
@@ -37,7 +38,6 @@ class APIValidator(BaseValidator):
         issues: list[ValidationIssue] = []
 
         for file_patch in request.patch.get("files", []):
-
             operation = file_patch.get("operation")
 
             if operation != "modify":
@@ -54,9 +54,7 @@ class APIValidator(BaseValidator):
                 continue
 
             try:
-                old_source = repo_file.read_text(
-                    encoding="utf-8"
-                )
+                old_source = repo_file.read_text(encoding="utf-8")
             except Exception:
                 continue
 
@@ -83,20 +81,15 @@ class APIValidator(BaseValidator):
             removed = old_api - new_api
 
             for symbol in sorted(removed):
-
                 issues.append(
                     ValidationIssue(
                         validator=self.name,
                         severity=Severity.ERROR,
                         file=str(path),
-                        message=(
-                            f"Public API '{symbol}' "
-                            "was removed."
-                        ),
+                        message=(f"Public API '{symbol}' was removed."),
                         code="API001",
                         suggestion=(
-                            "Preserve existing public APIs "
-                            "unless explicitly requested."
+                            "Preserve existing public APIs unless explicitly requested."
                         ),
                     )
                 )
@@ -115,7 +108,6 @@ class APIValidator(BaseValidator):
         api: set[str] = set()
 
         for node in tree.body:
-
             if isinstance(
                 node,
                 (

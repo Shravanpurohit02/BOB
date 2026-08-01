@@ -1,8 +1,8 @@
 from builder.graph.edge import Edge
 from builder.graph.node import Node
 
-class ProjectGraph:
 
+class ProjectGraph:
     def __init__(self):
         self.nodes = {}
         self.edges = []
@@ -19,5 +19,6 @@ class ProjectGraph:
             "nodes": len(self.nodes),
             "edges": len(self.edges),
         }
+
 
 graph = ProjectGraph()

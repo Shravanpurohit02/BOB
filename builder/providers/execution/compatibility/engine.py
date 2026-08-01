@@ -3,7 +3,6 @@ from builder.providers.execution.repair import engine as repair_engine
 
 
 class CompatibilityEngine:
-
     def repair(self, provider, text: str) -> CompatibilityResponse:
 
         repaired = repair_engine.repair(text)
@@ -48,7 +47,6 @@ class CompatibilityEngine:
         # Recover truncated Builder JSON
         #
         if text.startswith("{") and not text.endswith("}"):
-
             depth = 0
 
             for ch in text:
@@ -92,14 +90,12 @@ class CompatibilityEngine:
         }
 
         for f in obj.get("files", []):
-
             action = f.get(
                 "action",
                 "modify",
             )
 
             if action not in allowed:
-
                 return CompatibilityResponse(
                     text="",
                     modified=True,
@@ -136,11 +132,9 @@ class CompatibilityEngine:
         start = text.find("{")
 
         if start >= 0:
-
             depth = 0
 
             for i in range(start, len(text)):
-
                 if text[i] == "{":
                     depth += 1
 
@@ -148,7 +142,7 @@ class CompatibilityEngine:
                     depth -= 1
 
                     if depth == 0:
-                        text = text[start:i + 1]
+                        text = text[start : i + 1]
                         break
 
         return CompatibilityResponse(

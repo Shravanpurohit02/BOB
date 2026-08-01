@@ -47,7 +47,7 @@ class Environment:
         }
 
     @classmethod
-    def from_dict(cls, data: dict[str, Any]) -> "Environment":
+    def from_dict(cls, data: dict[str, Any]) -> Environment:
         return cls(
             os_name=data["os_name"],
             platform_name=data["platform_name"],
@@ -59,7 +59,7 @@ class Environment:
         )
 
     @classmethod
-    def detect(cls) -> "Environment":
+    def detect(cls) -> Environment:
         prefix = os.environ.get("PREFIX", "")
         return cls(
             os_name=os.name,

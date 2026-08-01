@@ -1,7 +1,7 @@
 from builder.providers.client.factory import factory
 
-class ClientManager:
 
+class ClientManager:
     def __init__(self):
         self._clients = {}
 
@@ -12,5 +12,6 @@ class ClientManager:
             self._clients[key] = factory.create(provider)
 
         return self._clients[key]
+
 
 manager = ClientManager()

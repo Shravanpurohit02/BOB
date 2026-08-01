@@ -7,7 +7,6 @@ from builder.codegen.artifacts import (
 
 @dataclass(slots=True)
 class CodeGenerationResponse:
-
     success: bool
 
     provider: str = ""
@@ -27,28 +26,16 @@ class CodeGenerationResponse:
     #
     # Code Generation V2
     #
-    artifacts: list[GeneratedArtifact] = field(
-        default_factory=list
-    )
+    artifacts: list[GeneratedArtifact] = field(default_factory=list)
 
-    generated_files: list[str] = field(
-        default_factory=list
-    )
+    generated_files: list[str] = field(default_factory=list)
 
-    modified_files: list[str] = field(
-        default_factory=list
-    )
+    modified_files: list[str] = field(default_factory=list)
 
-    created_directories: list[str] = field(
-        default_factory=list
-    )
+    created_directories: list[str] = field(default_factory=list)
 
-    warnings: list[str] = field(
-        default_factory=list
-    )
+    warnings: list[str] = field(default_factory=list)
 
-    errors: list[str] = field(
-        default_factory=list
-    )
+    errors: list[str] = field(default_factory=list)
 
     elapsed: float = 0.0

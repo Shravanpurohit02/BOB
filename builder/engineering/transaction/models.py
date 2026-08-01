@@ -30,7 +30,6 @@ class TransactionStage:
 
 @dataclass(slots=True)
 class EngineeringTransaction:
-
     id: str = field(default_factory=lambda: uuid4().hex)
 
     objective: str = ""

@@ -3,7 +3,6 @@ from dataclasses import dataclass, field
 
 @dataclass(slots=True)
 class PipelineContext:
-
     objective: str = ""
     workspace: str = ""
 
@@ -19,7 +18,6 @@ class PipelineContext:
 
 @dataclass(slots=True)
 class PipelineResult:
-
     success: bool = False
 
     stages: list[str] = field(default_factory=list)

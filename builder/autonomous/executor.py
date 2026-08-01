@@ -3,7 +3,6 @@ from builder.execution.executor import executor as execution
 
 
 class Executor:
-
     def execute(self, task):
 
         context = ExecutionContext()
@@ -13,12 +12,10 @@ class Executor:
         task.status = "running"
 
         for phase in task.phases:
-
             if phase not in task.completed:
                 task.completed.append(phase)
 
             if phase == "execution":
-
                 result = execution.execute(context)
 
                 task.context["execution"] = result

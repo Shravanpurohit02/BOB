@@ -1,8 +1,8 @@
+from typing import ClassVar
 import ast
 
 
 class SecurityAnalyzer:
-
     DANGEROUS = {
         "eval",
         "exec",
@@ -23,26 +23,22 @@ class SecurityAnalyzer:
         }
 
         for node in ast.walk(tree):
-
             if isinstance(
                 node,
                 ast.Call,
             ):
-
                 if isinstance(
                     node.func,
                     ast.Name,
                 ):
-
                     name = node.func.id
 
                     if name in self.DANGEROUS:
-
                         report["issues"].append(
                             {
-                                "severity":"high",
-                                "type":"dangerous-call",
-                                "symbol":name,
+                                "severity": "high",
+                                "type": "dangerous-call",
+                                "symbol": name,
                             }
                         )
 
@@ -50,20 +46,16 @@ class SecurityAnalyzer:
                 node,
                 ast.Global,
             ):
-
                 report["issues"].append(
                     {
-                        "severity":"medium",
-                        "type":"global-statement",
+                        "severity": "medium",
+                        "type": "global-statement",
                     }
                 )
 
-        report["score"] -= (
-            len(report["issues"]) * 20
-        )
+        report["score"] -= len(report["issues"]) * 20
 
-        if report["score"] < 0:
-            report["score"] = 0
+        report["score"] = max(report["score"], 0)
 
         return report
 
@@ -72,12 +64,8 @@ class SecurityAnalyzer:
         report,
     ):
 
-        return (
-            report["score"] >= 80
-            and not any(
-                issue["severity"] == "high"
-                for issue in report["issues"]
-            )
+        return report["score"] >= 80 and not any(
+            issue["severity"] == "high" for issue in report["issues"]
         )
 
 

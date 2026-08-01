@@ -11,7 +11,6 @@ class ContextBudget:
 
 
 class ContextBudgetEngine:
-
     DEFAULT_CONTEXT = 8192
     DEFAULT_OUTPUT = 2048
     SAFETY_MARGIN = 1024
@@ -21,18 +20,11 @@ class ContextBudgetEngine:
         try:
             runtime = registry.get(provider, model)
 
-            context = (
-                runtime.context_window
-                or self.DEFAULT_CONTEXT
-            )
+            context = runtime.context_window or self.DEFAULT_CONTEXT
 
-            output = (
-                runtime.max_output_tokens
-                or self.DEFAULT_OUTPUT
-            )
+            output = runtime.max_output_tokens or self.DEFAULT_OUTPUT
 
         except Exception:
-
             context = self.DEFAULT_CONTEXT
             output = self.DEFAULT_OUTPUT
 

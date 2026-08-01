@@ -4,17 +4,10 @@ import json
 import tempfile
 from pathlib import Path
 
-
-STATE = (
-    Path.cwd()
-    / ".builder"
-    / "state"
-    / "transactions"
-)
+STATE = Path.cwd() / ".builder" / "state" / "transactions"
 
 
 class TransactionStorage:
-
     def __init__(self):
         STATE.mkdir(
             parents=True,
@@ -37,7 +30,6 @@ class TransactionStorage:
             delete=False,
             encoding="utf-8",
         ) as tmp:
-
             json.dump(
                 transaction,
                 tmp,
@@ -81,10 +73,7 @@ class TransactionStorage:
 
         result = []
 
-        for file in sorted(
-            STATE.glob("*.json")
-        ):
-
+        for file in sorted(STATE.glob("*.json")):
             try:
                 result.append(
                     json.loads(

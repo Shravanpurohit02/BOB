@@ -19,7 +19,6 @@ class EditContext:
 
 
 class EditContextBuilder:
-
     def __init__(self):
         self.workspace = None
         self._built = False
@@ -54,15 +53,12 @@ class EditContextBuilder:
         return EditContext(
             query=query,
             risk=plan.risk,
-
             resolved_files=list(plan.resolved_files),
             resolved_symbols=list(plan.resolved_symbols),
             related_symbols=list(plan.related_symbols),
             impacts=list(plan.impacts),
-
             editable_files=list(plan.editable_files),
             missing_files=list(plan.missing_files),
-
             execution_order=execution_order,
         )
 

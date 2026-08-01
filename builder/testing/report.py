@@ -1,5 +1,4 @@
 class TestReport:
-
     def create(self, results):
 
         return {
@@ -11,5 +10,6 @@ class TestReport:
                 6,
             ),
         }
+
 
 report = TestReport()

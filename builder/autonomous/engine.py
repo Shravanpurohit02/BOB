@@ -1,7 +1,7 @@
 from builder.autonomous.controller import controller
 
-class AutonomousEngine:
 
+class AutonomousEngine:
     def execute(
         self,
         objective: str,
@@ -11,5 +11,6 @@ class AutonomousEngine:
             objective,
             **context,
         )
+
 
 engine = AutonomousEngine()

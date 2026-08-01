@@ -48,11 +48,7 @@ class ReflectionQuery:
         workspace: str,
     ):
 
-        return [
-            symbol
-            for symbol in self.symbols(workspace)
-            if symbol.kind == "class"
-        ]
+        return [symbol for symbol in self.symbols(workspace) if symbol.kind == "class"]
 
     def functions(
         self,
@@ -62,7 +58,8 @@ class ReflectionQuery:
         return [
             symbol
             for symbol in self.symbols(workspace)
-            if symbol.kind in (
+            if symbol.kind
+            in (
                 "function",
                 "async_function",
             )
@@ -79,10 +76,8 @@ class ReflectionQuery:
         return [
             symbol
             for symbol in self.symbols(workspace)
-            if text in symbol.name.lower()
-            or text in symbol.qualified_name.lower()
+            if text in symbol.name.lower() or text in symbol.qualified_name.lower()
         ]
 
 
 query = ReflectionQuery()
-

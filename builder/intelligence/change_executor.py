@@ -56,14 +56,11 @@ class ChangeExecutionPlan:
     query: str
     risk: str
 
-    operations: list[EditOperation] = field(
-        default_factory=list
-    )
+    operations: list[EditOperation] = field(default_factory=list)
 
 
 @dataclass(slots=True)
 class ExecutionReport:
-
     success: bool = False
 
     total: int = 0
@@ -74,13 +71,10 @@ class ExecutionReport:
 
     elapsed: float = 0.0
 
-    operations: list[EditOperation] = field(
-        default_factory=list
-    )
+    operations: list[EditOperation] = field(default_factory=list)
 
 
 class ChangeExecutor:
-
     def __init__(self):
         self._started = 0.0
 
@@ -106,7 +100,6 @@ class ChangeExecutor:
             op_plan.operations,
             start=1,
         ):
-
             plan.operations.append(
                 EditOperation(
                     order=order,
@@ -132,7 +125,6 @@ class ChangeExecutor:
         report.total = len(plan.operations)
 
         for op in plan.operations:
-
             if op.status is OperationStatus.COMPLETED:
                 report.completed += 1
 
@@ -145,10 +137,7 @@ class ChangeExecutor:
             elif op.status is OperationStatus.SKIPPED:
                 report.skipped += 1
 
-        report.success = (
-            report.completed == report.total
-            and report.failed == 0
-        )
+        report.success = report.completed == report.total and report.failed == 0
 
         report.elapsed = round(
             perf_counter() - self._started,

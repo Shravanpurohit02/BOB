@@ -19,9 +19,7 @@ class RepositoryQuery:
         self,
         workspace: str,
     ):
-        return self.build(
-            workspace
-        ).files()
+        return self.build(workspace).files()
 
     def get(
         self,
@@ -43,11 +41,7 @@ class RepositoryQuery:
         self,
         workspace: str,
     ):
-        return [
-            file
-            for file in self.all(workspace)
-            if file.is_python
-        ]
+        return [file for file in self.all(workspace) if file.is_python]
 
     def extension(
         self,
@@ -59,11 +53,7 @@ class RepositoryQuery:
         if not suffix.startswith("."):
             suffix = "." + suffix
 
-        return [
-            file
-            for file in self.all(workspace)
-            if file.extension == suffix
-        ]
+        return [file for file in self.all(workspace) if file.extension == suffix]
 
     def search(
         self,
@@ -72,12 +62,7 @@ class RepositoryQuery:
     ):
         text = text.lower()
 
-        return [
-            file
-            for file in self.all(workspace)
-            if text in file.path.lower()
-        ]
+        return [file for file in self.all(workspace) if text in file.path.lower()]
 
 
 query = RepositoryQuery()
-

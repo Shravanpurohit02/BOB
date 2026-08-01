@@ -1,5 +1,4 @@
 class ChangeImpactAnalyzer:
-
     def analyze(
         self,
         repository_graph,
@@ -10,7 +9,6 @@ class ChangeImpactAnalyzer:
         queue = list(changed_modules)
 
         while queue:
-
             module = queue.pop(0)
 
             if module in impacted:

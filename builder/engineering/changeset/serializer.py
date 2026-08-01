@@ -1,9 +1,8 @@
-from dataclasses import asdict
 import json
+from dataclasses import asdict
 
 
 class Serializer:
-
     def dumps(self, obj):
 
         return json.dumps(

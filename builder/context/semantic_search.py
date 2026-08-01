@@ -2,7 +2,6 @@ import re
 
 
 class SemanticSearch:
-
     def _tokens(self, module):
 
         values = (
@@ -17,7 +16,6 @@ class SemanticSearch:
         tokens = []
 
         for value in values:
-
             text = str(value)
 
             text = re.sub(
@@ -32,11 +30,7 @@ class SemanticSearch:
                 text,
             )
 
-            tokens.extend(
-                word.lower()
-                for word in text.split()
-                if word
-            )
+            tokens.extend(word.lower() for word in text.split() if word)
 
         return tokens
 
@@ -55,9 +49,7 @@ class SemanticSearch:
         score = 0
 
         for q in query_tokens:
-
             for token in module_tokens:
-
                 if token == q:
                     score += 100
 
@@ -82,11 +74,7 @@ class SemanticSearch:
             reverse=True,
         )
 
-        return [
-            m
-            for m in ranked
-            if self._score(m, query) > 0
-        ][:limit]
+        return [m for m in ranked if self._score(m, query) > 0][:limit]
 
 
 engine = SemanticSearch()

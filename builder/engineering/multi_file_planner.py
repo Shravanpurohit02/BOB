@@ -1,5 +1,4 @@
 class MultiFilePlanningEngine:
-
     def plan(
         self,
         repository_graph,
@@ -13,7 +12,6 @@ class MultiFilePlanningEngine:
             "impacted",
             [],
         ):
-
             node = repository_graph.get(
                 module,
                 {},
@@ -34,9 +32,7 @@ class MultiFilePlanningEngine:
                             [],
                         )
                     ),
-                    "strategy": strategy[
-                        "strategy"
-                    ],
+                    "strategy": strategy["strategy"],
                 }
             )
 
@@ -55,10 +51,7 @@ class MultiFilePlanningEngine:
         plan,
     ):
 
-        return [
-            item["module"]
-            for item in plan
-        ]
+        return [item["module"] for item in plan]
 
 
 planner = MultiFilePlanningEngine()

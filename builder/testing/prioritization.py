@@ -1,5 +1,4 @@
 class TestPrioritizationEngine:
-
     PRIORITY = {
         "critical": 300,
         "high": 200,
@@ -21,23 +20,18 @@ class TestPrioritizationEngine:
         ranked = []
 
         for test in tests:
-
-            score = (
-                self.PRIORITY.get(
-                    test.get(
-                        "priority",
-                        "normal",
-                    ),
-                    100,
-                )
-                +
-                self.TYPE_BONUS.get(
-                    test.get(
-                        "type",
-                        "unit",
-                    ),
-                    0,
-                )
+            score = self.PRIORITY.get(
+                test.get(
+                    "priority",
+                    "normal",
+                ),
+                100,
+            ) + self.TYPE_BONUS.get(
+                test.get(
+                    "type",
+                    "unit",
+                ),
+                0,
             )
 
             item = dict(test)
@@ -59,16 +53,8 @@ class TestPrioritizationEngine:
 
         return {
             "tests": len(ranked),
-            "highest": (
-                ranked[0]["score"]
-                if ranked
-                else 0
-            ),
-            "first": (
-                ranked[0]["module"]
-                if ranked
-                else None
-            ),
+            "highest": (ranked[0]["score"] if ranked else 0),
+            "first": (ranked[0]["module"] if ranked else None),
         }
 
 

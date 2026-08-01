@@ -1,7 +1,7 @@
 from builder.deployment.artifact import Artifact
 
-class DeploymentReport:
 
+class DeploymentReport:
     def create(self, archive, metadata):
 
         return Artifact(
@@ -9,5 +9,6 @@ class DeploymentReport:
             path=archive,
             size=metadata["size"],
         )
+
 
 report = DeploymentReport()

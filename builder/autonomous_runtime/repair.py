@@ -2,7 +2,6 @@ from builder.autopatch import engine as autopatch
 
 
 class RepairEngine:
-
     def repair(
         self,
         workspace: str,
@@ -17,7 +16,6 @@ class RepairEngine:
         # ------------------------------------------------------------------
 
         if not paths:
-
             try:
                 return autopatch.patch(
                     workspace=workspace,
@@ -40,9 +38,7 @@ class RepairEngine:
         results = []
 
         for path in paths:
-
             try:
-
                 results.append(
                     autopatch.patch(
                         workspace=workspace,
@@ -52,7 +48,6 @@ class RepairEngine:
                 )
 
             except Exception as exc:
-
                 results.append(
                     {
                         "success": False,
@@ -62,15 +57,8 @@ class RepairEngine:
                 )
 
         return {
-            "success": all(
-                r.get("success", False)
-                for r in results
-            ),
-            "patched": sum(
-                1
-                for r in results
-                if r.get("success")
-            ),
+            "success": all(r.get("success", False) for r in results),
+            "patched": sum(1 for r in results if r.get("success")),
             "results": results,
         }
 

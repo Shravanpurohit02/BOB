@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Iterable
+from collections.abc import Iterable
 
 from .config import GuardrailConfig
 from .exceptions import RegistryError
@@ -29,9 +29,7 @@ class ValidatorRegistry:
         validator: BaseValidator,
     ) -> None:
         if validator.name in self._validators:
-            raise RegistryError(
-                f"Validator '{validator.name}' already registered."
-            )
+            raise RegistryError(f"Validator '{validator.name}' already registered.")
 
         self._validators[validator.name] = validator
 
@@ -48,9 +46,7 @@ class ValidatorRegistry:
         try:
             return self._validators[name]
         except KeyError as exc:
-            raise RegistryError(
-                f"Unknown validator '{name}'."
-            ) from exc
+            raise RegistryError(f"Unknown validator '{name}'.") from exc
 
     def exists(
         self,

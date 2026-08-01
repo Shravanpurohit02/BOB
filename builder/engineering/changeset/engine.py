@@ -4,15 +4,14 @@ from pathlib import Path
 from builder.engineering.context import inspector
 from builder.engineering.state import engine as state
 
-from .models import EngineeringChangeSet, ChangeFile
-from .repository import RepositoryAnalysis
+from .models import ChangeFile, EngineeringChangeSet
 from .report import EngineeringReport
+from .repository import RepositoryAnalysis
 from .risk import Risk
 from .storage import storage
 
 
 class EngineeringEngine:
-
     def create(
         self,
         objective: str,
@@ -24,7 +23,6 @@ class EngineeringEngine:
         )
 
         if workspace:
-
             ctx = inspector.inspect(
                 objective=objective,
                 workspace=workspace,

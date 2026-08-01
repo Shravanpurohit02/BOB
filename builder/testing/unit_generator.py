@@ -1,5 +1,4 @@
 class UnitTestGenerator:
-
     def generate(
         self,
         plan,
@@ -8,15 +7,10 @@ class UnitTestGenerator:
         tests = []
 
         for item in plan:
-
             if item["type"] != "unit":
                 continue
 
-            module = (
-                item["file"]
-                .split("/")[-1]
-                .replace(".py", "")
-            )
+            module = item["file"].split("/")[-1].replace(".py", "")
 
             tests.append(
                 {
@@ -38,10 +32,7 @@ class UnitTestGenerator:
 
         return {
             "generated": len(tests),
-            "modules": [
-                test["module"]
-                for test in tests
-            ],
+            "modules": [test["module"] for test in tests],
         }
 
 

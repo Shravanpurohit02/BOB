@@ -18,8 +18,8 @@ __all__ = [
     "event_bus",
     "jobs",
     "plans",
+    "queue",
     "registry",
     "state",
-    "queue",
     "workers",
 ]

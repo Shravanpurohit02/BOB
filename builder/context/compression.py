@@ -1,5 +1,4 @@
 class ContextCompressor:
-
     MAX_LINE_LENGTH = 200
 
     def compress(self, text, budget):
@@ -14,7 +13,6 @@ class ContextCompressor:
         used = 0
 
         for line in lines:
-
             line = line.rstrip()
 
             if len(line) > self.MAX_LINE_LENGTH:
@@ -48,7 +46,6 @@ class ContextCompressor:
         output = []
 
         for file in files:
-
             source = self.compress(
                 file["source"],
                 remaining,

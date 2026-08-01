@@ -6,7 +6,6 @@ from time import time
 
 @dataclass(slots=True)
 class ProviderHealth:
-
     provider: str
 
     successes: int = 0
@@ -60,4 +59,4 @@ class ProviderHealth:
         score -= self.consecutive_failures * 6
         score -= self.average_latency * 2
 
-        return max(0.0, round(score,2))
+        return max(0.0, round(score, 2))

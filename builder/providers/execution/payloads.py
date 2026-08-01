@@ -2,7 +2,6 @@ from __future__ import annotations
 
 
 class PayloadBuilder:
-
     def build(self, provider, request):
 
         api_type = getattr(provider, "api_type", "openai")

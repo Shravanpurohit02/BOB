@@ -3,7 +3,6 @@ from dataclasses import dataclass, field
 
 @dataclass(slots=True)
 class ExecutionResult:
-
     success: bool = False
 
     message: str = ""

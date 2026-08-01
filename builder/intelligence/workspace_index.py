@@ -1,38 +1,33 @@
 from dataclasses import dataclass, field
 
-from .symbol_indexer import indexer
 from .dependency_map import dependency_map
+from .symbol_indexer import indexer
 
 
 @dataclass(slots=True)
 class WorkspaceIndex:
+    modules: int = 0
 
-    modules:int=0
+    symbols: int = 0
 
-    symbols:int=0
+    imports: int = 0
 
-    imports:int=0
+    dependency_graph: dict = field(default_factory=dict)
 
-    dependency_graph:dict=field(default_factory=dict)
-
-    symbol_index:object=None
+    symbol_index: object = None
 
 
 class WorkspaceIndexer:
-
     def build(
         self,
-        workspace:str,
+        workspace: str,
     ):
 
-        symbol_index=indexer.build(workspace)
+        symbol_index = indexer.build(workspace)
 
-        graph=dependency_map.build(workspace)
+        graph = dependency_map.build(workspace)
 
-        imports=sum(
-            len(v)
-            for v in graph.values()
-        )
+        imports = sum(len(v) for v in graph.values())
 
         return WorkspaceIndex(
             modules=len(symbol_index.modules),
@@ -43,4 +38,4 @@ class WorkspaceIndexer:
         )
 
 
-workspace_indexer=WorkspaceIndexer()
+workspace_indexer = WorkspaceIndexer()

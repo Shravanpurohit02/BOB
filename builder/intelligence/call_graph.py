@@ -4,7 +4,6 @@ from pathlib import Path
 
 
 class _Visitor(ast.NodeVisitor):
-
     def __init__(self, module):
         self.module = module
         self.current = None
@@ -28,7 +27,6 @@ class _Visitor(ast.NodeVisitor):
 
 
 class CallGraphBuilder:
-
     def build(self, workspace):
 
         root = Path(workspace)
@@ -48,7 +46,6 @@ class CallGraphBuilder:
         }
 
         for file in root.rglob("*.py"):
-
             if any(part in SKIP for part in file.parts):
                 continue
 

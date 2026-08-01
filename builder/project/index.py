@@ -1,4 +1,5 @@
 from __future__ import annotations
+from typing import ClassVar
 
 from pathlib import Path
 
@@ -33,23 +34,16 @@ class ProjectIndexer:
         )
 
         for item in root.rglob("*"):
-
             rel = item.relative_to(root).as_posix()
 
-            if any(
-                part in self.IGNORE
-                for part in item.parts
-            ):
+            if any(part in self.IGNORE for part in item.parts):
                 continue
 
             if item.is_dir():
-
                 project.add_directory(rel)
 
                 if (item / "__init__.py").exists():
-                    project.add_package(
-                        rel.replace("/", ".")
-                    )
+                    project.add_package(rel.replace("/", "."))
 
                 continue
 
@@ -70,28 +64,21 @@ class ProjectIndexer:
         workspace: str,
     ) -> list[str]:
 
-        return self.build(
-            workspace
-        ).modules
+        return self.build(workspace).modules
 
     def files(
         self,
         workspace: str,
     ) -> list[str]:
 
-        return self.build(
-            workspace
-        ).files
+        return self.build(workspace).files
 
     def packages(
         self,
         workspace: str,
     ) -> list[str]:
 
-        return self.build(
-            workspace
-        ).packages
+        return self.build(workspace).packages
 
 
 index = ProjectIndexer()
-

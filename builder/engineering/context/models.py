@@ -3,7 +3,6 @@ from dataclasses import dataclass, field
 
 @dataclass(slots=True)
 class EngineeringContext:
-
     objective: str = ""
 
     workspace: str = ""

@@ -1,27 +1,26 @@
 from .models import (
     EngineeringPlan,
-    Milestone,
     Job,
+    Milestone,
     Task,
 )
 
 
 class Planner:
-
     def create(
         self,
-        objective:str,
+        objective: str,
     ):
 
-        plan=EngineeringPlan(
+        plan = EngineeringPlan(
             objective=objective,
         )
 
-        milestone=Milestone(
+        milestone = Milestone(
             title="Implementation",
         )
 
-        job=Job(
+        job = Job(
             title="Engineering",
         )
 
@@ -34,11 +33,9 @@ class Planner:
 
         milestone.jobs.append(job)
 
-        plan.milestones.append(
-            milestone
-        )
+        plan.milestones.append(milestone)
 
         return plan
 
 
-planner=Planner()
+planner = Planner()

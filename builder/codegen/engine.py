@@ -8,7 +8,6 @@ from builder.codegen.response import CodeGenerationResponse
 
 
 class CodeEngine:
-
     def generate(
         self,
         request=None,
@@ -24,11 +23,8 @@ class CodeEngine:
         if isinstance(request, CodeGenerationRequest):
             req = request
         else:
-
             if objective is None:
-                raise ValueError(
-                    "objective or CodeGenerationRequest required"
-                )
+                raise ValueError("objective or CodeGenerationRequest required")
 
             workspace = str(Path(workspace).resolve())
 
@@ -48,12 +44,14 @@ class CodeEngine:
 
         result = generator.generate(req)
 
-        code = cleaner.clean(
-            extractor.code(result.text)
-        )
+        code = cleaner.clean(extractor.code(result.text))
 
-        artifacts = extractor.artifacts(
-            result.text
+
+        artifacts = extractor.artifacts(result.text)
+
+        self._validate_generation(
+            req,
+            artifacts,
         )
 
         generated_files = []
@@ -61,22 +59,14 @@ class CodeEngine:
         created_directories = []
 
         for artifact in artifacts:
-
             for directory in artifact.directories:
-                created_directories.append(
-                    directory.path
-                )
+                created_directories.append(directory.path)
 
             for file in artifact.files:
-
                 if file.action == "create":
-                    generated_files.append(
-                        file.path
-                    )
+                    generated_files.append(file.path)
                 else:
-                    modified_files.append(
-                        file.path
-                    )
+                    modified_files.append(file.path)
 
         return CodeGenerationResponse(
             success=result.success,
@@ -95,6 +85,40 @@ class CodeEngine:
                 6,
             ),
         )
+
+
+    def _validate_generation(
+        self,
+        request,
+        artifacts,
+    ):
+        """
+        Reject generated artifacts that violate the engineering plan.
+        """
+
+        allowed = set(request.resolved_files)
+
+        allow_create = any(
+            getattr(op, "operation", "") == "create_file"
+            or str(getattr(op, "operation", "")).endswith("CREATE_FILE")
+            for op in request.operations
+        )
+
+        for artifact in artifacts:
+            for file in artifact.files:
+
+                if allowed and file.path not in allowed:
+                    raise ValueError(
+                        f"Generator attempted unauthorized file: {file.path}"
+                    )
+
+                if (
+                    file.action == "create"
+                    and not allow_create
+                ):
+                    raise ValueError(
+                        f"Generator attempted unauthorized create: {file.path}"
+                    )
 
 
 engine = CodeEngine()

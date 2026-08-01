@@ -4,7 +4,6 @@ from dataclasses import dataclass
 
 from builder.providers.runtime import router as runtime_router
 
-
 RETRY_STATUS = {
     408,
     409,
@@ -27,7 +26,6 @@ class ProviderFailure:
 
 
 class FailoverEngine:
-
     def should_retry(self, response):
 
         if response is None:

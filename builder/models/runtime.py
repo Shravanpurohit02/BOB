@@ -42,16 +42,12 @@ class RuntimeContext:
             "workspace": str(self.workspace),
             "environment": self.environment,
             "builder_version": self.builder_version,
-            "project": (
-                self.project.to_dict()
-                if self.project
-                else None
-            ),
+            "project": (self.project.to_dict() if self.project else None),
             "metadata": dict(self.metadata),
         }
 
     @classmethod
-    def from_dict(cls, data: dict[str, Any]) -> "RuntimeContext":
+    def from_dict(cls, data: dict[str, Any]) -> RuntimeContext:
         return cls(
             session_id=data["session_id"],
             started_at=datetime.fromisoformat(data["started_at"]),
@@ -59,9 +55,7 @@ class RuntimeContext:
             environment=data["environment"],
             builder_version=data["builder_version"],
             project=(
-                Project.from_dict(data["project"])
-                if data.get("project")
-                else None
+                Project.from_dict(data["project"]) if data.get("project") else None
             ),
             metadata=dict(data.get("metadata", {})),
         )

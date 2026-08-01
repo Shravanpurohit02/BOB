@@ -9,7 +9,6 @@ from builder.providers.runtime.registry import registry
 
 
 class ProviderLoader:
-
     def __init__(self):
         self.loaded_files = []
 
@@ -40,15 +39,11 @@ class ProviderLoader:
         registry.providers.clear()
 
         for provider in PROVIDERS:
-
             prefix = provider.env_prefix
 
             if provider.name == "gemini":
-
                 api_key = (
-                    values.get("GEMINI_API_KEY")
-                    or values.get("GOOGLE_API_KEY")
-                    or ""
+                    values.get("GEMINI_API_KEY") or values.get("GOOGLE_API_KEY") or ""
                 ).strip()
 
                 base_url = (
@@ -64,22 +59,13 @@ class ProviderLoader:
                 )
 
             else:
-
                 api_key = (
-                    values.get(f"{prefix}_API_KEY")
-                    or values.get(f"{prefix}_KEY")
-                    or ""
+                    values.get(f"{prefix}_API_KEY") or values.get(f"{prefix}_KEY") or ""
                 ).strip()
 
-                base_url = (
-                    values.get(f"{prefix}_BASE_URL")
-                    or provider.default_base_url
-                )
+                base_url = values.get(f"{prefix}_BASE_URL") or provider.default_base_url
 
-                model = (
-                    values.get(f"{prefix}_MODEL")
-                    or provider.default_model
-                )
+                model = values.get(f"{prefix}_MODEL") or provider.default_model
 
             registry.register(
                 ProviderRuntime(

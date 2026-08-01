@@ -1,13 +1,12 @@
 from builder.self_improvement.models import Improvement
 
-class Planner:
 
+class Planner:
     def build(self, issues):
 
         improvements = []
 
         for target, issue in issues:
-
             improvements.append(
                 Improvement(
                     target=target,
@@ -17,5 +16,6 @@ class Planner:
             )
 
         return improvements
+
 
 planner = Planner()

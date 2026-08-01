@@ -6,8 +6,8 @@ from builder.models.event import Event
 
 EVENT_FILE = Path(".builder/state/events.json")
 
-class EventBus:
 
+class EventBus:
     def __init__(self):
         self._events = []
         self._load()
@@ -15,8 +15,7 @@ class EventBus:
     def _load(self):
         if EVENT_FILE.exists():
             self._events = [
-                Event(**e)
-                for e in json.loads(EVENT_FILE.read_text(encoding="utf-8"))
+                Event(**e) for e in json.loads(EVENT_FILE.read_text(encoding="utf-8"))
             ]
 
     def _save(self):
@@ -41,5 +40,6 @@ class EventBus:
 
     def all(self):
         return list(self._events)
+
 
 event_bus = EventBus()

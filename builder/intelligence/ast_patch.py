@@ -14,7 +14,6 @@ class PatchResult:
 
 
 class ASTPatchEngine:
-
     def _find_node(self, tree, symbol):
 
         for node in ast.walk(tree):
@@ -63,11 +62,7 @@ class ASTPatchEngine:
 
         replacement = new_source.strip("\n").splitlines()
 
-        updated = (
-            lines[:start]
-            + replacement
-            + lines[end:]
-        )
+        updated = lines[:start] + replacement + lines[end:]
 
         after = "\n".join(updated)
 

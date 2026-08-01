@@ -21,7 +21,6 @@ class QualifiedSymbolIndex:
 
 
 class _Visitor(ast.NodeVisitor):
-
     def __init__(self, module, index):
         self.module = module
         self.index = index
@@ -63,7 +62,6 @@ class _Visitor(ast.NodeVisitor):
 
 
 class QualifiedSymbolIndexer:
-
     def build(self, workspace):
 
         root = Path(workspace)
@@ -83,7 +81,6 @@ class QualifiedSymbolIndexer:
         }
 
         for file in root.rglob("*.py"):
-
             if any(p in SKIP for p in file.parts):
                 continue
 
@@ -97,9 +94,7 @@ class QualifiedSymbolIndexer:
             except Exception:
                 continue
 
-            module = ".".join(
-                file.relative_to(root).with_suffix("").parts
-            )
+            module = ".".join(file.relative_to(root).with_suffix("").parts)
 
             _Visitor(module, index).visit(tree)
 

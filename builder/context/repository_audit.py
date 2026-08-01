@@ -1,12 +1,11 @@
 from __future__ import annotations
 
+from builder.intelligence.workspace_index import workspace_indexer
 from builder.project import analyzer, indexer
 from builder.project.registry import registry
-from builder.intelligence.workspace_index import workspace_indexer
 
 
 class RepositoryAudit:
-
     MAX_FILES = 200
 
     def build(self, workspace: str) -> str:
@@ -43,7 +42,6 @@ class RepositoryAudit:
         count = 0
 
         for file in sorted(registry.all(), key=lambda f: f.relative_path):
-
             if count >= self.MAX_FILES:
                 break
 

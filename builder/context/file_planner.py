@@ -1,5 +1,4 @@
 class IntelligentFilePlanner:
-
     def plan(
         self,
         impact,
@@ -20,7 +19,6 @@ class IntelligentFilePlanner:
             "impacted",
             [],
         ):
-
             node = repository_graph.get(
                 module,
                 {},
@@ -34,12 +32,15 @@ class IntelligentFilePlanner:
             ):
                 priority += 100
 
-            priority += len(
-                node.get(
-                    "imported_by",
-                    [],
+            priority += (
+                len(
+                    node.get(
+                        "imported_by",
+                        [],
+                    )
                 )
-            ) * 10
+                * 10
+            )
 
             if module in hubs:
                 priority += 50

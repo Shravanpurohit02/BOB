@@ -32,7 +32,6 @@ class PathValidator(BaseValidator):
         files = request.patch.get("files", [])
 
         for entry in files:
-
             path = str(entry.get("path", "")).replace("\\", "/").strip()
 
             if not path:
@@ -80,11 +79,7 @@ class PathValidator(BaseValidator):
                 )
 
             # Forbidden directories
-            forbidden = [
-                part
-                for part in p.parts
-                if part in FORBIDDEN_DIRECTORIES
-            ]
+            forbidden = [part for part in p.parts if part in FORBIDDEN_DIRECTORIES]
 
             if forbidden:
                 issues.append(

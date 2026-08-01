@@ -1,4 +1,5 @@
 from __future__ import annotations
+from typing import ClassVar
 
 from pathlib import Path
 
@@ -32,23 +33,15 @@ class RepositoryIndex:
         root = Path(workspace).resolve()
 
         for item in root.rglob("*"):
-
             if not item.is_file():
                 continue
 
-            if any(
-                part in self.IGNORE
-                for part in item.parts
-            ):
+            if any(part in self.IGNORE for part in item.parts):
                 continue
 
             relative = item.relative_to(root)
 
-            database.add(
-                RepositoryFile.from_path(
-                    relative
-                )
-            )
+            database.add(RepositoryFile.from_path(relative))
 
         return database
 
@@ -57,20 +50,14 @@ class RepositoryIndex:
         workspace: str,
     ) -> list[RepositoryFile]:
 
-        return self.build(
-            workspace
-        ).files()
+        return self.build(workspace).files()
 
     def python_files(
         self,
         workspace: str,
     ) -> list[RepositoryFile]:
 
-        return [
-            file
-            for file in self.files(workspace)
-            if file.is_python
-        ]
+        return [file for file in self.files(workspace) if file.is_python]
 
     def get(
         self,
@@ -84,4 +71,3 @@ class RepositoryIndex:
 
 
 index = RepositoryIndex()
-

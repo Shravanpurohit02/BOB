@@ -2,7 +2,6 @@ from builder.providers.runtime.loader import loader
 
 
 class ProviderRouter:
-
     def _registry(self):
         return loader.load()
 

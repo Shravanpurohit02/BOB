@@ -1,6 +1,8 @@
-class Pipeline:
+from typing import ClassVar
 
-    STAGES = [
+
+class Pipeline:
+    STAGES: ClassVar[tuple[str, ...]] = (
         "workspace",
         "reflection",
         "dependency",
@@ -10,9 +12,10 @@ class Pipeline:
         "patch",
         "testing",
         "deployment",
-    ]
+    )
 
-    def stages(self):
+    def stages(self) -> list[str]:
         return list(self.STAGES)
+
 
 pipeline = Pipeline()

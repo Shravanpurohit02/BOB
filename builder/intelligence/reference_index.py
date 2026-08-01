@@ -9,7 +9,6 @@ from .references import (
 
 
 class _Visitor(ast.NodeVisitor):
-
     def __init__(self, module: str, index: ReferenceIndex):
         self.module = module
         self.index = index
@@ -56,7 +55,6 @@ class _Visitor(ast.NodeVisitor):
 
 
 class ReferenceIndexer:
-
     def build(self, workspace: str):
 
         root = Path(workspace)
@@ -76,7 +74,6 @@ class ReferenceIndexer:
         }
 
         for file in root.rglob("*.py"):
-
             if any(part in SKIP_DIRS for part in file.parts):
                 continue
 
@@ -90,9 +87,7 @@ class ReferenceIndexer:
             except Exception:
                 continue
 
-            module = ".".join(
-                file.relative_to(root).with_suffix("").parts
-            )
+            module = ".".join(file.relative_to(root).with_suffix("").parts)
 
             _Visitor(module, index).visit(tree)
 

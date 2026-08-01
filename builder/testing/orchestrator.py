@@ -1,5 +1,4 @@
 class AutonomousTestOrchestrator:
-
     def execute(
         self,
         unit_tests,
@@ -11,7 +10,6 @@ class AutonomousTestOrchestrator:
         executed = []
 
         for test in prioritized_tests:
-
             executed.append(
                 {
                     "module": test["module"],
@@ -35,10 +33,7 @@ class AutonomousTestOrchestrator:
 
         return {
             "total": len(result["executed"]),
-            "passed": sum(
-                item["status"] == "passed"
-                for item in result["executed"]
-            ),
+            "passed": sum(item["status"] == "passed" for item in result["executed"]),
             "unit": result["unit"],
             "integration": result["integration"],
             "regression": result["regression"],

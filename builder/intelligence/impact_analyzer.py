@@ -3,7 +3,6 @@ from .reverse_call_graph import reverse_call_graph_builder
 
 
 class ImpactAnalyzer:
-
     def __init__(self):
         self._reverse = None
 
@@ -18,11 +17,9 @@ class ImpactAnalyzer:
         usages = navigator.find_usages(symbol)
         callers = sorted(self._reverse.get(symbol, []))
 
-        modules = sorted({
-            d.module for d in definitions
-        } | {
-            r.module for r in references
-        })
+        modules = sorted(
+            {d.module for d in definitions} | {r.module for r in references}
+        )
 
         if len(callers) > 50 or len(usages) > 500:
             risk = "critical"

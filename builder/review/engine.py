@@ -1,4 +1,4 @@
-from datetime import datetime, UTC
+from datetime import UTC, datetime
 from pathlib import Path
 
 from builder.review.models import ReviewTask
@@ -7,7 +7,6 @@ from builder.self_improvement.models import Improvement
 
 
 class ReviewEngine:
-
     def list(self):
         return storage.load()
 
@@ -16,11 +15,11 @@ class ReviewEngine:
         tasks = storage.load()
 
         for task in tasks:
-
             if (
                 task.target == improvement.target
                 and task.issue == improvement.issue
-                and task.status in (
+                and task.status
+                in (
                     "pending",
                     "approved",
                 )
@@ -49,14 +48,10 @@ class ReviewEngine:
         tasks = storage.load()
 
         for task in tasks:
-
             if task.id == task_id:
-
                 task.status = "approved"
                 task.reviewer = reviewer
-                task.reviewed_at = (
-                    datetime.now(UTC).isoformat()
-                )
+                task.reviewed_at = datetime.now(UTC).isoformat()
 
                 storage.save(tasks)
 
@@ -73,14 +68,10 @@ class ReviewEngine:
         tasks = storage.load()
 
         for task in tasks:
-
             if task.id == task_id:
-
                 task.status = "rejected"
                 task.reviewer = reviewer
-                task.reviewed_at = (
-                    datetime.now(UTC).isoformat()
-                )
+                task.reviewed_at = datetime.now(UTC).isoformat()
 
                 storage.save(tasks)
 

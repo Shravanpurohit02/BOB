@@ -2,7 +2,6 @@ from .models import EngineeringContext
 
 
 class ContextEngine:
-
     def create(
         self,
         objective: str,

@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Iterable
+from collections.abc import Iterable
 
 from .models import ValidationIssue
 
@@ -51,12 +51,8 @@ class ValidationError(GuardrailError):
                     location += f":{issue.line}"
 
             if location:
-                lines.append(
-                    f"[{issue.severity.value}] {location} - {issue.message}"
-                )
+                lines.append(f"[{issue.severity.value}] {location} - {issue.message}")
             else:
-                lines.append(
-                    f"[{issue.severity.value}] {issue.message}"
-                )
+                lines.append(f"[{issue.severity.value}] {issue.message}")
 
         return "\n".join(lines)

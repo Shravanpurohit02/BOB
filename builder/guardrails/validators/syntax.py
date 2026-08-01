@@ -1,4 +1,5 @@
 from __future__ import annotations
+from typing import ClassVar
 
 import ast
 
@@ -20,7 +21,7 @@ class SyntaxValidator(BaseValidator):
     name = "syntax"
     priority = 40
 
-    PYTHON_SUFFIXES = {
+    PYTHON_SUFFIXES: ClassVar = {
         ".py",
         ".pyi",
     }
@@ -34,7 +35,6 @@ class SyntaxValidator(BaseValidator):
         issues: list[ValidationIssue] = []
 
         for entry in request.patch.get("files", []):
-
             path = str(entry.get("path", ""))
 
             if not any(path.endswith(ext) for ext in self.PYTHON_SUFFIXES):
@@ -49,7 +49,6 @@ class SyntaxValidator(BaseValidator):
                 ast.parse(content, filename=path)
 
             except SyntaxError as exc:
-
                 issues.append(
                     ValidationIssue(
                         validator=self.name,

@@ -1,12 +1,11 @@
-from builder.review.static_analysis import engine as static_analysis
 from builder.review.code_quality import engine as quality
-from builder.review.security import engine as security
 from builder.review.performance import engine as performance
 from builder.review.refactoring import engine as refactoring
+from builder.review.security import engine as security
+from builder.review.static_analysis import engine as static_analysis
 
 
 class AutonomousReviewEngine:
-
     def review(
         self,
         source,

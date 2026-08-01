@@ -1,6 +1,8 @@
 from dataclasses import dataclass, field
 
 from builder.providers.chat.messages import Message
+from builder.providers.execution.mode import ExecutionMode
+
 
 @dataclass(slots=True)
 class ExecutionRequest:
@@ -10,3 +12,4 @@ class ExecutionRequest:
     temperature: float = 0.2
     max_tokens: int = 4096
     stream: bool = False
+    mode: ExecutionMode = ExecutionMode.GENERATION

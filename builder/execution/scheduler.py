@@ -1,7 +1,7 @@
 from builder.core.jobs import jobs
 
-class Scheduler:
 
+class Scheduler:
     def next_job(self):
         items = jobs.all()
         for job in items:
@@ -21,7 +21,8 @@ class Scheduler:
                 j,
                 "status",
                 "pending",
-            ) == "pending"
+            )
+            == "pending"
         ]
 
         pending.sort(
@@ -48,7 +49,6 @@ class Scheduler:
 
         return pending
 
-
     def schedule_parallel(
         self,
         jobs,
@@ -60,25 +60,17 @@ class Scheduler:
         batches = []
 
         while queue:
-
             batch = []
 
-            while (
-                queue
-                and len(batch) < workers
-            ):
-                batch.append(
-                    queue.pop(0)
-                )
+            while queue and len(batch) < workers:
+                batch.append(queue.pop(0))
 
             batches.append(batch)
 
         return batches
 
 
-
 class WorkerPool:
-
     def __init__(
         self,
         size=4,
@@ -87,7 +79,7 @@ class WorkerPool:
 
         self.workers = [
             {
-                "id": f"worker-{i+1}",
+                "id": f"worker-{i + 1}",
                 "status": "idle",
                 "jobs": 0,
             }
@@ -99,35 +91,24 @@ class WorkerPool:
         target_size,
     ):
 
-        if target_size < 1:
-            target_size = 1
+        target_size = max(target_size, 1)
 
         current = len(self.workers)
 
         if target_size > current:
-
             for i in range(current, target_size):
-
                 self.workers.append(
                     {
-                        "id": f"worker-{i+1}",
+                        "id": f"worker-{i + 1}",
                         "status": "idle",
                         "jobs": 0,
                     }
                 )
 
         elif target_size < current:
+            removable = [w for w in self.workers if w["status"] == "idle"]
 
-            removable = [
-                w
-                for w in self.workers
-                if w["status"] == "idle"
-            ]
-
-            while (
-                len(self.workers) > target_size
-                and removable
-            ):
+            while len(self.workers) > target_size and removable:
                 worker = removable.pop()
                 self.workers.remove(worker)
 
@@ -135,13 +116,10 @@ class WorkerPool:
 
         return self.size
 
-
     def acquire(self):
 
         for worker in self.workers:
-
             if worker["status"] == "idle":
-
                 worker["status"] = "busy"
 
                 worker["jobs"] += 1
@@ -159,7 +137,6 @@ class WorkerPool:
         idle = 0
 
         for worker in self.workers:
-
             if worker["status"] == "busy":
                 busy += 1
             else:
@@ -172,13 +149,8 @@ class WorkerPool:
             "healthy": healthy,
             "busy": busy,
             "idle": idle,
-            "utilization": (
-                busy / len(self.workers)
-                if self.workers
-                else 0.0
-            ),
+            "utilization": (busy / len(self.workers) if self.workers else 0.0),
         }
-
 
     def release(
         self,
@@ -186,9 +158,7 @@ class WorkerPool:
     ):
 
         for worker in self.workers:
-
             if worker["id"] == worker_id:
-
                 worker["status"] = "idle"
 
                 return True
@@ -202,7 +172,6 @@ class WorkerPool:
         recovered = 0
 
         for worker in self.workers:
-
             if worker["status"] != "failed":
                 continue
 
@@ -211,7 +180,6 @@ class WorkerPool:
             recovered += 1
 
         return recovered
-
 
     def metrics(
         self,
@@ -225,10 +193,7 @@ class WorkerPool:
             "idle": health["idle"],
             "healthy": health["healthy"],
             "utilization": health["utilization"],
-            "jobs_processed": sum(
-                w["jobs"]
-                for w in self.workers
-            ),
+            "jobs_processed": sum(w["jobs"] for w in self.workers),
         }
 
 

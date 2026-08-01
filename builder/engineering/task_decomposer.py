@@ -1,5 +1,4 @@
 class AutonomousTaskDecomposer:
-
     PHASES = (
         "analysis",
         "planning",
@@ -25,7 +24,6 @@ class AutonomousTaskDecomposer:
             self.PHASES,
             start=1,
         ):
-
             subtasks.append(
                 {
                     "id": order,
@@ -45,14 +43,8 @@ class AutonomousTaskDecomposer:
 
         return {
             "total": len(subtasks),
-            "completed": sum(
-                task["completed"]
-                for task in subtasks
-            ),
-            "remaining": sum(
-                not task["completed"]
-                for task in subtasks
-            ),
+            "completed": sum(task["completed"] for task in subtasks),
+            "remaining": sum(not task["completed"] for task in subtasks),
         }
 
 

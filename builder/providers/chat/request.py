@@ -2,6 +2,7 @@ from dataclasses import dataclass, field
 
 from builder.providers.chat.messages import Message
 
+
 @dataclass(slots=True)
 class ChatRequest:
     model: str

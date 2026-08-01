@@ -11,9 +11,7 @@ class StreamingEngine:
         if not getattr(request, "stream", False):
             return False
 
-        return bool(
-            getattr(provider, "supports_streaming", False)
-        )
+        return bool(getattr(provider, "supports_streaming", False))
 
     def prepare_payload(self, provider, payload, request):
 

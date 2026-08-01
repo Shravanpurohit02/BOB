@@ -2,7 +2,6 @@ from builder.testing import engine as testing
 
 
 class PipelineTesting:
-
     def run(
         self,
         workspace: str,

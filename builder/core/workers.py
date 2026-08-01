@@ -1,7 +1,7 @@
 from builder.models.worker import Worker
 
-class WorkerPool:
 
+class WorkerPool:
     def __init__(self):
         self._workers = {}
 
@@ -30,5 +30,6 @@ class WorkerPool:
 
     def all(self):
         return list(self._workers.values())
+
 
 workers = WorkerPool()

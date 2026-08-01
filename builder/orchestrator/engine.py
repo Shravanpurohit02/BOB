@@ -1,8 +1,9 @@
 from .orchestrator import orchestrator
 
-class OrchestratorEngine:
 
+class OrchestratorEngine:
     def run(self, request):
         return orchestrator.execute(request)
+
 
 engine = OrchestratorEngine()

@@ -26,7 +26,6 @@ class EditSession:
 
 
 class EditSessionBuilder:
-
     def __init__(self):
         self.workspace: Path | None = None
         self._built = False
@@ -37,9 +36,7 @@ class EditSessionBuilder:
     ):
         self.workspace = Path(workspace).resolve()
 
-        edit_context_builder.build(
-            str(self.workspace)
-        )
+        edit_context_builder.build(str(self.workspace))
 
         self._built = True
 
@@ -68,26 +65,17 @@ class EditSessionBuilder:
         targets = {}
 
         for file in ctx.execution_order:
-
             path = self.workspace / file
 
             targets[file] = EditTarget(
                 file=file,
                 exists=path.exists(),
-                size=(
-                    path.stat().st_size
-                    if path.exists()
-                    else 0
-                ),
+                size=(path.stat().st_size if path.exists() else 0),
             )
 
         # Attach resolved symbols to their files.
         for symbol in ctx.resolved_symbols:
-
-            file = (
-                symbol.module.replace(".", "/")
-                + ".py"
-            )
+            file = symbol.module.replace(".", "/") + ".py"
 
             target = targets.get(file)
 
@@ -96,13 +84,8 @@ class EditSessionBuilder:
 
         # Attach impacts to files.
         for impact in ctx.impacts:
-
             for module in impact["affected_modules"]:
-
-                file = (
-                    module.replace(".", "/")
-                    + ".py"
-                )
+                file = module.replace(".", "/") + ".py"
 
                 target = targets.get(file)
 
@@ -113,12 +96,13 @@ class EditSessionBuilder:
 
         # Initialize metadata for later execution.
         for target in targets.values():
-
-            target.metadata.update({
-                "action": "replace_symbol",
-                "symbol_count": len(target.symbols),
-                "impact_count": len(target.impacts),
-            })
+            target.metadata.update(
+                {
+                    "action": "replace_symbol",
+                    "symbol_count": len(target.symbols),
+                    "impact_count": len(target.impacts),
+                }
+            )
 
         return EditSession(
             query=query,

@@ -6,7 +6,6 @@ from builder.context import engine as context
 
 
 class Generator:
-
     def generate(
         self,
         workspace,

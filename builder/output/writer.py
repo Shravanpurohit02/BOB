@@ -3,7 +3,6 @@ from pathlib import Path
 
 
 class OutputWriter:
-
     def write(
         self,
         directory,

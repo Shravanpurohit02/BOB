@@ -1,7 +1,7 @@
 from builder.models.capability import Capability
 
-class CapabilityRegistry:
 
+class CapabilityRegistry:
     def __init__(self):
         self._items = {}
 
@@ -13,5 +13,6 @@ class CapabilityRegistry:
 
     def all(self):
         return list(self._items.values())
+
 
 capabilities = CapabilityRegistry()

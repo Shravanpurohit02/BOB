@@ -1,9 +1,9 @@
 from __future__ import annotations
 
+from builder.reflection.call_graph import call_graph
 from builder.reflection.query import query
 from builder.reflection.reference_index import reference_index
 from builder.reflection.reverse_index import reverse_index
-from builder.reflection.call_graph import call_graph
 
 
 class ReflectionNavigator:
@@ -99,4 +99,3 @@ class ReflectionNavigator:
 
 
 navigator = ReflectionNavigator()
-

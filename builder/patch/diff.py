@@ -1,7 +1,7 @@
 import difflib
 
-class DiffEngine:
 
+class DiffEngine:
     def diff(self, original: str, updated: str):
 
         return "".join(
@@ -12,5 +12,6 @@ class DiffEngine:
                 tofile="updated",
             )
         )
+
 
 diff_engine = DiffEngine()

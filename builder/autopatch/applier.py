@@ -4,7 +4,6 @@ from builder.patch import engine as patch_engine
 
 
 class Applier:
-
     def apply(self, path, code):
 
         target = Path(path)
@@ -16,7 +15,6 @@ class Applier:
             }
 
         try:
-
             patch = patch_engine.apply(
                 path=str(target),
                 updated=code,
@@ -33,7 +31,6 @@ class Applier:
             }
 
         except Exception as exc:
-
             return {
                 "success": False,
                 "path": str(target),

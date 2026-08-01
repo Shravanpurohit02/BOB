@@ -1,5 +1,4 @@
 class RepositoryGraph:
-
     def build(
         self,
         modules,
@@ -10,7 +9,6 @@ class RepositoryGraph:
         graph = {}
 
         for module in modules:
-
             graph[module.path] = {
                 "imports": imports["imports"].get(
                     module.path,
@@ -43,13 +41,7 @@ class RepositoryGraph:
             {},
         )
 
-        return sorted(
-            set(
-                node.get("imports", [])
-                +
-                node.get("imported_by", [])
-            )
-        )
+        return sorted(set(node.get("imports", []) + node.get("imported_by", [])))
 
     def degree(
         self,
@@ -62,11 +54,7 @@ class RepositoryGraph:
             {},
         )
 
-        return (
-            len(node.get("imports", []))
-            +
-            len(node.get("imported_by", []))
-        )
+        return len(node.get("imports", [])) + len(node.get("imported_by", []))
 
 
 engine = RepositoryGraph()

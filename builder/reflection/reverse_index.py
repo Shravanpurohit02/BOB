@@ -20,19 +20,13 @@ class ReverseIndex:
 
         reverse: dict[str, set[str]] = defaultdict(set)
 
-        forward = reference_index.build(
-            workspace
-        )
+        forward = reference_index.build(workspace)
 
         for symbol, modules in forward.items():
-
             for module in modules:
                 reverse[module].add(symbol)
 
-        return {
-            module: sorted(symbols)
-            for module, symbols in reverse.items()
-        }
+        return {module: sorted(symbols) for module, symbols in reverse.items()}
 
     def symbols(
         self,
@@ -58,10 +52,7 @@ class ReverseIndex:
         workspace: str,
     ) -> list[str]:
 
-        return sorted(
-            self.build(workspace)
-        )
+        return sorted(self.build(workspace))
 
 
 reverse_index = ReverseIndex()
-

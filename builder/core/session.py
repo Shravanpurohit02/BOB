@@ -28,11 +28,7 @@ def save_session(runtime: RuntimeContext) -> None:
 def load_session() -> RuntimeContext:
     if SESSION_FILE.exists():
         return RuntimeContext.from_dict(
-            json.loads(
-                SESSION_FILE.read_text(
-                    encoding="utf-8"
-                )
-            )
+            json.loads(SESSION_FILE.read_text(encoding="utf-8"))
         )
 
     runtime = create_runtime()

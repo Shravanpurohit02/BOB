@@ -5,9 +5,9 @@ from builder.project.registry import registry
 
 __all__ = [
     "Project",
+    "analyzer",
     "index",
     "registry",
-    "analyzer",
 ]
 
 # Backward compatibility

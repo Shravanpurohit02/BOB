@@ -2,7 +2,6 @@ from .cross_reference import cross_reference_engine
 
 
 class Navigator:
-
     def __init__(self):
         self._db = None
 

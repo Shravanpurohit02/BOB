@@ -3,13 +3,9 @@ from pathlib import Path
 
 
 class AutonomousEngineeringMemory:
-
     def __init__(self):
 
-        self.root = (
-            Path(".builder")
-            / "engineering_memory"
-        )
+        self.root = Path(".builder") / "engineering_memory"
 
         self.root.mkdir(
             parents=True,
@@ -21,12 +17,7 @@ class AutonomousEngineeringMemory:
         workspace,
     ):
 
-        name = (
-            workspace
-            .replace("/", "_")
-            .replace("\\", "_")
-            .replace(":", "_")
-        )
+        name = workspace.replace("/", "_").replace("\\", "_").replace(":", "_")
 
         return self.root / f"{name}.json"
 

@@ -1,31 +1,21 @@
 from __future__ import annotations
 
 import hashlib
-from datetime import UTC, datetime
 import shutil
+from datetime import UTC, datetime
 from pathlib import Path
 
-
-SNAPSHOT_ROOT = (
-    Path.cwd()
-    / ".builder"
-    / "state"
-    / "transactions"
-    / "snapshots"
-)
+SNAPSHOT_ROOT = Path.cwd() / ".builder" / "state" / "transactions" / "snapshots"
 
 
 class SnapshotEngine:
-
     def _dir(self, transaction_id: str) -> Path:
         path = SNAPSHOT_ROOT / transaction_id
         path.mkdir(parents=True, exist_ok=True)
         return path
 
     def _name(self, file: Path) -> str:
-        return hashlib.sha256(
-            str(file).encode("utf-8")
-        ).hexdigest()
+        return hashlib.sha256(str(file).encode("utf-8")).hexdigest()
 
     def snapshot(
         self,
@@ -42,9 +32,7 @@ class SnapshotEngine:
 
         shutil.copy2(src, target)
 
-        digest = hashlib.sha256(
-            src.read_bytes()
-        ).hexdigest()
+        digest = hashlib.sha256(src.read_bytes()).hexdigest()
 
         return {
             "path": str(src.resolve()),
@@ -59,13 +47,9 @@ class SnapshotEngine:
         manifest: dict,
     ) -> bool:
 
-        snap = Path(
-            manifest["snapshot"]
-        )
+        snap = Path(manifest["snapshot"])
 
-        dst = Path(
-            manifest["path"]
-        )
+        dst = Path(manifest["path"])
 
         if not snap.exists():
             return False
@@ -98,20 +82,14 @@ class SnapshotEngine:
         path: str,
     ) -> bool:
 
-        return (
-            self._dir(transaction_id)
-            / self._name(Path(path))
-        ).exists()
-
+        return (self._dir(transaction_id) / self._name(Path(path))).exists()
 
     def verify(
         self,
         manifest: dict,
     ) -> dict:
 
-        snap = Path(
-            manifest["snapshot"]
-        )
+        snap = Path(manifest["snapshot"])
 
         if not snap.exists():
             return {
@@ -119,9 +97,7 @@ class SnapshotEngine:
                 "reason": "snapshot_missing",
             }
 
-        digest = hashlib.sha256(
-            snap.read_bytes()
-        ).hexdigest()
+        digest = hashlib.sha256(snap.read_bytes()).hexdigest()
 
         if digest != manifest["sha256"]:
             return {
@@ -133,7 +109,6 @@ class SnapshotEngine:
             "valid": True,
             "reason": "",
         }
-
 
 
 engine = SnapshotEngine()

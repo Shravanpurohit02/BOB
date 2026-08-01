@@ -13,7 +13,6 @@ class ResolutionResult:
 
 
 class SymbolResolver:
-
     def __init__(self):
         self.index = None
 
@@ -64,37 +63,24 @@ class SymbolResolver:
         seen = set()
 
         for token in self._tokens(query):
-
             for symbol in self.index.symbols:
-
                 name = symbol.name.lower()
                 cls = (symbol.cls or "").split(".")[-1].lower()
                 module_base = symbol.module.split(".")[-1].lower()
 
                 score = None
 
-                if token == name:
+                if token == name or token == cls or token == module_base:
                     score = "exact"
 
-                elif token == cls:
-                    score = "exact"
-
-                elif token == module_base:
-                    score = "exact"
-
-                elif name.startswith(token):
+                elif (
+                    name.startswith(token)
+                    or cls.startswith(token)
+                    or module_base.startswith(token)
+                ):
                     score = "prefix"
 
-                elif cls.startswith(token):
-                    score = "prefix"
-
-                elif module_base.startswith(token):
-                    score = "prefix"
-
-                elif token in name:
-                    score = "contains"
-
-                elif token in cls:
+                elif token in name or token in cls:
                     score = "contains"
 
                 if score is None:

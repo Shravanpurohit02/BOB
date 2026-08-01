@@ -1,18 +1,17 @@
 import hashlib
 import py_compile
 import tempfile
-from datetime import datetime, UTC
+from datetime import UTC, datetime
 from pathlib import Path
 
+from builder.engineering.transaction.engine import engine as transactions
 from builder.patch.applier import applier
 from builder.patch.diff import diff_engine
 from builder.patch.models import Patch
 from builder.patch.validator import validator
-from builder.engineering.transaction.engine import engine as transactions
 
 
 class PatchEngine:
-
     def create(
         self,
         path: str,
@@ -39,12 +38,8 @@ class PatchEngine:
             path=str(target.resolve()),
             original=original,
             updated=updated,
-            original_hash=hashlib.sha256(
-                original.encode("utf-8")
-            ).hexdigest(),
-            updated_hash=hashlib.sha256(
-                updated.encode("utf-8")
-            ).hexdigest(),
+            original_hash=hashlib.sha256(original.encode("utf-8")).hexdigest(),
+            updated_hash=hashlib.sha256(updated.encode("utf-8")).hexdigest(),
             metadata={
                 "action": action,
                 "new_file": not target.exists(),
@@ -105,14 +100,10 @@ class PatchEngine:
     ):
 
         if not self.validate(patch):
-            raise RuntimeError(
-                "Patch validation failed."
-            )
+            raise RuntimeError("Patch validation failed.")
 
         if not self.compile(patch):
-            raise RuntimeError(
-                "Patch compilation failed."
-            )
+            raise RuntimeError("Patch compilation failed.")
 
         Path(patch.path).parent.mkdir(
             parents=True,

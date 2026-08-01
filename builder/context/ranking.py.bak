@@ -1,0 +1,74 @@
+from __future__ import annotations
+
+from dataclasses import dataclass
+from pathlib import Path
+
+
+@dataclass(slots=True)
+class RankedFile:
+    path: str
+    score: float
+
+
+class ContextRankingEngine:
+    PATH_WEIGHT = 10.0
+    CONTENT_WEIGHT = 1.0
+    NAME_WEIGHT = 20.0
+
+    def rank(
+        self,
+        workspace: str,
+        objective: str,
+    ) -> list[RankedFile]:
+
+        root = Path(workspace)
+
+        words = {
+            w.lower()
+            for w in (
+                objective.replace("/", " ").replace("_", " ").replace("-", " ").split()
+            )
+            if len(w) > 2
+        }
+
+        ranked = []
+
+        for file in root.rglob("*.py"):
+            try:
+                text = file.read_text(
+                    encoding="utf-8",
+                    errors="ignore",
+                )
+            except Exception:
+                continue
+
+            rel = str(file.relative_to(root))
+
+            score = 0.0
+
+            lower_path = rel.lower()
+            lower_name = file.stem.lower()
+            lower_text = text.lower()
+
+            for word in words:
+                score += lower_path.count(word) * self.PATH_WEIGHT
+                score += lower_name.count(word) * self.NAME_WEIGHT
+                score += lower_text.count(word) * self.CONTENT_WEIGHT
+
+            if score:
+                ranked.append(
+                    RankedFile(
+                        path=rel,
+                        score=score,
+                    )
+                )
+
+        ranked.sort(
+            key=lambda r: r.score,
+            reverse=True,
+        )
+
+        return ranked
+
+
+engine = ContextRankingEngine()

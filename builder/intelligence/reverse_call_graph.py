@@ -4,7 +4,6 @@ from .call_graph import call_graph_builder
 
 
 class ReverseCallGraphBuilder:
-
     def build(self, workspace: str):
 
         graph = call_graph_builder.build(workspace)

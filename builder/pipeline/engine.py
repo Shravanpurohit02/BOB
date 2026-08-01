@@ -1,20 +1,19 @@
+from builder.engineering.changeset import engine as ecs
+from builder.intelligence.impact import impact
+from builder.output import engine as output
+from builder.planning import analyzer
+from builder.reflection.semantic_engine import engine as semantic
+
+from .finalizer import finalizer
 from .models import (
     PipelineContext,
     PipelineResult,
 )
-
-from builder.engineering.changeset import engine as ecs
-from builder.reflection.semantic_engine import engine as semantic
-from builder.planning import analyzer
-from builder.intelligence.impact import impact
-from builder.output import engine as output
-from .validator import validator
 from .testing import testing_pipeline
-from .finalizer import finalizer
+from .validator import validator
 
 
 class PipelineEngine:
-
     def start(
         self,
         objective: str,

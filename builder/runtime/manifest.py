@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import asdict, dataclass, field
-from datetime import datetime, UTC
+from datetime import UTC, datetime
 from typing import Any
 
 
@@ -15,9 +15,7 @@ class RuntimeManifest:
 
     version: str = "1.0"
 
-    created_at: str = field(
-        default_factory=lambda: datetime.now(UTC).isoformat()
-    )
+    created_at: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
 
     workspace: str = ""
 
@@ -35,7 +33,6 @@ class RuntimeManifest:
     ) -> None:
 
         for key, value in values.items():
-
             if hasattr(self, key):
                 setattr(self, key, value)
             else:
@@ -51,17 +48,14 @@ class RuntimeManifest:
     def from_dict(
         cls,
         data: dict[str, Any],
-    ) -> "RuntimeManifest":
+    ) -> RuntimeManifest:
 
         manifest = cls()
 
         for key, value in data.items():
-
             if hasattr(manifest, key):
                 setattr(manifest, key, value)
             else:
                 manifest.metadata[key] = value
 
         return manifest
-
-

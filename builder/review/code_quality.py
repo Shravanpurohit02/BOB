@@ -2,7 +2,6 @@ import ast
 
 
 class CodeQualityAnalyzer:
-
     def analyze(
         self,
         source,
@@ -19,21 +18,16 @@ class CodeQualityAnalyzer:
         }
 
         for node in ast.walk(tree):
-
             if isinstance(node, ast.FunctionDef):
-
                 report["functions"] += 1
 
                 body = len(node.body)
 
                 if body > 20:
                     report["long_functions"] += 1
-                    report["issues"].append(
-                        f"Long function: {node.name}"
-                    )
+                    report["issues"].append(f"Long function: {node.name}")
 
             elif isinstance(node, ast.ClassDef):
-
                 report["classes"] += 1
 
             elif isinstance(
@@ -45,17 +39,13 @@ class CodeQualityAnalyzer:
                     ast.Try,
                 ),
             ):
-
                 depth = len(getattr(node, "body", []))
 
                 if depth > 5:
                     report["nested_blocks"] += 1
 
         report["score"] = max(
-            0,
-            100
-            - report["long_functions"] * 10
-            - report["nested_blocks"] * 5
+            0, 100 - report["long_functions"] * 10 - report["nested_blocks"] * 5
         )
 
         return report
@@ -65,10 +55,7 @@ class CodeQualityAnalyzer:
         report,
     ):
 
-        return (
-            report["score"] >= 80
-            and report["long_functions"] == 0
-        )
+        return report["score"] >= 80 and report["long_functions"] == 0
 
 
 engine = CodeQualityAnalyzer()

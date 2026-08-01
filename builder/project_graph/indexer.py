@@ -20,13 +20,9 @@ class ProjectGraphIndexer:
 
         modules = ast_symbols.build(workspace)
 
-        paths = {
-            module.name: module.path
-            for module in modules
-        }
+        paths = {module.name: module.path for module in modules}
 
         for module in modules:
-
             node = ProjectNode(
                 path=module.path,
                 imports=sorted(module.imports),
@@ -36,9 +32,7 @@ class ProjectGraphIndexer:
             database.add_node(node)
 
         for module in modules:
-
             for imported in module.imports:
-
                 target = paths.get(imported)
 
                 if target is None:
@@ -59,19 +53,14 @@ class ProjectGraphIndexer:
         workspace: str,
     ):
 
-        return self.build(
-            workspace
-        ).all_nodes()
+        return self.build(workspace).all_nodes()
 
     def edges(
         self,
         workspace: str,
     ):
 
-        return self.build(
-            workspace
-        ).all_edges()
+        return self.build(workspace).all_edges()
 
 
 indexer = ProjectGraphIndexer()
-

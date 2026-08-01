@@ -4,7 +4,6 @@ from .engine import engine
 
 
 class SnapshotManager:
-
     def create(
         self,
         **kwargs,
@@ -76,7 +75,6 @@ class SnapshotManager:
             snapshot,
         )
 
-
     def verify(
         self,
         snapshot,
@@ -91,16 +89,13 @@ class SnapshotManager:
             default=str,
         ).encode("utf-8")
 
-        digest = hashlib.sha256(
-            payload
-        ).hexdigest()
+        digest = hashlib.sha256(payload).hexdigest()
 
         expected = snapshot.metadata.get(
             "sha256",
         )
 
         if expected is None:
-
             snapshot.metadata["sha256"] = digest
 
             engine.save(snapshot)
@@ -115,7 +110,6 @@ class SnapshotManager:
             "created": False,
         }
 
-
     def acquire_lock(
         self,
         snapshot,
@@ -126,9 +120,7 @@ class SnapshotManager:
 
         snapshot.metadata["locked"] = True
 
-        snapshot.metadata["lock_owner"] = (
-            snapshot.execution_id
-        )
+        snapshot.metadata["lock_owner"] = snapshot.execution_id
 
         engine.save(snapshot)
 

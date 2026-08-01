@@ -1,8 +1,8 @@
+from typing import ClassVar
 from builder.autonomous.task import AutonomousTask
 
 
 class Planner:
-
     DEFAULT_PHASES = [
         "planning",
         "execution",
@@ -21,9 +21,7 @@ class Planner:
             objective=objective,
         )
 
-        task.phases.extend(
-            self.DEFAULT_PHASES
-        )
+        task.phases.extend(self.DEFAULT_PHASES)
 
         return task
 

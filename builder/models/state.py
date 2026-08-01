@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from datetime import datetime, UTC
+from datetime import UTC, datetime
 from typing import Any
 from uuid import uuid4
 
@@ -35,7 +35,7 @@ class BuilderState:
         }
 
     @classmethod
-    def from_dict(cls, data: dict[str, Any]) -> "BuilderState":
+    def from_dict(cls, data: dict[str, Any]) -> BuilderState:
         return cls(
             id=data["id"],
             created_at=data["created_at"],

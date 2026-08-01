@@ -1,7 +1,7 @@
 from builder.models.service import Service
 
-class ServiceContainer:
 
+class ServiceContainer:
     def __init__(self):
         self._services = {}
 
@@ -23,5 +23,6 @@ class ServiceContainer:
 
     def all(self):
         return list(self._services.values())
+
 
 container = ServiceContainer()

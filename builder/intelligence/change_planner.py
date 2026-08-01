@@ -22,7 +22,6 @@ class ChangePlan:
 
 
 class ChangePlanner:
-
     def build(self, workspace: str):
         engineering_context_builder.build(workspace)
 
@@ -34,7 +33,6 @@ class ChangePlanner:
         risks = []
 
         for impact in ctx.impacts:
-
             risks.append(impact["risk"])
             modules.update(impact["affected_modules"])
 
@@ -50,17 +48,11 @@ class ChangePlanner:
         return ChangePlan(
             query=query,
             risk=risk,
-
             resolved_files=list(ctx.resolved_files),
-
             resolved_symbols=list(ctx.resolved_symbols),
-
             related_symbols=list(ctx.related_symbols),
-
             impacts=list(ctx.impacts),
-
             modules=sorted(modules),
-
             steps=[
                 "Resolve files",
                 "Resolve symbols",

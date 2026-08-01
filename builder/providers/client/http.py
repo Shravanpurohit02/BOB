@@ -2,7 +2,6 @@ import httpx
 
 
 class HTTPClient:
-
     def __init__(self, runtime, timeout: float = 120.0):
 
         self.runtime = runtime
@@ -32,7 +31,6 @@ class HTTPClient:
     def post(self, url, payload):
 
         try:
-
             r = self.client.post(
                 url,
                 json=payload,
@@ -49,7 +47,6 @@ class HTTPClient:
             return r
 
         except Exception as e:
-
             print(type(e).__name__, e)
 
             return httpx.Response(

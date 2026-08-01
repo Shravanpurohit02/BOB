@@ -2,7 +2,6 @@ from .qualified_symbols import qualified_symbol_indexer
 
 
 class SemanticSearch:
-
     def __init__(self):
         self.index = None
 
@@ -15,7 +14,6 @@ class SemanticSearch:
         scored = []
 
         for symbol in self.index.symbols:
-
             score = 0
 
             sid = symbol.id.lower()

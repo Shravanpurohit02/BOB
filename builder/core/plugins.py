@@ -1,7 +1,7 @@
 from builder.models.plugin import Plugin
 
-class PluginRegistry:
 
+class PluginRegistry:
     def __init__(self):
         self._plugins = {}
 
@@ -13,5 +13,6 @@ class PluginRegistry:
 
     def all(self):
         return list(self._plugins.values())
+
 
 registry = PluginRegistry()

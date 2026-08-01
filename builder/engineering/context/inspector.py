@@ -4,7 +4,6 @@ from .engine import engine
 
 
 class ContextInspector:
-
     def inspect(
         self,
         objective: str,
@@ -19,7 +18,6 @@ class ContextInspector:
         root = Path(workspace)
 
         for file in root.rglob("*.py"):
-
             engine.add_file(
                 ctx,
                 str(file.relative_to(root)),
@@ -27,9 +25,7 @@ class ContextInspector:
 
             engine.add_module(
                 ctx,
-                ".".join(
-                    file.relative_to(root).with_suffix("").parts
-                ),
+                ".".join(file.relative_to(root).with_suffix("").parts),
             )
 
         return ctx

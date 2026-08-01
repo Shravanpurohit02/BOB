@@ -90,7 +90,5 @@ class Project:
     def from_dict(
         cls,
         data: dict[str, Any],
-    ) -> "Project":
+    ) -> Project:
         return cls(**data)
-
-

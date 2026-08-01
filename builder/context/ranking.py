@@ -1,7 +1,44 @@
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass
 from pathlib import Path
+
+from builder.repository import index
+
+STOP_WORDS = {
+    "a",
+    "an",
+    "and",
+    "are",
+    "be",
+    "by",
+    "do",
+    "exactly",
+    "file",
+    "files",
+    "first",
+    "for",
+    "how",
+    "in",
+    "is",
+    "it",
+    "its",
+    "name",
+    "of",
+    "on",
+    "quote",
+    "repository",
+    "show",
+    "that",
+    "the",
+    "this",
+    "to",
+    "what",
+    "where",
+    "which",
+    "with",
+}
 
 
 @dataclass(slots=True)
@@ -11,10 +48,16 @@ class RankedFile:
 
 
 class ContextRankingEngine:
+    PATH_WEIGHT = 15.0
+    NAME_WEIGHT = 30.0
+    CONTENT_WEIGHT = 2.0
 
-    PATH_WEIGHT = 10.0
-    CONTENT_WEIGHT = 1.0
-    NAME_WEIGHT = 20.0
+    def _tokens(self, text: str) -> set[str]:
+        return {
+            token
+            for token in re.findall(r"[A-Za-z_][A-Za-z0-9_]*", text.lower())
+            if token not in STOP_WORDS and len(token) > 1
+        }
 
     def rank(
         self,
@@ -22,58 +65,59 @@ class ContextRankingEngine:
         objective: str,
     ) -> list[RankedFile]:
 
-        root = Path(workspace)
+        query = self._tokens(objective)
 
-        words = {
-            w.lower()
-            for w in (
-                objective.replace("/", " ")
-                .replace("_", " ")
-                .replace("-", " ")
-                .split()
-            )
-            if len(w) > 2
-        }
+        ranked: list[RankedFile] = []
 
-        ranked = []
+        for item in index.files(workspace):
 
-        for file in root.rglob("*.py"):
-
-            try:
-                text = file.read_text(
-                    encoding="utf-8",
-                    errors="ignore",
-                )
-            except Exception:
+            if not item.is_python:
                 continue
-
-            rel = str(file.relative_to(root))
 
             score = 0.0
 
-            lower_path = rel.lower()
-            lower_name = file.stem.lower()
-            lower_text = text.lower()
+            path_lower = item.path.lower()
+            stem_lower = Path(item.path).stem.lower()
 
-            for word in words:
-                score += lower_path.count(word) * self.PATH_WEIGHT
-                score += lower_name.count(word) * self.NAME_WEIGHT
-                score += lower_text.count(word) * self.CONTENT_WEIGHT
+            for token in query:
+                score += path_lower.count(token) * self.PATH_WEIGHT
+                score += stem_lower.count(token) * self.NAME_WEIGHT
 
-            if score:
-                ranked.append(
-                    RankedFile(
-                        path=rel,
-                        score=score,
+            try:
+                text = (
+                    (Path(workspace) / item.path)
+                    .read_text(
+                        encoding="utf-8",
+                        errors="ignore",
                     )
+                    .lower()
                 )
 
+                for token in query:
+                    score += text.count(token) * self.CONTENT_WEIGHT
+
+            except (OSError, UnicodeDecodeError):
+                continue
+
+            ranked.append(
+                RankedFile(
+                    path=item.path,
+                    score=score,
+                )
+            )
+
         ranked.sort(
-            key=lambda r: r.score,
+            key=lambda r: (
+                r.score,
+                r.path,
+            ),
             reverse=True,
         )
 
-        return ranked
+        if ranked and ranked[0].score == 0:
+            return ranked[:20]
+
+        return [r for r in ranked if r.score > 0]
 
 
 engine = ContextRankingEngine()

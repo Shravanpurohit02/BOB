@@ -7,7 +7,7 @@ from builder.runtime.runtime import Runtime
 __all__ = [
     "Runtime",
     "RuntimeManifest",
+    "introspection",
     "loader",
     "registry",
-    "introspection",
 ]

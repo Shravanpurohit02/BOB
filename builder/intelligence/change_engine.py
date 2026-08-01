@@ -19,7 +19,6 @@ class ChangeEngineResult:
 
 
 class ChangeEngine:
-
     def build(self, workspace: str):
         change_executor.build(workspace)
 
@@ -38,7 +37,9 @@ class ChangeEngine:
                     order=operation.order,
                     file=operation.file,
                     status=operation.status,
-                    message="Ready for edit" if operation.status == "ready" else "Missing file",
+                    message="Ready for edit"
+                    if operation.status == "ready"
+                    else "Missing file",
                 )
             )
 

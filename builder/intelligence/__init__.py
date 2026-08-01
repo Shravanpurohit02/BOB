@@ -2,13 +2,13 @@
 Builder Intelligence subsystem.
 """
 
-from .symbol_indexer import indexer
 from .query import query
+from .symbol_indexer import indexer
 from .symbols import Symbol, SymbolIndex
 
 __all__ = [
-    "indexer",
-    "query",
     "Symbol",
     "SymbolIndex",
+    "indexer",
+    "query",
 ]

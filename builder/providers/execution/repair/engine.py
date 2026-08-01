@@ -5,7 +5,6 @@ import re
 
 
 class RepairEngine:
-
     _FENCE = re.compile(r"^```(?:json)?\s*|\s*```$", re.MULTILINE)
     _THINK = re.compile(
         r"<think>.*?</think>",
@@ -39,7 +38,6 @@ class RepairEngine:
         depth = 0
 
         for i in range(start, len(text)):
-
             c = text[i]
 
             if c == "{":
@@ -49,7 +47,7 @@ class RepairEngine:
                 depth -= 1
 
                 if depth == 0:
-                    return text[start:i + 1]
+                    return text[start : i + 1]
 
         return text[start:]
 

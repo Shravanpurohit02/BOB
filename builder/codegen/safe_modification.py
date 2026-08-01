@@ -2,15 +2,12 @@ import hashlib
 
 
 class SafeModificationEngine:
-
     def fingerprint(
         self,
         source,
     ):
 
-        return hashlib.sha256(
-            source.encode("utf-8")
-        ).hexdigest()
+        return hashlib.sha256(source.encode("utf-8")).hexdigest()
 
     def create_patch(
         self,
@@ -31,10 +28,7 @@ class SafeModificationEngine:
         patch,
     ):
 
-        return (
-            patch["changed"]
-            and patch["before"] != patch["after"]
-        )
+        return patch["changed"] and patch["before"] != patch["after"]
 
     def apply(
         self,
@@ -42,9 +36,7 @@ class SafeModificationEngine:
     ):
 
         if not self.validate(patch):
-            raise ValueError(
-                "Invalid patch."
-            )
+            raise ValueError("Invalid patch.")
 
         return patch["updated"]
 

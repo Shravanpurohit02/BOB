@@ -5,13 +5,12 @@ from builder.self_improvement.planner import planner
 
 
 class SelfImprovementResult:
-
     __slots__ = (
-        "success",
         "elapsed",
-        "issues",
         "improvements",
+        "issues",
         "review_tasks",
+        "success",
     )
 
     def __init__(self):
@@ -23,7 +22,6 @@ class SelfImprovementResult:
 
 
 class SelfImprovementEngine:
-
     def inspect(
         self,
         workspace: str,
@@ -55,14 +53,9 @@ class SelfImprovementEngine:
         result.improvements = improvements
 
         for improvement in improvements:
+            task = review_engine.submit(improvement)
 
-            task = review_engine.submit(
-                improvement
-            )
-
-            result.review_tasks.append(
-                task
-            )
+            result.review_tasks.append(task)
 
         result.success = True
 

@@ -8,7 +8,6 @@ from builder.codegen.parser.markdown import parser as markdown_parser
 
 
 class Extractor:
-
     SCHEMA = "vidhi-builder/v1"
 
     def artifacts(self, response):

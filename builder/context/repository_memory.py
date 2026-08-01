@@ -3,13 +3,9 @@ from pathlib import Path
 
 
 class RepositoryMemory:
-
     def __init__(self):
 
-        self.root = (
-            Path(".builder")
-            / "memory"
-        )
+        self.root = Path(".builder") / "memory"
 
         self.root.mkdir(
             parents=True,
@@ -21,12 +17,7 @@ class RepositoryMemory:
         workspace,
     ):
 
-        name = (
-            workspace
-            .replace("/", "_")
-            .replace("\\", "_")
-            .replace(":", "_")
-        )
+        name = workspace.replace("/", "_").replace("\\", "_").replace(":", "_")
 
         return self.root / f"{name}.json"
 

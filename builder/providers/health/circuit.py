@@ -14,7 +14,6 @@ class CircuitState(Enum):
 
 @dataclass(slots=True)
 class Circuit:
-
     state: CircuitState = CircuitState.CLOSED
 
     consecutive_failures: int = 0
@@ -25,7 +24,6 @@ class Circuit:
 
 
 class CircuitBreaker:
-
     FAILURE_THRESHOLD = 3
 
     def __init__(self):
@@ -37,9 +35,7 @@ class CircuitBreaker:
     def circuit(self, provider):
 
         with self._lock:
-
             if provider not in self._circuits:
-
                 self._circuits[provider] = Circuit()
 
             return self._circuits[provider]
@@ -55,7 +51,6 @@ class CircuitBreaker:
             return True
 
         if monotonic() - c.opened_at >= c.cooldown:
-
             c.state = CircuitState.HALF_OPEN
 
             return True
@@ -77,7 +72,6 @@ class CircuitBreaker:
         c.consecutive_failures += 1
 
         if c.consecutive_failures >= self.FAILURE_THRESHOLD:
-
             c.state = CircuitState.OPEN
 
             c.opened_at = monotonic()

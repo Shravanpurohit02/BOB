@@ -19,7 +19,6 @@ class EditPlan:
 
 
 class EditPlanner:
-
     def build(self, workspace: str):
         self.workspace = Path(workspace)
         change_scope_analyzer.build(workspace)
@@ -32,7 +31,6 @@ class EditPlanner:
         missing = []
 
         for file in scope.resolved_files:
-
             path = self.workspace / file
 
             if path.exists():
@@ -43,12 +41,10 @@ class EditPlanner:
         return EditPlan(
             query=query,
             risk=scope.risk,
-
             resolved_files=list(scope.resolved_files),
             resolved_symbols=list(scope.resolved_symbols),
             related_symbols=list(scope.related_symbols),
             impacts=list(scope.impacts),
-
             editable_files=editable,
             missing_files=missing,
         )

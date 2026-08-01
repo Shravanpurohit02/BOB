@@ -62,9 +62,7 @@ class RepositoryDatabase:
         self,
     ) -> list[str]:
 
-        return sorted(
-            self._files.keys()
-        )
+        return sorted(self._files.keys())
 
     def count(
         self,
@@ -74,4 +72,3 @@ class RepositoryDatabase:
 
 
 database = RepositoryDatabase()
-

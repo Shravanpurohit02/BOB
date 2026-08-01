@@ -14,7 +14,6 @@ class TransformResult:
 
 
 class _ReplaceNode(ast.NodeTransformer):
-
     def __init__(self, target_type, target_name, replacement):
         self.target_type = target_type
         self.target_name = target_name
@@ -22,35 +21,25 @@ class _ReplaceNode(ast.NodeTransformer):
         self.replaced = False
 
     def visit_ClassDef(self, node):
-        if (
-            self.target_type is ast.ClassDef
-            and node.name == self.target_name
-        ):
+        if self.target_type is ast.ClassDef and node.name == self.target_name:
             self.replaced = True
             return self.replacement
         return self.generic_visit(node)
 
     def visit_FunctionDef(self, node):
-        if (
-            self.target_type is ast.FunctionDef
-            and node.name == self.target_name
-        ):
+        if self.target_type is ast.FunctionDef and node.name == self.target_name:
             self.replaced = True
             return self.replacement
         return self.generic_visit(node)
 
     def visit_AsyncFunctionDef(self, node):
-        if (
-            self.target_type is ast.AsyncFunctionDef
-            and node.name == self.target_name
-        ):
+        if self.target_type is ast.AsyncFunctionDef and node.name == self.target_name:
             self.replaced = True
             return self.replacement
         return self.generic_visit(node)
 
 
 class ASTTransformer:
-
     def replace(
         self,
         file,
@@ -68,9 +57,7 @@ class ASTTransformer:
 
         tree = ast.parse(original)
 
-        replacement_tree = ast.parse(
-            replacement_source
-        )
+        replacement_tree = ast.parse(replacement_source)
 
         replacement = replacement_tree.body[0]
 

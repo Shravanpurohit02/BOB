@@ -2,15 +2,15 @@ import re
 from pathlib import Path
 
 from builder.context.selector import selector
-from builder.planning.task_decomposer import engine as task_decomposer
-from builder.execution.task_queue import engine as task_queue, QueueTask
+from builder.execution.task_queue import QueueTask
+from builder.execution.task_queue import engine as task_queue
 from builder.intelligence.impact import impact
+from builder.planning.task_decomposer import engine as task_decomposer
 
 from .engine import engine
 
 
 class PlanAnalyzer:
-
     VERBS = (
         "delete",
         "modify",
@@ -26,7 +26,6 @@ class PlanAnalyzer:
         text = objective.lower()
 
         for verb in self.VERBS:
-
             m = re.search(
                 rf"{verb}\s+([A-Za-z0-9_./\\-]+\.[A-Za-z0-9_]+)",
                 text,
@@ -92,13 +91,9 @@ class PlanAnalyzer:
         added = set()
 
         for module in report.validation_scope:
-
-            filename = (
-                module.replace(".", "/") + ".py"
-            )
+            filename = module.replace(".", "/") + ".py"
 
             if filename not in added:
-
                 engine.add_task(
                     job,
                     title=filename,
@@ -108,15 +103,17 @@ class PlanAnalyzer:
                 added.add(filename)
 
         if not added:
-
             for module in selector.select(
                 workspace,
                 objective,
             ):
+                workspace_path = Path(workspace).resolve()
+                module_path = Path(module.path).resolve()
 
-                path = Path(module.path).relative_to(
-                    Path(workspace)
-                ).as_posix()
+                try:
+                    path = module_path.relative_to(workspace_path).as_posix()
+                except ValueError:
+                    path = module_path.name
 
                 if path in added:
                     continue

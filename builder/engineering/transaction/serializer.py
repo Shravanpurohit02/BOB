@@ -6,23 +6,16 @@ from pathlib import Path
 
 
 class TransactionSerializer:
-
     def _convert(self, obj):
 
         if is_dataclass(obj):
             return self._convert(asdict(obj))
 
         if isinstance(obj, dict):
-            return {
-                k: self._convert(v)
-                for k, v in obj.items()
-            }
+            return {k: self._convert(v) for k, v in obj.items()}
 
         if isinstance(obj, (list, tuple)):
-            return [
-                self._convert(v)
-                for v in obj
-            ]
+            return [self._convert(v) for v in obj]
 
         if isinstance(obj, Path):
             return str(obj)

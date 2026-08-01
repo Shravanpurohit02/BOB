@@ -28,9 +28,7 @@ class ResponseNormalizer:
         try:
             if api_type == "openai":
                 text = (
-                    data.get("choices", [{}])[0]
-                    .get("message", {})
-                    .get("content", "")
+                    data.get("choices", [{}])[0].get("message", {}).get("content", "")
                 )
 
             elif api_type == "anthropic":
