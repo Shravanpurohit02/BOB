@@ -26,6 +26,9 @@ class PatchEngine:
         if action == "create" and target.exists():
             raise RuntimeError("create_target_exists")
 
+        if action == "delete" and not target.exists():
+            raise RuntimeError("delete_target_missing")
+
         if target.exists():
             original = target.read_text(
                 encoding="utf-8",
@@ -33,6 +36,8 @@ class PatchEngine:
             )
         else:
             original = ""
+
+        updated = "" if action == "delete" else updated
 
         return Patch(
             path=str(target.resolve()),
@@ -74,7 +79,7 @@ class PatchEngine:
             patch.compiled = True
             return True
 
-        fd, tmp = tempfile.mkstemp(suffix=".py")
+        _fd, tmp = tempfile.mkstemp(suffix=".py")
         Path(tmp).write_text(
             patch.updated,
             encoding="utf-8",
@@ -119,12 +124,21 @@ class PatchEngine:
                     transaction.transaction,
                     patch.path,
                 )
-            except Exception:
-                pass
+            except OSError as exc:
+                transactions.add_event(
+                    transaction.transaction,
+                    "ERROR",
+                    "patch",
+                    str(exc),
+                )
 
         applier.apply(
             patch.path,
             patch.updated,
+            action=patch.metadata.get(
+                "action",
+                "modify",
+            ),
         )
 
         patch.committed = True
@@ -144,6 +158,7 @@ class PatchEngine:
             applier.apply(
                 patch.path,
                 patch.original,
+                action="modify",
             )
 
         patch.rolled_back = True
@@ -157,6 +172,7 @@ class PatchEngine:
         path: str,
         updated: str,
         action: str = "modify",
+        transaction=None,
     ):
         patch = self.create(
             path=path,
@@ -166,6 +182,7 @@ class PatchEngine:
 
         self.commit(
             patch,
+            transaction=transaction,
         )
 
         return patch
