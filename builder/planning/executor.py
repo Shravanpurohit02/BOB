@@ -279,10 +279,9 @@ class PlanExecutor:
             transaction is not None
             and getattr(transaction, "transaction", None) is not None
         ):
-            try:
-                plan.metadata["transaction"] = transaction.id
-            except Exception:
-                pass
+            transaction_id = getattr(transaction, "id", None)
+            if transaction_id:
+                plan.metadata["transaction"] = transaction_id
 
         for milestone in plan.milestones:
             for job in milestone.jobs:

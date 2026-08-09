@@ -1,11 +1,5 @@
 [
   {
-    "target": "builder/execution/executor.py",
-    "issue": "Pass statement found",
-    "proposal": "Resolve: Pass statement found",
-    "priority": 1
-  },
-  {
     "target": "builder/execution/timeout.py",
     "issue": "Pass statement found",
     "proposal": "Resolve: Pass statement found",
@@ -24,25 +18,13 @@
     "priority": 1
   },
   {
-    "target": "builder/ast/symbols.py",
-    "issue": "Pass statement found",
-    "proposal": "Resolve: Pass statement found",
-    "priority": 1
-  },
-  {
     "target": "builder/ast/cache.py",
     "issue": "Pass statement found",
     "proposal": "Resolve: Pass statement found",
     "priority": 1
   },
   {
-    "target": "builder/patch/engine.py",
-    "issue": "Pass statement found",
-    "proposal": "Resolve: Pass statement found",
-    "priority": 1
-  },
-  {
-    "target": "builder/validation/engine.py",
+    "target": "builder/ast/module_indexer.py",
     "issue": "Pass statement found",
     "proposal": "Resolve: Pass statement found",
     "priority": 1
@@ -66,19 +48,7 @@
     "priority": 1
   },
   {
-    "target": "builder/planning/executor.py",
-    "issue": "Pass statement found",
-    "proposal": "Resolve: Pass statement found",
-    "priority": 1
-  },
-  {
     "target": "builder/output/engine.py",
-    "issue": "Pass statement found",
-    "proposal": "Resolve: Pass statement found",
-    "priority": 1
-  },
-  {
-    "target": "builder/review/engine.py",
     "issue": "Pass statement found",
     "proposal": "Resolve: Pass statement found",
     "priority": 1

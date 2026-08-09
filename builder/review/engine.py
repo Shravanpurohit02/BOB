@@ -105,11 +105,10 @@ class ReviewEngine:
             transaction is not None
             and getattr(transaction, "transaction", None) is not None
         ):
-            try:
-                task.metadata["transaction"] = transaction.id
-                storage.save(storage.load())
-            except Exception:
-                pass
+            transaction_id = getattr(transaction, "id", None)
+            if transaction_id:
+                task.metadata["transaction"] = transaction_id
+                storage.save(task)
 
         return task
 

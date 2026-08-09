@@ -26,14 +26,14 @@ class Executor:
 
     def execute(self, context):
 
-        try:
+        queue = getattr(context, "task_queue", None)
+
+        if queue is not None:
             context.metadata["queue"] = {
-                "total": len(task_queue.tasks),
-                "pending": len(task_queue.pending()),
-                "ready": len(task_queue.ready()),
+                "total": len(getattr(queue, "tasks", [])),
+                "pending": len(queue.pending()),
+                "ready": len(queue.ready()),
             }
-        except Exception:
-            pass
 
         workspace = getattr(
             context,
@@ -198,9 +198,13 @@ class Executor:
             plan = analyzer.analyze(
                 objective=objective,
                 workspace=workspace,
+                transaction=transaction,
             )
 
-            planning_executor.execute(plan)
+            planning_executor.execute(
+                plan,
+                transaction=transaction,
+            )
 
             result.completed_stages.append("planning")
 
