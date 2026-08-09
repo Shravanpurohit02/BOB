@@ -1,5 +1,5 @@
-from __future__ import annotations
 
+from __future__ import annotations
 from builder.providers.runtime.loader import loader
 from builder.providers.runtime.router import router
 

@@ -1,3 +1,4 @@
+from builder.providers.runtime.request_builder import request_builder
 from dataclasses import dataclass, field
 
 from builder.providers.chat.messages import Message

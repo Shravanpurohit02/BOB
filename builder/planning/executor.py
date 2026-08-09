@@ -36,7 +36,7 @@ class ExecutionAnalytics:
 
 
 @dataclass(slots=True)
-class ExecutionResult:
+class PlanExecutionResult:
     total: int = 0
     completed: int = 0
     failed: int = 0
@@ -270,7 +270,7 @@ class PlanExecutor:
 
         started = perf_counter()
 
-        result = ExecutionResult()
+        result = PlanExecutionResult()
 
         result.analytics.repository = self._repository_scope(
             plan,

@@ -1,6 +1,6 @@
+
+
 from __future__ import annotations
-
-
 class StreamingEngine:
     """
     Determines whether streaming should be enabled for a request.

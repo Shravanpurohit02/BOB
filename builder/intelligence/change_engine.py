@@ -22,28 +22,35 @@ class ChangeEngine:
     def build(self, workspace: str):
         change_executor.build(workspace)
 
-    def execute(self, query: str):
+
+    def execute(
+        self,
+        query: str,
+        *,
+        transaction=None,
+    ):
 
         plan = change_executor.create_plan(query)
+
+        report = change_executor.execute(
+            plan,
+            transaction=transaction,
+        )
 
         result = ChangeEngineResult(
             query=query,
             risk=plan.risk,
         )
 
-        for operation in plan.operations:
+        for operation in report.operations:
             result.completed.append(
                 ChangeResult(
                     order=operation.order,
                     file=operation.file,
-                    status=operation.status,
-                    message="Ready for edit"
-                    if operation.status == "ready"
-                    else "Missing file",
+                    status=operation.status.value,
+                    message=operation.message,
                 )
             )
 
         return result
-
-
 change_engine = ChangeEngine()

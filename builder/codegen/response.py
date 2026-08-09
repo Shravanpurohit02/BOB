@@ -1,4 +1,5 @@
 from dataclasses import dataclass, field
+from typing import Any
 
 from builder.codegen.artifacts import (
     GeneratedArtifact,
@@ -39,3 +40,13 @@ class CodeGenerationResponse:
     errors: list[str] = field(default_factory=list)
 
     elapsed: float = 0.0
+
+    #
+    # Production execution integration
+    #
+    # Populated by the orchestrator after generated artifacts
+    # have been adapted into engineering operations and executed.
+    #
+    execution: Any = None
+
+    artifact_adaptation: Any = None

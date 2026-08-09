@@ -3,7 +3,7 @@ from pathlib import Path
 from builder.ast.parser import parser
 
 
-class SymbolIndex:
+class ModuleIndexer:
     def build(self, workspace: str):
 
         modules = []
@@ -17,4 +17,4 @@ class SymbolIndex:
         return modules
 
 
-symbols = SymbolIndex()
+module_indexer = ModuleIndexer()

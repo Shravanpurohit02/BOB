@@ -94,7 +94,48 @@ class FileResolver:
 
         seen = set()
 
-        for token in self._tokens(query):
+        tokens = self._tokens(query)
+
+        filename_tokens = [
+            t for t in tokens
+            if "." in t
+        ]
+
+        if filename_tokens:
+
+            for token in filename_tokens:
+
+                for file in self.files.values():
+
+                    path = file["path"].lower()
+                    name = file["name"].lower()
+                    stem = file["stem"].lower()
+
+                    if (
+                        token == path
+                        or token == name
+                        or token == stem
+                    ):
+                        if path not in seen:
+                            seen.add(path)
+                            result.exact.append(file["path"])
+
+            if result.exact:
+                return result
+
+        for token in tokens:
+
+            if token in {
+                "builder",
+                "project",
+                "src",
+                "app",
+                "python",
+                "file",
+                "files",
+            }:
+                continue
+
             for file in self.files.values():
                 path = file["path"].lower()
                 name = file["name"].lower()
@@ -105,10 +146,18 @@ class FileResolver:
                         seen.add(path)
                         result.exact.append(file["path"])
 
-                elif token in path or token in name or token in stem:
-                    if path not in seen:
-                        seen.add(path)
-                        result.partial.append(file["path"])
+                else:
+
+                    parts = path.split("/")
+
+                    if (
+                        token == name
+                        or token == stem
+                        or token in parts
+                    ):
+                        if path not in seen:
+                            seen.add(path)
+                            result.partial.append(file["path"])
 
         return result
 

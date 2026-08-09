@@ -1,5 +1,5 @@
-from __future__ import annotations
 
+from __future__ import annotations
 from threading import Lock
 
 from builder.providers.health.models import ProviderHealth

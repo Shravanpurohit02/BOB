@@ -14,7 +14,6 @@ class ProviderLoader:
 
     def _search_paths(self):
         package_root = Path(__file__).resolve().parents[3]
-
         return [
             Path.cwd() / ".env",
             package_root / ".env",
@@ -24,7 +23,6 @@ class ProviderLoader:
         ]
 
     def load(self):
-
         values = {}
         self.loaded_files = []
 
@@ -33,59 +31,68 @@ class ProviderLoader:
                 values.update(dotenv_values(env_file))
                 self.loaded_files.append(str(env_file))
 
-        # Environment variables override .env values.
         values.update(os.environ)
 
-        registry.providers.clear()
+        registry._providers.clear()
 
-        for provider in PROVIDERS:
-            prefix = provider.env_prefix
+        for entry in PROVIDERS:
+            prefix = entry.env_prefix
 
-            if provider.name == "gemini":
+            if entry.name == "gemini":
                 api_key = (
-                    values.get("GEMINI_API_KEY") or values.get("GOOGLE_API_KEY") or ""
+                    values.get("GEMINI_API_KEY")
+                    or values.get("GOOGLE_API_KEY")
+                    or ""
                 ).strip()
 
                 base_url = (
                     values.get("GEMINI_BASE_URL")
                     or values.get("GOOGLE_BASE_URL")
-                    or provider.default_base_url
+                    or "https://generativelanguage.googleapis.com"
                 )
 
                 model = (
                     values.get("GEMINI_MODEL")
                     or values.get("GOOGLE_MODEL")
-                    or provider.default_model
+                    or "gemini-2.5-pro"
                 )
 
             else:
                 api_key = (
-                    values.get(f"{prefix}_API_KEY") or values.get(f"{prefix}_KEY") or ""
+                    values.get(f"{prefix}_API_KEY")
+                    or values.get(f"{prefix}_KEY")
+                    or ""
                 ).strip()
 
-                base_url = values.get(f"{prefix}_BASE_URL") or provider.default_base_url
+                base_url = (
+                    values.get(f"{prefix}_BASE_URL")
+                    or entry.default_base_url
+                )
 
-                model = values.get(f"{prefix}_MODEL") or provider.default_model
+                model = (
+                    values.get(f"{prefix}_MODEL")
+                    or entry.default_model
+                )
 
             registry.register(
                 ProviderRuntime(
-                    name=provider.name,
-                    display_name=provider.display_name,
-                    api_type=provider.api_type,
+                    name=entry.name,
                     api_key=api_key,
                     base_url=base_url,
                     model=model,
                     enabled=bool(api_key),
+                    display_name=entry.display_name,
+                    api_type=entry.api_type,
+                    free_tier=entry.free_tier,
+                    priority=entry.priority,
+                    supports_streaming=entry.supports_streaming,
+                    supports_tools=entry.supports_tools,
+                    supports_vision=entry.supports_vision,
+                    supports_reasoning=entry.supports_reasoning,
+                    supports_embeddings=entry.supports_embeddings,
+                    context_window=entry.context_window,
+                    max_output_tokens=entry.max_output_tokens,
                     healthy=bool(api_key),
-                    free_tier=provider.free_tier,
-                    priority=provider.priority,
-                    supports_streaming=provider.supports_streaming,
-                    supports_tools=provider.supports_tools,
-                    supports_vision=provider.supports_vision,
-                    supports_reasoning=provider.supports_reasoning,
-                    supports_embeddings=provider.supports_embeddings,
-                    context_window=provider.context_window,
-                    max_output_tokens=provider.max_output_tokens,
                 )
             )
 

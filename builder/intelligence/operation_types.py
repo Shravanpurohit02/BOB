@@ -10,6 +10,7 @@ class OperationType(str, Enum):
     RENAME_SYMBOL = "rename_symbol"
 
     CREATE_FILE = "create_file"
+    MODIFY_FILE = "modify_file"
     DELETE_FILE = "delete_file"
     RENAME_FILE = "rename_file"
     MOVE_FILE = "move_file"

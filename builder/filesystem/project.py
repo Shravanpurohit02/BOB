@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from builder.models.project import Project
+from builder.project.model import Project
 
 
 class ProjectScanner:
@@ -15,11 +15,8 @@ class ProjectScanner:
         git = root / ".git"
 
         project = Project(
-            root=root,
+            root=str(root),
             name=root.name,
-            detected=root.exists(),
-            pyproject=primary,
-            git=git if git.exists() else None,
         )
 
         return project

@@ -4,6 +4,13 @@ from dataclasses import dataclass, field
 from enum import Enum
 from time import perf_counter
 
+from builder.intelligence.handlers import (
+    HandlerContext,
+    HandlerStatus,
+    bootstrap_handlers,
+    registry as handler_registry,
+)
+
 from .operation_planner import operation_planner
 
 
@@ -20,13 +27,10 @@ class OperationStatus(str, Enum):
 @dataclass(slots=True)
 class EditOperation:
     order: int
-
     file: str
-
     operation: str
 
     symbols: list = field(default_factory=list)
-
     impacts: list = field(default_factory=list)
 
     status: OperationStatus = OperationStatus.PENDING
@@ -37,12 +41,13 @@ class EditOperation:
     started: float = 0.0
     finished: float = 0.0
 
+    message: str = ""
     error: str = ""
 
     metadata: dict = field(default_factory=dict)
 
     @property
-    def elapsed(self):
+    def elapsed(self) -> float:
         if self.started == 0 or self.finished == 0:
             return 0.0
         return round(
@@ -56,7 +61,9 @@ class ChangeExecutionPlan:
     query: str
     risk: str
 
-    operations: list[EditOperation] = field(default_factory=list)
+    operations: list[EditOperation] = field(
+        default_factory=list,
+    )
 
 
 @dataclass(slots=True)
@@ -71,23 +78,33 @@ class ExecutionReport:
 
     elapsed: float = 0.0
 
-    operations: list[EditOperation] = field(default_factory=list)
+    operations: list[EditOperation] = field(
+        default_factory=list,
+    )
 
 
 class ChangeExecutor:
+
     def __init__(self):
+
+        self.workspace = "."
         self._started = 0.0
 
     def build(
         self,
         workspace: str,
-    ):
+    ) -> None:
+
+        self.workspace = workspace
+
+        bootstrap_handlers()
+
         operation_planner.build(workspace)
 
     def create_plan(
         self,
         query: str,
-    ):
+    ) -> ChangeExecutionPlan:
 
         op_plan = operation_planner.plan(query)
 
@@ -114,10 +131,79 @@ class ChangeExecutor:
 
         return plan
 
+    def execute(
+        self,
+        plan: ChangeExecutionPlan,
+        *,
+        transaction=None,
+    ) -> ExecutionReport:
+
+        self._started = perf_counter()
+
+        context = HandlerContext(
+            workspace=self.workspace,
+            transaction=transaction,
+        )
+
+        for operation in plan.operations:
+
+            operation.started = perf_counter()
+            operation.status = OperationStatus.RUNNING
+
+            try:
+
+                handler = handler_registry.get(
+                    operation.operation,
+                )
+
+                handler_metadata = dict(
+                    operation.metadata
+                )
+
+                # ChangeExecutor is the production write boundary.
+                # Handlers may default to preview mode, but an
+                # operation reaching this executor has explicitly
+                # entered the execution phase and must be committed.
+                handler_metadata["write"] = True
+
+                result = handler.execute(
+                    {
+                        "file": operation.file,
+                        "symbols": operation.symbols,
+                        "metadata": handler_metadata,
+                    },
+                    context,
+                )
+
+                operation.patch_id = result.patch_id
+                operation.backup = result.backup
+                operation.message = result.message
+
+                if result.success:
+                    operation.status = (
+                        OperationStatus.COMPLETED
+                    )
+                else:
+                    operation.status = (
+                        OperationStatus.FAILED
+                    )
+                    operation.error = result.error
+
+            except Exception as exc:
+
+                operation.status = (
+                    OperationStatus.FAILED
+                )
+                operation.error = str(exc)
+
+            operation.finished = perf_counter()
+
+        return self.report(plan)
+
     def report(
         self,
         plan: ChangeExecutionPlan,
-    ):
+    ) -> ExecutionReport:
 
         report = ExecutionReport()
 
@@ -125,6 +211,7 @@ class ChangeExecutor:
         report.total = len(plan.operations)
 
         for op in plan.operations:
+
             if op.status is OperationStatus.COMPLETED:
                 report.completed += 1
 
@@ -137,7 +224,10 @@ class ChangeExecutor:
             elif op.status is OperationStatus.SKIPPED:
                 report.skipped += 1
 
-        report.success = report.completed == report.total and report.failed == 0
+        report.success = (
+            report.failed == 0
+            and report.completed == report.total
+        )
 
         report.elapsed = round(
             perf_counter() - self._started,
@@ -148,3 +238,11 @@ class ChangeExecutor:
 
 
 change_executor = ChangeExecutor()
+
+__all__ = (
+    "EditOperation",
+    "ChangeExecutionPlan",
+    "ExecutionReport",
+    "ChangeExecutor",
+    "change_executor",
+)

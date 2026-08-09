@@ -1,11 +1,16 @@
 from __future__ import annotations
 
+from collections.abc import Iterator
+
 from .base import BaseHandler
+from .exceptions import (
+    UnsupportedOperationError,
+)
 
 
 class HandlerRegistry:
     """
-    Registry of engineering operation handlers.
+    Production registry for engineering handlers.
     """
 
     def __init__(self) -> None:
@@ -14,8 +19,23 @@ class HandlerRegistry:
     def register(
         self,
         handler: BaseHandler,
-    ) -> None:
-        self._handlers[handler.operation] = handler
+    ) -> BaseHandler:
+
+        operation = handler.operation.strip()
+
+        if not operation:
+            raise ValueError(
+                "Handler.operation must not be empty."
+            )
+
+        if operation in self._handlers:
+            raise ValueError(
+                f"Handler already registered: {operation}"
+            )
+
+        self._handlers[operation] = handler
+
+        return handler
 
     def unregister(
         self,
@@ -27,7 +47,14 @@ class HandlerRegistry:
         self,
         operation: str,
     ) -> BaseHandler:
-        return self._handlers[operation]
+
+        try:
+            return self._handlers[operation]
+        except KeyError as exc:
+            raise UnsupportedOperationError(
+                f"Unknown handler: {operation}",
+                operation=operation,
+            ) from exc
 
     def has(
         self,
@@ -35,15 +62,37 @@ class HandlerRegistry:
     ) -> bool:
         return operation in self._handlers
 
-    def all(
-        self,
-    ) -> dict[str, BaseHandler]:
-        return dict(self._handlers)
-
-    def clear(
-        self,
-    ) -> None:
+    def clear(self) -> None:
         self._handlers.clear()
+
+    def operations(self) -> tuple[str, ...]:
+        return tuple(sorted(self._handlers))
+
+    def values(self) -> tuple[BaseHandler, ...]:
+        return tuple(
+            self._handlers[k]
+            for k in sorted(self._handlers)
+        )
+
+    def items(
+        self,
+    ) -> tuple[tuple[str, BaseHandler], ...]:
+        return tuple(
+            (k, self._handlers[k])
+            for k in sorted(self._handlers)
+        )
+
+    def __contains__(
+        self,
+        operation: str,
+    ) -> bool:
+        return operation in self._handlers
+
+    def __len__(self) -> int:
+        return len(self._handlers)
+
+    def __iter__(self) -> Iterator[BaseHandler]:
+        return iter(self.values())
 
 
 registry = HandlerRegistry()

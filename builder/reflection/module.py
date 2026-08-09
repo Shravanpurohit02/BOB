@@ -1,9 +1,3 @@
-from dataclasses import dataclass, field
-from uuid import uuid4
+from builder.ast.module import Module
 
-
-@dataclass(slots=True)
-class Module:
-    id: str = field(default_factory=lambda: uuid4().hex)
-    path: str = ""
-    name: str = ""
+__all__ = ["Module"]

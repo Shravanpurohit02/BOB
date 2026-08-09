@@ -2,7 +2,7 @@ import json
 from dataclasses import asdict
 from pathlib import Path
 
-from builder.models.event import Event
+from builder.events.models import Event
 
 EVENT_FILE = Path(".builder/state/events.json")
 

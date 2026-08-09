@@ -1,3 +1,4 @@
+from builder.providers.runtime.request_builder import request_builder
 from builder.providers.chat.request import ChatRequest
 from builder.providers.chat.response import ChatResponse
 from builder.providers.client import manager

@@ -3,7 +3,7 @@ from typing import ClassVar
 
 from collections import defaultdict
 
-from builder.ast.symbols import symbols as ast_symbols
+from builder.ast.module_indexer import module_indexer as ast_symbols
 
 
 class ReferenceIndex:

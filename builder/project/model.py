@@ -90,5 +90,21 @@ class Project:
     def from_dict(
         cls,
         data: dict[str, Any],
-    ) -> Project:
-        return cls(**data)
+    ) -> "Project":
+
+        allowed = {
+            "root",
+            "name",
+            "version",
+            "description",
+            "python_version",
+            "modules",
+            "packages",
+            "files",
+            "directories",
+            "metadata",
+        }
+
+        return cls(
+            **{k: v for k, v in data.items() if k in allowed}
+        )

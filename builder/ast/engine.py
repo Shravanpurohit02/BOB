@@ -4,7 +4,7 @@ from builder.ast.call_graph import call_graph
 from builder.ast.imports import imports
 from builder.ast.parser import parser
 from builder.ast.symbol_graph import symbol_graph
-from builder.ast.symbols import symbols
+from builder.ast.module_indexer import module_indexer
 
 
 class ASTEngine:
@@ -19,25 +19,25 @@ class ASTEngine:
         return parser.parse(path)
 
     def parse_workspace(self, workspace: str):
-        return symbols.build(workspace)
+        return module_indexer.build(workspace)
 
     def imports(self, workspace: str):
-        modules = symbols.build(workspace)
+        modules = module_indexer.build(workspace)
         return imports.build(modules)
 
     def reverse_imports(self, workspace: str):
-        modules = symbols.build(workspace)
+        modules = module_indexer.build(workspace)
         return imports.reverse(modules)
 
     def symbol_graph(self, workspace: str):
-        modules = symbols.build(workspace)
+        modules = module_indexer.build(workspace)
         return symbol_graph.build(modules)
 
     def call_graph(self, workspace: str):
         return call_graph.build(workspace)
 
     def analyze(self, workspace: str):
-        modules = symbols.build(workspace)
+        modules = module_indexer.build(workspace)
         return {
             "modules": modules,
             "imports": imports.build(modules),

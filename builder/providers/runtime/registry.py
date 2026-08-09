@@ -1,101 +1,81 @@
-from builder.providers.health import engine as health_engine
-from builder.providers.health.circuit import engine as circuit_engine
+from __future__ import annotations
+
+from builder.providers.runtime.config import ProviderRuntime
 
 
-class RuntimeRegistry:
+class ProviderRegistry:
     def __init__(self):
-        self.providers = {}
+        self._providers: dict[str, ProviderRuntime] = {}
 
-    #
-    # Existing API
-    #
+    def register(self, profile: ProviderProfile) -> ProviderRuntime:
+        self._providers[profile.name.lower()] = profile
+        return profile
 
-    def register(self, provider):
-        self.providers[provider.name] = provider
+    def get(self, provider: str) -> ProviderRuntime:
+        return self._providers[provider.lower()]
 
-    def get(self, name):
-        return self.providers.get(name)
+    def exists(self, provider: str) -> bool:
+        return provider.lower() in self._providers
 
-    def all(self):
-        return list(self.providers.values())
+    def providers(self) -> list[str]:
+        return sorted(self._providers)
 
-    #
-    # Capability Queries
-    #
+    def all(self) -> list[ProviderProfile]:
+        return sorted(
+            self._providers.values(),
+            key=lambda p: p.priority,
+        )
 
-    def enabled(self):
-        return [p for p in self.providers.values() if p.enabled]
+    def enabled(self) -> list[ProviderProfile]:
+        return [
+            p
+            for p in self.all()
+            if p.enabled
+        ]
 
-    def healthy(self):
-        return [p for p in self.enabled() if p.healthy]
+    def healthy(self) -> list[ProviderProfile]:
+        return [
+            p
+            for p in self.enabled()
+            if p.healthy
+        ]
 
-    def free(self):
-        return [p for p in self.enabled() if p.free_tier]
+    def free(self) -> list[ProviderProfile]:
+        return [
+            p
+            for p in self.enabled()
+            if p.free_tier
+        ]
 
-    def compatible(self, api_type):
-        return [p for p in self.enabled() if p.api_type == api_type]
-
-    def supports(self, capability):
-
-        attribute = f"supports_{capability}"
+    def supports(self, capability: str) -> list[ProviderProfile]:
+        key = f"supports_{capability}"
 
         return [
             p
             for p in self.enabled()
-            if getattr(
-                p,
-                attribute,
-                False,
-            )
+            if bool(getattr(p, key, False))
         ]
 
-    #
-    # Selection
-    #
+    def compatible(self, api_type: str) -> list[ProviderProfile]:
+        return [
+            p
+            for p in self.enabled()
+            if p.api_type == api_type
+        ]
 
-    def highest_priority(self):
+    def best_order(self) -> list[ProviderProfile]:
+        healthy = self.healthy()
+        if healthy:
+            return healthy
+        return self.enabled()
 
-        providers = sorted(
-            self.enabled(),
-            key=lambda p: p.priority,
-        )
-
+    def highest_priority(self) -> ProviderRuntime | None:
+        providers = self.enabled()
         return providers[0] if providers else None
 
-    def best(self):
-
-        providers = [p for p in self.healthy() if circuit_engine.allow(p.name)]
-
-        if not providers:
-            return None
-
-        ranking = {p.provider: p.score for p in health_engine.ranking()}
-
-        providers.sort(
-            key=lambda p: (
-                -ranking.get(p.name, 100.0),
-                p.priority,
-                not p.free_tier,
-            )
-        )
-
-        return providers[0]
-
-    def best_order(self):
-
-        providers = [p for p in self.healthy() if circuit_engine.allow(p.name)]
-
-        ranking = {p.provider: p.score for p in health_engine.ranking()}
-
-        providers.sort(
-            key=lambda p: (
-                -ranking.get(p.name, 100.0),
-                p.priority,
-                not p.free_tier,
-            )
-        )
-
-        return providers
+    def best(self) -> ProviderRuntime | None:
+        providers = self.best_order()
+        return providers[0] if providers else None
 
 
-registry = RuntimeRegistry()
+registry = ProviderRegistry()

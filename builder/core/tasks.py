@@ -4,7 +4,7 @@ from dataclasses import asdict
 from pathlib import Path
 
 from builder.autonomous_runtime import engine as runtime_engine
-from builder.models.task import Task
+from builder.planning.models import Task
 
 TASK_FILE = Path(".builder/state/tasks.json")
 QUEUE_FILE = Path(".builder/state/queue.json")

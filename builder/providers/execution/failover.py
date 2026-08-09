@@ -1,5 +1,5 @@
-from __future__ import annotations
 
+from __future__ import annotations
 from dataclasses import dataclass
 
 from builder.providers.runtime import router as runtime_router

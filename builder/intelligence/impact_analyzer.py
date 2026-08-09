@@ -2,7 +2,7 @@ from .navigation import navigator
 from .reverse_call_graph import reverse_call_graph_builder
 
 
-class ImpactAnalyzer:
+class SemanticImpactAnalyzer:
     def __init__(self):
         self._reverse = None
 
@@ -32,13 +32,13 @@ class ImpactAnalyzer:
 
         return {
             "symbol": symbol,
-            "definitions": definitions,
-            "references": references,
-            "usages": usages,
-            "callers": callers,
+            "definition_count": len(definitions),
+            "reference_count": len(references),
+            "usage_count": len(usages),
+            "caller_count": len(callers),
             "affected_modules": modules,
             "risk": risk,
         }
 
 
-impact_analyzer = ImpactAnalyzer()
+impact_analyzer = SemanticImpactAnalyzer()

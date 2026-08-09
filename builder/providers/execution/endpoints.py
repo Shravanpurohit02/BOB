@@ -1,4 +1,5 @@
 from __future__ import annotations
+from builder.providers.runtime.request_builder import request_builder
 
 
 class EndpointRouter:

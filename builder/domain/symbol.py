@@ -2,21 +2,22 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from typing import Any
+from uuid import uuid4
 
 
 @dataclass(slots=True)
 class Symbol:
     """
-    Canonical symbol model shared across the Builder architecture.
+    Canonical symbol model used across Builder.
     """
 
-    id: str
+    id: str = field(default_factory=lambda: uuid4().hex)
 
-    module: str
+    module: str = ""
 
-    name: str
+    name: str = ""
 
-    kind: str
+    kind: str = ""
 
     line: int = 0
 
