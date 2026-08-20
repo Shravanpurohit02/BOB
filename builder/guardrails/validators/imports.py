@@ -118,16 +118,13 @@ class ImportValidator(BaseValidator):
                 Severity.CRITICAL: 3,
             }
 
-            status = (
-                ValidationResult.failure
-                if any(
-                    severity_order[i.severity] >= severity_order[Severity.ERROR]
-                    for i in issues
-                )
-                else ValidationResult.success
+            has_error = any(
+                severity_order[issue.severity]
+                >= severity_order[Severity.ERROR]
+                for issue in issues
             )
 
-            if status is ValidationResult.success:
+            if not has_error:
                 result = ValidationResult.success(self.name)
                 result.issues.extend(issues)
                 return result
