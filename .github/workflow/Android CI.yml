@@ -1,0 +1,101 @@
+name: Android CI
+
+# Run on push to main/develop and on pull requests; adjust branches as needed
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+  workflow_dispatch:
+
+env:
+  # Set to "true" to enable the instrumentation test job (or change per-job if you prefer)
+  RUN_INSTRUMENTATION: "false"
+  # If your Android project is in a subfolder, change this (example: appDir: "android")
+  WORKING_DIRECTORY: "."
+
+jobs:
+  build:
+    name: Build & Unit tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # If Android project is in a subfolder, use 'working-directory' on steps that run Gradle:
+      - name: Set up Java 11
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '11'
+
+      - name: Cache Gradle
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+            .gradle
+          # Key uses wrapper and gradle files to ensure cache updates when build scripts change
+          key: gradle-${{ runner.os }}-${{ hashFiles('**/gradle-wrapper.properties', '**/*.gradle*', '**/gradle.properties') }}
+          restore-keys: |
+            gradle-${{ runner.os }}-
+
+      - name: Make gradlew executable
+        run: chmod +x ${{ env.WORKING_DIRECTORY }}/gradlew || true
+
+      - name: Assemble (debug)
+        run: ${{ env.WORKING_DIRECTORY }}/gradlew assembleDebug --no-daemon
+
+      - name: Run unit tests
+        run: ${{ env.WORKING_DIRECTORY }}/gradlew testDebugUnitTest --no-daemon
+
+      - name: Upload build outputs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: apk-artifacts
+          path: |
+            ${{ env.WORKING_DIRECTORY }}/**/build/outputs/**/*
+
+  instrumentation-tests:
+    name: Instrumentation tests (optional)
+    needs: build
+    runs-on: ubuntu-latest
+    # Only run when RUN_INSTRUMENTATION is set to "true"
+    if: ${{ env.RUN_INSTRUMENTATION == 'true' }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java 11
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '11'
+
+      - name: Make gradlew executable
+        run: chmod +x ${{ env.WORKING_DIRECTORY }}/gradlew || true
+
+      # This action installs SDK components and starts an emulator, then runs the given script
+      - name: Run instrumentation tests on emulator
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 30                  # change to desired API level (30/31/33...)
+          target: google_apis            # or 'default' / 'google_apis_playstore' as required
+          arch: x86_64
+          profile: Nexus 6               # emulator profile; adjust if needed
+          force-avd-creation: true
+          script: |
+            # adjust working dir if your android project isn't at repo root
+            cd ${{ env.WORKING_DIRECTORY }}
+            ./gradlew connectedDebugAndroidTest --no-daemon
+
+      - name: Upload instrumentation test reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: instrumentation-reports
+          path: |
+            ${{ env.WORKING_DIRECTORY }}/**/build/outputs/**/* 
+            ${{ env.WORKING_DIRECTORY }}/**/build/reports/**/*
