@@ -4,7 +4,6 @@ from .reference_index import reference_indexer
 
 
 class CrossReferenceEngine:
-
     def build(self, workspace: str):
 
         idx = reference_indexer.build(workspace)
@@ -16,7 +15,6 @@ class CrossReferenceEngine:
         usages = defaultdict(list)
 
         for name, refs in references.items():
-
             defs = definitions.get(name, [])
 
             for d in defs:

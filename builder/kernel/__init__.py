@@ -5,9 +5,9 @@ from builder.kernel.registry import registry
 from builder.kernel.state import KernelState
 
 __all__ = [
+    "Context",
     "Kernel",
     "KernelState",
-    "Context",
     "engine",
     "registry",
 ]

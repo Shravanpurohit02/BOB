@@ -14,7 +14,6 @@ class ContextFile:
 
 
 class ContextSelector:
-
     DEFAULT_FILE_LIMIT = 20
     DEFAULT_BUDGET = 12000
 
@@ -35,7 +34,6 @@ class ContextSelector:
         used = 0
 
         for ranked in ranking_engine.rank(workspace, objective):
-
             if len(selected) >= max_files:
                 break
 
@@ -82,7 +80,6 @@ class ContextSelector:
             budget,
             max_files,
         ):
-
             blocks.append(
                 f"""### FILE: {Path(item.path).name}
 Score: {item.score:.2f}

@@ -3,7 +3,6 @@ from builder.providers.runtime import router
 
 
 class ClientFactory:
-
     def create(self, provider=None):
 
         runtime = provider or router.default()

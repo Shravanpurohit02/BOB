@@ -1,5 +1,4 @@
 class IncrementalCodeEvolution:
-
     def evolve(
         self,
         current_version,
@@ -14,7 +13,6 @@ class IncrementalCodeEvolution:
             modifications,
             start=1,
         ):
-
             history.append(
                 {
                     "revision": index,
@@ -38,20 +36,14 @@ class IncrementalCodeEvolution:
 
         history = evolution["history"]
 
-        return (
-            history[-1]
-            if history
-            else None
-        )
+        return history[-1] if history else None
 
     def revisions(
         self,
         evolution,
     ):
 
-        return len(
-            evolution["history"]
-        )
+        return len(evolution["history"])
 
 
 engine = IncrementalCodeEvolution()

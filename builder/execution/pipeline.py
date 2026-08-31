@@ -2,8 +2,8 @@ from builder.execution.context import ExecutionContext
 from builder.execution.executor import executor
 from builder.execution.scheduler import scheduler
 
-class Pipeline:
 
+class Pipeline:
     def run(self):
         job = scheduler.next_job()
 
@@ -24,5 +24,6 @@ class Pipeline:
         jobs.complete(job.id)
 
         return result
+
 
 pipeline = Pipeline()

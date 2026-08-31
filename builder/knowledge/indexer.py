@@ -3,8 +3,8 @@ from pathlib import Path
 from builder.knowledge.database import database
 from builder.knowledge.document import Document
 
-class Indexer:
 
+class Indexer:
     def build(self, workspace: str):
         count = 0
 
@@ -29,5 +29,6 @@ class Indexer:
             count += 1
 
         return count
+
 
 indexer = Indexer()

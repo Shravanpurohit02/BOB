@@ -1,7 +1,7 @@
 from pathlib import Path
 
-class Workspace:
 
+class Workspace:
     def __init__(self, root: Path):
         self.root = root.resolve()
 

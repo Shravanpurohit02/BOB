@@ -6,18 +6,10 @@ from pathlib import Path
 
 from .serializer import serializer
 
-
-STATE = (
-    Path.cwd()
-    / ".builder"
-    / "state"
-    / "execution"
-    / "snapshots"
-)
+STATE = Path.cwd() / ".builder" / "state" / "execution" / "snapshots"
 
 
 class SnapshotStorage:
-
     def __init__(self):
 
         STATE.mkdir(
@@ -54,7 +46,6 @@ class SnapshotStorage:
             delete=False,
             encoding="utf-8",
         ) as tmp:
-
             json.dump(
                 payload,
                 tmp,
@@ -70,9 +61,7 @@ class SnapshotStorage:
 
         snapshot.metadata.setdefault(
             "committed_at",
-            __import__("datetime").datetime.now(
-                __import__("datetime").UTC
-            ).isoformat(),
+            __import__("datetime").datetime.now(__import__("datetime").UTC).isoformat(),
         )
 
         return target
@@ -113,12 +102,8 @@ class SnapshotStorage:
 
         result = []
 
-        for file in sorted(
-            STATE.glob("*.json")
-        ):
-
+        for file in sorted(STATE.glob("*.json")):
             try:
-
                 result.append(
                     serializer.loads(
                         json.loads(
@@ -127,7 +112,6 @@ class SnapshotStorage:
                             )
                         )
                     )
-
                 )
 
             except Exception:

@@ -4,11 +4,11 @@ from builder.core import environment, queue, state
 from builder.core.session import load_session
 
 runtime = load_session()
-from builder.core.queue_worker import worker as queue_worker
 from builder.core.checkpoints import create_checkpoint
 from builder.version import __title__, __version__
 
 app = typer.Typer(add_completion=False, invoke_without_command=True)
+
 
 @app.callback()
 def root():
@@ -25,16 +25,17 @@ def root():
     print(f"Boot Count  : {state.boot_count}")
     print(f"Queue Size  : {len(queue)}")
 
+
 @app.command()
 def checkpoint(name: str, description: str = ""):
     cp = create_checkpoint(name, description)
     print(cp.id)
 
+
 @app.command()
 def task(name: str):
     t = queue.submit(name)
     print(t.id)
-
 
 
 @app.command()

@@ -1,5 +1,4 @@
 class DecisionEngine:
-
     def decide(self, runtime):
 
         validation = runtime.context.pipeline.context.validation

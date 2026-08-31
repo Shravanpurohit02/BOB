@@ -21,18 +21,14 @@ class ProjectGraphQuery:
         workspace: str,
     ):
 
-        return self.build(
-            workspace
-        ).all_nodes()
+        return self.build(workspace).all_nodes()
 
     def edges(
         self,
         workspace: str,
     ):
 
-        return self.build(
-            workspace
-        ).all_edges()
+        return self.build(workspace).all_edges()
 
     def node(
         self,
@@ -50,11 +46,7 @@ class ProjectGraphQuery:
         path: str,
     ):
 
-        return [
-            edge
-            for edge in self.edges(workspace)
-            if edge.source == path
-        ]
+        return [edge for edge in self.edges(workspace) if edge.source == path]
 
     def incoming(
         self,
@@ -62,11 +54,7 @@ class ProjectGraphQuery:
         path: str,
     ):
 
-        return [
-            edge
-            for edge in self.edges(workspace)
-            if edge.target == path
-        ]
+        return [edge for edge in self.edges(workspace) if edge.target == path]
 
     def dependencies(
         self,
@@ -102,4 +90,3 @@ class ProjectGraphQuery:
 
 
 query = ProjectGraphQuery()
-

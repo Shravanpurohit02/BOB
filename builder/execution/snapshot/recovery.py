@@ -1,33 +1,29 @@
 from __future__ import annotations
 
 from datetime import UTC, datetime
+from typing import ClassVar
 
 from .storage import storage
 
 
 class SnapshotRecovery:
-
-    ACTIVE = {
+    ACTIVE: ClassVar[frozenset[str]] = frozenset({
         "created",
         "running",
-    }
+    })
 
-    TERMINAL = {
+    TERMINAL: ClassVar[frozenset[str]] = frozenset({
         "completed",
         "failed",
         "abandoned",
-    }
+    })
 
     def list(self):
         return storage.list()
 
     def find_incomplete(self):
 
-        return [
-            s
-            for s in storage.list()
-            if s.status in self.ACTIVE
-        ]
+        return [s for s in storage.list() if s.status in self.ACTIVE]
 
     def latest_incomplete(self):
 
@@ -52,9 +48,7 @@ class SnapshotRecovery:
 
         snapshot.metadata["resumed"] = True
 
-        snapshot.metadata["resumed_at"] = (
-            datetime.now(UTC).isoformat()
-        )
+        snapshot.metadata["resumed_at"] = datetime.now(UTC).isoformat()
 
         storage.save(snapshot)
 
@@ -74,11 +68,7 @@ class SnapshotRecovery:
             "checkpoints",
         )
 
-        missing = [
-            field
-            for field in required
-            if not hasattr(snapshot, field)
-        ]
+        missing = [field for field in required if not hasattr(snapshot, field)]
 
         return {
             "valid": len(missing) == 0,
@@ -116,14 +106,11 @@ class SnapshotRecovery:
 
         snapshot.status = "abandoned"
 
-        snapshot.metadata["abandoned_at"] = (
-            datetime.now(UTC).isoformat()
-        )
+        snapshot.metadata["abandoned_at"] = datetime.now(UTC).isoformat()
 
         storage.save(snapshot)
 
         return snapshot
-
 
     def next_stage(
         self,
@@ -132,9 +119,7 @@ class SnapshotRecovery:
     ):
 
         completed = {
-            cp.stage
-            for cp in snapshot.checkpoints
-            if cp.status == "completed"
+            cp.stage for cp in snapshot.checkpoints if cp.status == "completed"
         }
 
         for stage in pipeline:
@@ -142,7 +127,6 @@ class SnapshotRecovery:
                 return stage
 
         return None
-
 
     def garbage_collect(
         self,
@@ -158,7 +142,6 @@ class SnapshotRecovery:
         removed = []
 
         for snapshot in snapshots[keep:]:
-
             if snapshot.status in self.ACTIVE:
                 continue
 

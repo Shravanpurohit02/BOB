@@ -1,38 +1,30 @@
 import time
 
-from builder.execution.result import ExecutionResult
-from builder.engineering.transaction.context import TransactionContext
-
-from builder.planning import analyzer
-from builder.planning.executor import executor as planning_executor
-
-from builder.validation import engine as validation
-from builder.testing import engine as testing
-
 from builder.autonomous_runtime.repair import repair
-
 from builder.engineering.changeset import engine as changesets
+from builder.engineering.transaction.context import TransactionContext
 from builder.engineering.transaction.engine import (
     engine as transactions,
 )
-
-from builder.output import engine as output
+from builder.execution.result import ExecutionResult
 from builder.execution.snapshot import (
     manager as snapshots,
 )
 from builder.execution.snapshot.recovery import (
     recovery as snapshot_recovery,
 )
-
 from builder.execution.task_queue import engine as task_queue
+from builder.output import engine as output
+from builder.planning import analyzer
+from builder.planning.executor import executor as planning_executor
+from builder.testing import engine as testing
+from builder.validation import engine as validation
 
 
 class Executor:
-
     MAX_REPAIRS = 3
 
     def execute(self, context):
-
 
         try:
             context.metadata["queue"] = {
@@ -60,13 +52,13 @@ class Executor:
         result = ExecutionResult()
 
         if (
-            getattr(context, "transaction", None)
-            is not None
+            getattr(context, "transaction", None) is not None
             and getattr(
                 context.transaction,
                 "transaction",
                 None,
-            ) is not None
+            )
+            is not None
         ):
             transaction = context.transaction.transaction
         else:
@@ -80,26 +72,20 @@ class Executor:
             )
 
         if context.snapshot is None:
-
             snapshot = snapshot_recovery.resume_latest()
 
-            if (
-                snapshot is not None
-                and snapshot.transaction_id == transaction.id
-            ):
+            if snapshot is not None and snapshot.transaction_id == transaction.id:
                 context.snapshot = snapshot
 
-                context.metadata["resume_stage"] = (
-                    snapshot_recovery.next_stage(
-                        snapshot,
-                        [
-                            "changeset",
-                            "output",
-                            "planning",
-                            "validation",
-                            "testing",
-                        ],
-                    )
+                context.metadata["resume_stage"] = snapshot_recovery.next_stage(
+                    snapshot,
+                    [
+                        "changeset",
+                        "output",
+                        "planning",
+                        "validation",
+                        "testing",
+                    ],
                 )
 
             else:
@@ -166,9 +152,7 @@ class Executor:
         )
 
         if isinstance(artifact, dict):
-            result.artifacts.append(
-                artifact["path"]
-            )
+            result.artifacts.append(artifact["path"])
 
             transactions.attach_artifact(
                 transaction,
@@ -176,10 +160,7 @@ class Executor:
             )
 
         else:
-
-            result.artifacts.extend(
-                artifact.files
-            )
+            result.artifacts.extend(artifact.files)
 
             for file in artifact.files:
                 transactions.attach_artifact(
@@ -204,7 +185,6 @@ class Executor:
         )
 
         try:
-
             snapshots.before_stage(
                 context.snapshot,
                 "planning",
@@ -222,9 +202,7 @@ class Executor:
 
             planning_executor.execute(plan)
 
-            result.completed_stages.append(
-                "planning"
-            )
+            result.completed_stages.append("planning")
 
             transactions.finish_stage(
                 transaction,
@@ -253,7 +231,6 @@ class Executor:
             repairs = 0
 
             while True:
-
                 snapshots.before_stage(
                     context.snapshot,
                     "validation",
@@ -280,9 +257,7 @@ class Executor:
                     result.validation,
                 )
 
-                result.completed_stages.append(
-                    "validation"
-                )
+                result.completed_stages.append("validation")
 
                 transactions.finish_stage(
                     transaction,
@@ -306,9 +281,7 @@ class Executor:
                     break
 
                 if repairs >= self.MAX_REPAIRS:
-                    result.failed_stages.append(
-                        "validation"
-                    )
+                    result.failed_stages.append("validation")
                     break
 
                 transactions.start_stage(
@@ -331,9 +304,7 @@ class Executor:
 
                 repairs += 1
 
-                result.completed_stages.append(
-                    f"repair-{repairs}"
-                )
+                result.completed_stages.append(f"repair-{repairs}")
 
                 transactions.finish_stage(
                     transaction,
@@ -360,9 +331,7 @@ class Executor:
                 result.testing,
             )
 
-            result.completed_stages.append(
-                "testing"
-            )
+            result.completed_stages.append("testing")
 
             transactions.finish_stage(
                 transaction,
@@ -381,8 +350,7 @@ class Executor:
 
             result.success = (
                 result.validation.get("failed", 0) == 0
-                and
-                result.testing.get("failed", 0) == 0
+                and result.testing.get("failed", 0) == 0
             )
 
             if result.success:
@@ -402,12 +370,9 @@ class Executor:
             transactions.commit(transaction)
 
         except Exception as exc:
-
             result.success = False
 
-            result.failed_stages.append(
-                type(exc).__name__
-            )
+            result.failed_stages.append(type(exc).__name__)
 
             result.message = str(exc)
 

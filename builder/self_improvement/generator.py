@@ -3,8 +3,8 @@ from builder.codegen import (
     engine,
 )
 
-class Generator:
 
+class Generator:
     def improve(self, improvement):
 
         return engine.generate(
@@ -22,5 +22,6 @@ Return only production-ready code.
 """,
             )
         )
+
 
 generator = Generator()

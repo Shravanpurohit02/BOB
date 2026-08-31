@@ -1,6 +1,5 @@
 from builder.ast import engine
 
-
 FEATURES = {
     "builder": (
         "builder",
@@ -76,7 +75,6 @@ FEATURES = {
 
 
 class ModuleContext:
-
     def _score(self, module, keywords):
         text = " ".join(
             [

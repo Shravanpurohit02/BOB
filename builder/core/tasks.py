@@ -3,15 +3,14 @@ from collections import deque
 from dataclasses import asdict
 from pathlib import Path
 
-from builder.models.task import Task
 from builder.autonomous_runtime import engine as runtime_engine
+from builder.models.task import Task
 
 TASK_FILE = Path(".builder/state/tasks.json")
 QUEUE_FILE = Path(".builder/state/queue.json")
 
 
 class TaskQueue:
-
     def __init__(self):
         self._queue = deque()
         self._load()
@@ -60,23 +59,12 @@ class TaskQueue:
             str(Path.cwd()),
         )
 
-        task.status = (
-            "completed"
-            if result.success
-            else "failed"
-        )
+        task.status = "completed" if result.success else "failed"
 
         if QUEUE_FILE.exists():
-            queue = json.loads(
-                QUEUE_FILE.read_text(
-                    encoding="utf-8"
-                )
-            )
+            queue = json.loads(QUEUE_FILE.read_text(encoding="utf-8"))
 
-            queue = [
-                q for q in queue
-                if q != task.id
-            ]
+            queue = [q for q in queue if q != task.id]
 
             QUEUE_FILE.write_text(
                 json.dumps(
@@ -98,23 +86,16 @@ class TaskQueue:
 
     def next(self):
         for task in self._queue:
-            if task.status in ("pending","running"):
+            if task.status in ("pending", "running"):
                 return task
         return None
-
 
     def queue_size(self):
 
         if not QUEUE_FILE.exists():
             return 0
 
-        return len(
-            json.loads(
-                QUEUE_FILE.read_text(
-                    encoding="utf-8"
-                )
-            )
-        )
+        return len(json.loads(QUEUE_FILE.read_text(encoding="utf-8")))
 
     def __len__(self):
         return self.queue_size()

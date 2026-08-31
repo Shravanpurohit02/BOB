@@ -6,6 +6,6 @@ from builder.providers.registry import registry
 __all__ = [
     "BaseProvider",
     "Provider",
-    "registry",
     "manager",
+    "registry",
 ]

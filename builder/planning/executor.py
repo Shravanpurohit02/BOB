@@ -1,14 +1,10 @@
+from typing import ClassVar
 from dataclasses import dataclass, field
-
-
-
-
 from time import perf_counter
 
 
 @dataclass(slots=True)
 class RepositoryScope:
-
     files: list[str] = field(
         default_factory=list,
     )
@@ -20,7 +16,6 @@ class RepositoryScope:
 
 @dataclass(slots=True)
 class ExecutionAnalytics:
-
     tasks: int = 0
 
     completed: int = 0
@@ -53,16 +48,6 @@ class ExecutionResult:
 
 
 class PlanExecutor:
-
-
-
-
-
-
-
-
-
-
     def _repository_scope(
         self,
         plan,
@@ -76,26 +61,15 @@ class PlanExecutor:
         for milestone in plan.milestones:
             for job in milestone.jobs:
                 for task in job.tasks:
+                    scope["files"].add(task.title)
 
-                    scope["files"].add(
-                        task.title
-                    )
-
-                    scope["modules"].add(
-                        task.title.split(
-                            "/"
-                        )[0]
-                    )
+                    scope["modules"].add(task.title.split("/")[0])
 
         repository = RepositoryScope()
 
-        repository.files.extend(
-            sorted(scope["files"])
-        )
+        repository.files.extend(sorted(scope["files"]))
 
-        repository.modules.extend(
-            sorted(scope["modules"])
-        )
+        repository.modules.extend(sorted(scope["modules"]))
 
         return repository
 
@@ -114,16 +88,11 @@ class PlanExecutor:
         )
 
         for index, task in enumerate(tasks):
-
-            agent = agents[
-                index % len(agents)
-            ]
+            agent = agents[index % len(agents)]
 
             task.metadata["agent"] = agent
 
-            assignments[
-                task.id
-            ] = agent
+            assignments[task.id] = agent
 
         return assignments
 
@@ -138,10 +107,7 @@ class PlanExecutor:
             {},
         )
 
-        metadata.setdefault(
-            "evolution",
-            []
-        )
+        metadata.setdefault("evolution", [])
 
         metadata["evolution"].append(
             {
@@ -170,11 +136,14 @@ class PlanExecutor:
         ):
             return "dependency"
 
-        if getattr(
-            task,
-            "priority",
-            100,
-        ) <= 10:
+        if (
+            getattr(
+                task,
+                "priority",
+                100,
+            )
+            <= 10
+        ):
             return "priority"
 
         return "standard"
@@ -188,9 +157,7 @@ class PlanExecutor:
         import time
 
         while True:
-
             try:
-
                 action(task)
 
                 task.status = "completed"
@@ -198,7 +165,6 @@ class PlanExecutor:
                 return True
 
             except Exception as exc:
-
                 task.retries += 1
 
                 classification = self._classify_failure(
@@ -207,22 +173,18 @@ class PlanExecutor:
 
                 task.metadata["failure"] = classification
 
-                if (
-                    classification == "permanent"
-                    or self._retry_budget(task) == 0
-                ):
+                if classification == "permanent" or self._retry_budget(task) == 0:
                     task.status = "failed"
                     return False
 
                 delay = min(
-                    2 ** task.retries,
+                    2**task.retries,
                     8,
                 )
 
                 task.metadata["backoff"] = delay
 
                 time.sleep(delay)
-
 
     TRANSIENT_ERRORS = {
         "TimeoutError",
@@ -242,7 +204,6 @@ class PlanExecutor:
 
         return "permanent"
 
-
     def _retry_budget(
         self,
         task,
@@ -259,7 +220,6 @@ class PlanExecutor:
             3 - retries,
         )
 
-
     def _dependency_order(
         self,
         tasks,
@@ -270,11 +230,9 @@ class PlanExecutor:
         pending = list(tasks)
 
         while pending:
-
             progress = False
 
             for task in pending[:]:
-
                 deps = set(
                     getattr(
                         task,
@@ -284,7 +242,6 @@ class PlanExecutor:
                 )
 
                 if deps <= completed:
-
                     ordered.append(task)
 
                     completed.add(task.id)
@@ -294,7 +251,6 @@ class PlanExecutor:
                     progress = True
 
             if not progress:
-
                 ordered.extend(
                     sorted(
                         pending,
@@ -306,7 +262,6 @@ class PlanExecutor:
 
         return ordered
 
-
     def execute(
         self,
         plan,
@@ -317,10 +272,8 @@ class PlanExecutor:
 
         result = ExecutionResult()
 
-        result.analytics.repository = (
-            self._repository_scope(
-                plan,
-            )
+        result.analytics.repository = self._repository_scope(
+            plan,
         )
         if (
             transaction is not None
@@ -333,7 +286,6 @@ class PlanExecutor:
 
         for milestone in plan.milestones:
             for job in milestone.jobs:
-
                 tasks = self._dependency_order(
                     sorted(
                         job.tasks,
@@ -353,15 +305,12 @@ class PlanExecutor:
                 )
 
                 for task in tasks:
-
                     if getattr(
                         task,
                         "dependencies",
                         [],
                     ):
-                        task.metadata["dependency_count"] = len(
-                            task.dependencies
-                        )
+                        task.metadata["dependency_count"] = len(task.dependencies)
 
                     task.status = "completed"
 
@@ -373,9 +322,7 @@ class PlanExecutor:
                         task,
                     )
 
-                    result.analytics.decisions.append(
-                        decision + ":" + task.title
-                    )
+                    result.analytics.decisions.append(decision + ":" + task.title)
 
                     result.total += 1
                     result.completed += 1

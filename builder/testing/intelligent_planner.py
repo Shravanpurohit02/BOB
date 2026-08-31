@@ -1,5 +1,4 @@
 class IntelligentTestPlanner:
-
     TEST_TYPES = {
         "planner": "unit",
         "executor": "integration",
@@ -20,7 +19,6 @@ class IntelligentTestPlanner:
             impacted_files,
             start=1,
         ):
-
             plan.append(
                 {
                     "order": order,
@@ -40,7 +38,6 @@ class IntelligentTestPlanner:
         name = path.lower()
 
         for key, value in self.TEST_TYPES.items():
-
             if key in name:
                 return value
 
@@ -53,16 +50,10 @@ class IntelligentTestPlanner:
 
         name = path.lower()
 
-        if (
-            "provider" in name
-            or "runtime" in name
-        ):
+        if "provider" in name or "runtime" in name:
             return "critical"
 
-        if (
-            "executor" in name
-            or "planner" in name
-        ):
+        if "executor" in name or "planner" in name:
             return "high"
 
         return "normal"
@@ -74,14 +65,8 @@ class IntelligentTestPlanner:
 
         return {
             "tests": len(plan),
-            "critical": sum(
-                item["priority"] == "critical"
-                for item in plan
-            ),
-            "integration": sum(
-                item["type"] == "integration"
-                for item in plan
-            ),
+            "critical": sum(item["priority"] == "critical" for item in plan),
+            "integration": sum(item["type"] == "integration" for item in plan),
         }
 
 

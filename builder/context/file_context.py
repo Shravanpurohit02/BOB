@@ -2,7 +2,6 @@ from pathlib import Path
 
 
 class FileContext:
-
     MAX_LINES = 800
 
     def build(self, path: str):
@@ -20,7 +19,7 @@ class FileContext:
         lines = text.splitlines()
 
         if len(lines) > self.MAX_LINES:
-            text = "\n".join(lines[:self.MAX_LINES])
+            text = "\n".join(lines[: self.MAX_LINES])
 
         return {
             "path": str(p),

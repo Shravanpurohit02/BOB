@@ -9,7 +9,6 @@ from .models import (
 
 
 class SnapshotSerializer:
-
     def dumps(
         self,
         snapshot: ExecutionSnapshot,
@@ -32,9 +31,7 @@ class SnapshotSerializer:
 
         snapshot = ExecutionSnapshot(**data)
 
-        snapshot.checkpoints.extend(
-            checkpoints
-        )
+        snapshot.checkpoints.extend(checkpoints)
 
         return snapshot
 

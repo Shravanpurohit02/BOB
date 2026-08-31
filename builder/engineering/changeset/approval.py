@@ -1,10 +1,9 @@
 from dataclasses import dataclass
-from datetime import datetime, UTC
+from datetime import UTC, datetime
 
 
 @dataclass(slots=True)
 class Approval:
-
     status: str = "draft"
 
     approved_by: str = ""

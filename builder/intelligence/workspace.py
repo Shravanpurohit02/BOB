@@ -1,6 +1,8 @@
 from builder.workspace.scanner import (
     WorkspaceFile,
     WorkspaceScanner,
+)
+from builder.workspace.scanner import (
     scanner as workspace_scanner,
 )
 

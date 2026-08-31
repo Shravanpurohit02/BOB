@@ -28,7 +28,6 @@ class ProviderCatalogEntry:
 
 
 PROVIDERS = (
-
     ProviderCatalogEntry(
         name="gemini",
         display_name="Google Gemini",
@@ -41,7 +40,6 @@ PROVIDERS = (
         max_output_tokens=65_536,
         priority=20,
     ),
-
     ProviderCatalogEntry(
         name="anthropic",
         display_name="Anthropic",
@@ -54,7 +52,6 @@ PROVIDERS = (
         max_output_tokens=64_000,
         priority=30,
     ),
-
     ProviderCatalogEntry(
         name="openai",
         display_name="OpenAI",
@@ -67,7 +64,6 @@ PROVIDERS = (
         max_output_tokens=128_000,
         priority=40,
     ),
-
     ProviderCatalogEntry(
         name="groq",
         display_name="Groq",
@@ -79,7 +75,6 @@ PROVIDERS = (
         max_output_tokens=32_768,
         priority=50,
     ),
-
     ProviderCatalogEntry(
         name="openrouter",
         display_name="OpenRouter",
@@ -91,7 +86,6 @@ PROVIDERS = (
         max_output_tokens=65_536,
         priority=60,
     ),
-
     ProviderCatalogEntry(
         name="cerebras",
         display_name="Cerebras",
@@ -102,7 +96,6 @@ PROVIDERS = (
         max_output_tokens=32_768,
         priority=70,
     ),
-
     ProviderCatalogEntry(
         name="nvidia",
         display_name="NVIDIA NIM",
@@ -113,7 +106,6 @@ PROVIDERS = (
         max_output_tokens=32_768,
         priority=10,
     ),
-
     ProviderCatalogEntry(
         name="mistral",
         display_name="Mistral",
@@ -124,7 +116,6 @@ PROVIDERS = (
         max_output_tokens=32_768,
         priority=80,
     ),
-
     ProviderCatalogEntry(
         name="huggingface",
         display_name="Hugging Face",

@@ -1,8 +1,8 @@
 from builder.providers.health import engine as health_engine
 from builder.providers.health.circuit import engine as circuit_engine
 
-class RuntimeRegistry:
 
+class RuntimeRegistry:
     def __init__(self):
         self.providers = {}
 
@@ -24,32 +24,16 @@ class RuntimeRegistry:
     #
 
     def enabled(self):
-        return [
-            p
-            for p in self.providers.values()
-            if p.enabled
-        ]
+        return [p for p in self.providers.values() if p.enabled]
 
     def healthy(self):
-        return [
-            p
-            for p in self.enabled()
-            if p.healthy
-        ]
+        return [p for p in self.enabled() if p.healthy]
 
     def free(self):
-        return [
-            p
-            for p in self.enabled()
-            if p.free_tier
-        ]
+        return [p for p in self.enabled() if p.free_tier]
 
     def compatible(self, api_type):
-        return [
-            p
-            for p in self.enabled()
-            if p.api_type == api_type
-        ]
+        return [p for p in self.enabled() if p.api_type == api_type]
 
     def supports(self, capability):
 
@@ -76,28 +60,16 @@ class RuntimeRegistry:
             key=lambda p: p.priority,
         )
 
-        return (
-            providers[0]
-            if providers
-            else None
-        )
-
+        return providers[0] if providers else None
 
     def best(self):
 
-        providers = [
-            p
-            for p in self.healthy()
-            if circuit_engine.allow(p.name)
-        ]
+        providers = [p for p in self.healthy() if circuit_engine.allow(p.name)]
 
         if not providers:
             return None
 
-        ranking = {
-            p.provider: p.score
-            for p in health_engine.ranking()
-        }
+        ranking = {p.provider: p.score for p in health_engine.ranking()}
 
         providers.sort(
             key=lambda p: (
@@ -111,16 +83,9 @@ class RuntimeRegistry:
 
     def best_order(self):
 
-        providers = [
-            p
-            for p in self.healthy()
-            if circuit_engine.allow(p.name)
-        ]
+        providers = [p for p in self.healthy() if circuit_engine.allow(p.name)]
 
-        ranking = {
-            p.provider: p.score
-            for p in health_engine.ranking()
-        }
+        ranking = {p.provider: p.score for p in health_engine.ranking()}
 
         providers.sort(
             key=lambda p: (

@@ -1,5 +1,6 @@
 from .engine import logger
 
+
 def configure_logging():
     """
     Backward-compatible logging initialization.
@@ -10,7 +11,8 @@ def configure_logging():
     """
     return logger
 
+
 __all__ = [
-    "logger",
     "configure_logging",
+    "logger",
 ]

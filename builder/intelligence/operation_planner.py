@@ -2,6 +2,7 @@ from dataclasses import dataclass, field
 from enum import Enum
 
 from .edit_session import edit_session_builder
+from .operation_classifier import classifier
 
 
 class OperationType(str, Enum):
@@ -40,7 +41,6 @@ class OperationPlan:
 
 
 class OperationPlanner:
-
     def build(
         self,
         workspace: str,
@@ -60,16 +60,9 @@ class OperationPlanner:
         )
 
         for target in session.targets:
+            operation = classifier.classify(query)
 
-            action = target.metadata.get(
-                "action",
-                OperationType.REPLACE_SYMBOL.value,
-            )
-
-            try:
-                operation = OperationType(action)
-            except ValueError:
-                operation = OperationType.REPLACE_SYMBOL
+            target.metadata["action"] = operation.value
 
             plan.operations.append(
                 PlannedOperation(

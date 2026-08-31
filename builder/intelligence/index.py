@@ -4,7 +4,6 @@ from builder.intelligence.workspace import workspace_scanner
 
 
 class ProjectIndex:
-
     def build(self, workspace: str):
         ctx = Context()
 

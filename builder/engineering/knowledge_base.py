@@ -2,7 +2,6 @@ from collections import defaultdict
 
 
 class EngineeringKnowledgeBase:
-
     def __init__(self):
 
         self._knowledge = defaultdict(

@@ -1,20 +1,19 @@
 import json
 from pathlib import Path
 
-from .models import RuntimeContext, RuntimeResult
+from builder.engineering.transaction.engine import engine as transactions
+from builder.pipeline import engine as pipeline
+from builder.review import engine as review
+from builder.self_improvement import engine as improvement
+
 from .decision import decision
-from .repair import repair
 from .history import history
 from .metrics import metrics
-
-from builder.pipeline import engine as pipeline
-from builder.self_improvement import engine as improvement
-from builder.review import engine as review
-from builder.engineering.transaction.engine import engine as transactions
+from .models import RuntimeContext, RuntimeResult
+from .repair import repair
 
 
 class AutonomousRuntime:
-
     MAX_ATTEMPTS = 3
 
     def execute(
@@ -40,7 +39,6 @@ class AutonomousRuntime:
         )
 
         while ctx.attempts < self.MAX_ATTEMPTS:
-
             ctx.attempts += 1
 
             ctx.pipeline = pipeline.start(
@@ -61,7 +59,6 @@ class AutonomousRuntime:
             review_tasks = []
 
             if improvements:
-
                 out = Path(".builder/output") / "latest"
                 out.mkdir(
                     parents=True,
@@ -72,9 +69,7 @@ class AutonomousRuntime:
                     task = review.submit(item)
                     review_tasks.append(task.id)
 
-                Path(
-                    out / "improvements.json"
-                ).write_text(
+                Path(out / "improvements.json").write_text(
                     json.dumps(
                         [
                             {

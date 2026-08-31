@@ -8,7 +8,6 @@ from builder.reflection.semantic_models import (
 
 
 class SemanticEngine:
-
     def build(self, workspace: str):
         repo = SemanticRepository()
 

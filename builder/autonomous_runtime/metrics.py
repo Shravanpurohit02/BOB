@@ -3,7 +3,6 @@ from dataclasses import dataclass
 
 @dataclass(slots=True)
 class RuntimeMetrics:
-
     attempts: int = 0
     completed: int = 0
     failed: int = 0
@@ -11,7 +10,6 @@ class RuntimeMetrics:
 
 
 class MetricsEngine:
-
     def collect(self, runtime):
 
         return RuntimeMetrics(

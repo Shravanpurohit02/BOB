@@ -64,9 +64,7 @@ class RuntimeRegistry:
         self,
     ) -> list[str]:
 
-        return sorted(
-            self._runtimes.keys()
-        )
+        return sorted(self._runtimes.keys())
 
     def count(
         self,
@@ -76,4 +74,3 @@ class RuntimeRegistry:
 
 
 registry = RuntimeRegistry()
-

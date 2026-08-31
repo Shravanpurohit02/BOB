@@ -1,7 +1,7 @@
 from builder.knowledge.document import Document
 
-class KnowledgeBase:
 
+class KnowledgeBase:
     def __init__(self):
         self._docs = {}
 
@@ -10,5 +10,6 @@ class KnowledgeBase:
 
     def all(self):
         return list(self._docs.values())
+
 
 database = KnowledgeBase()

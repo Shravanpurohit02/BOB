@@ -3,8 +3,8 @@ from builder.providers.chat.response import ChatResponse
 from builder.providers.client import manager
 from builder.providers.runtime import router
 
-class ChatClient:
 
+class ChatClient:
     def generate(self, request: ChatRequest):
 
         provider = router.default()
@@ -31,5 +31,6 @@ class ChatClient:
             content="READY",
             raw=payload,
         )
+
 
 chat = ChatClient()

@@ -2,7 +2,6 @@ import ast
 
 
 class StaticAnalysisEngine:
-
     def analyze(
         self,
         source,
@@ -19,7 +18,6 @@ class StaticAnalysisEngine:
         }
 
         for node in ast.walk(tree):
-
             if isinstance(
                 node,
                 ast.FunctionDef,
@@ -60,11 +58,7 @@ class StaticAnalysisEngine:
         report,
     ):
 
-        return (
-            report["functions"]
-            + report["classes"]
-            + report["imports"]
-        )
+        return report["functions"] + report["classes"] + report["imports"]
 
 
 engine = StaticAnalysisEngine()

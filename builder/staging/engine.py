@@ -10,6 +10,7 @@ from .models import StagedDirectory, StagedFile, StagingSession
 
 _guardrails = create_guardrail_engine()
 
+
 class StagingEngine:
     def create(self, workspace: str):
         workspace = Path(workspace).resolve()
@@ -69,5 +70,6 @@ class StagingEngine:
 
     def discard(self, session):
         shutil.rmtree(session.root, ignore_errors=True)
+
 
 engine = StagingEngine()

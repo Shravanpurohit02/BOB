@@ -6,7 +6,6 @@ from builder.review.models import ReviewTask
 
 
 class ReviewStorage:
-
     FILE = Path(".builder/state/review_queue.json")
 
     def load(self):
@@ -20,10 +19,7 @@ class ReviewStorage:
             )
         )
 
-        return [
-            ReviewTask(**item)
-            for item in data
-        ]
+        return [ReviewTask(**item) for item in data]
 
     def save(self, tasks):
 
@@ -34,10 +30,7 @@ class ReviewStorage:
 
         self.FILE.write_text(
             json.dumps(
-                [
-                    asdict(t)
-                    for t in tasks
-                ],
+                [asdict(t) for t in tasks],
                 indent=2,
             ),
             encoding="utf-8",

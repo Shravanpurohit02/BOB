@@ -1,7 +1,7 @@
 from builder.knowledge.database import database
 
-class SearchEngine:
 
+class SearchEngine:
     def search(self, query: str):
         results = []
 
@@ -12,5 +12,6 @@ class SearchEngine:
                 results.append(doc)
 
         return results
+
 
 search = SearchEngine()

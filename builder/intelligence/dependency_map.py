@@ -3,7 +3,6 @@ from pathlib import Path
 
 
 class DependencyMap:
-
     def build(
         self,
         workspace: str,
@@ -14,10 +13,7 @@ class DependencyMap:
         root = Path(workspace)
 
         for file in root.rglob("*.py"):
-
-            module = ".".join(
-                file.relative_to(root).with_suffix("").parts
-            )
+            module = ".".join(file.relative_to(root).with_suffix("").parts)
 
             graph[module] = set()
 
@@ -32,20 +28,15 @@ class DependencyMap:
                 continue
 
             for node in ast.walk(tree):
-
                 if isinstance(node, ast.Import):
                     for alias in node.names:
                         graph[module].add(alias.name)
 
                 elif isinstance(node, ast.ImportFrom):
-
                     if node.module:
                         graph[module].add(node.module)
 
-        return {
-            k: sorted(v)
-            for k, v in graph.items()
-        }
+        return {k: sorted(v) for k, v in graph.items()}
 
 
 dependency_map = DependencyMap()

@@ -3,7 +3,6 @@ from dataclasses import dataclass, field
 
 @dataclass(slots=True)
 class SemanticSymbol:
-
     name: str
     module: str
     kind: str
@@ -14,7 +13,6 @@ class SemanticSymbol:
 
 @dataclass(slots=True)
 class SemanticRepository:
-
     modules: dict = field(default_factory=dict)
 
     symbols: dict = field(default_factory=dict)

@@ -3,6 +3,7 @@ import json
 from builder.providers.execution.adapter import adapter
 from builder.providers.execution.endpoints import router as endpoint_router
 from builder.providers.execution.failover import engine as failover
+from builder.providers.execution.mode import ExecutionMode
 from builder.providers.execution.normalizer import normalizer
 from builder.providers.execution.payloads import builder as payload_builder
 from builder.providers.execution.response import ExecutionResponse
@@ -10,10 +11,7 @@ from builder.providers.execution.semantic_validator import semantic_validator
 from builder.providers.execution.validator import validator
 
 
-import time
-from builder.providers.health import engine as health_engine
 class ExecutionEngine:
-
     def execute(self, request):
 
         providers = failover.providers(adapter)
@@ -28,7 +26,6 @@ class ExecutionEngine:
         last_response = None
 
         for provider in providers:
-
             last_provider = provider
 
             _, client = adapter.client(provider)
@@ -41,11 +38,16 @@ class ExecutionEngine:
             success = False
             reason = "unknown"
 
+            mode = getattr(
+                request,
+                "mode",
+                ExecutionMode.GENERATION,
+            )
+
             for attempt in range(
                 1,
                 failover.max_attempts() + 1,
             ):
-
                 response = client.post(
                     endpoint_router.endpoint(
                         provider,
@@ -64,10 +66,7 @@ class ExecutionEngine:
                 #
 
                 if failover.should_retry(response):
-
-                    reason = (
-                        f"http_{getattr(response,'status_code',0)}"
-                    )
+                    reason = f"http_{getattr(response, 'status_code', 0)}"
 
                     print(
                         f"[Builder] {provider.name} "
@@ -86,7 +85,9 @@ class ExecutionEngine:
                     response,
                 )
 
-                from builder.providers.execution.compatibility import engine as compatibility
+                from builder.providers.execution.compatibility import (
+                    engine as compatibility,
+                )
 
                 repaired = compatibility.repair(
                     provider,
@@ -95,19 +96,39 @@ class ExecutionEngine:
 
                 normalized["text"] = repaired.text
 
-                validation = validator.validate(
-                    normalized["text"]
-                )
+                validation = validator.validate(normalized["text"])
+
+                if mode is ExecutionMode.CHAT:
+                    return ExecutionResponse(
+                        success=True,
+                        provider=provider.name,
+                        model=payload.get(
+                            "model",
+                            provider.model,
+                        ),
+                        text=normalized["text"],
+                        usage=normalized["usage"],
+                        raw=normalized["raw"],
+                    )
+
+                if mode is ExecutionMode.ANALYSIS:
+                    return ExecutionResponse(
+                        success=True,
+                        provider=provider.name,
+                        model=payload.get(
+                            "model",
+                            provider.model,
+                        ),
+                        text=normalized["text"],
+                        usage=normalized["usage"],
+                        raw=normalized["raw"],
+                    )
+
 
                 if not validation.valid:
-
                     reason = validation.reason
 
-                    print(
-                        f"[Builder] Invalid response "
-                        f"from {provider.name}: "
-                        f"{reason}"
-                    )
+                    print(f"[Builder] Invalid response from {provider.name}: {reason}")
 
                     if attempt < failover.max_attempts():
                         continue
@@ -115,11 +136,8 @@ class ExecutionEngine:
                     break
 
                 try:
-                    obj = json.loads(
-                        normalized["text"]
-                    )
+                    obj = json.loads(normalized["text"])
                 except Exception:
-
                     reason = "invalid_json"
 
                     if attempt < failover.max_attempts():
@@ -127,19 +145,12 @@ class ExecutionEngine:
 
                     break
 
-                semantic = semantic_validator.validate(
-                    obj
-                )
+                semantic = semantic_validator.validate(obj)
 
                 if not semantic.valid:
-
                     reason = semantic.reason
 
-                    print(
-                        f"[Builder] Unsafe response "
-                        f"from {provider.name}: "
-                        f"{reason}"
-                    )
+                    print(f"[Builder] Unsafe response from {provider.name}: {reason}")
 
                     if attempt < failover.max_attempts():
                         continue
@@ -161,7 +172,6 @@ class ExecutionEngine:
                 )
 
             if not success:
-
                 failover.record_failure(
                     failures,
                     provider,
@@ -170,7 +180,6 @@ class ExecutionEngine:
                 )
 
         if last_provider is None:
-
             return ExecutionResponse(
                 success=False,
                 provider="",

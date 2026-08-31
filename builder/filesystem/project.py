@@ -4,7 +4,6 @@ from builder.models.project import Project
 
 
 class ProjectScanner:
-
     def scan(self, root: Path | str) -> Project:
 
         root = Path(root).resolve()

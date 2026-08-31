@@ -1,5 +1,4 @@
 class ProviderRegistry:
-
     def __init__(self):
         self._providers = {}
 
@@ -11,5 +10,6 @@ class ProviderRegistry:
 
     def all(self):
         return list(self._providers.values())
+
 
 registry = ProviderRegistry()

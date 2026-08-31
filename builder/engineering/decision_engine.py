@@ -1,5 +1,4 @@
 class EngineeringDecisionEngine:
-
     PRIORITY = {
         "critical": 100,
         "high": 75,

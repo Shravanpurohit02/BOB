@@ -24,7 +24,7 @@ class RepositoryFile:
     def from_path(
         cls,
         path: str | Path,
-    ) -> "RepositoryFile":
+    ) -> RepositoryFile:
 
         path = Path(path)
 
@@ -65,4 +65,3 @@ class RepositoryFile:
 
 
 File = RepositoryFile
-

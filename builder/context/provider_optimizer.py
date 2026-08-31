@@ -1,9 +1,8 @@
-from builder.context.token_budget import manager
 from builder.context.compression import compressor
+from builder.context.token_budget import manager
 
 
 class ProviderContextOptimizer:
-
     RESERVED_OUTPUT_TOKENS = 8192
 
     def optimize(

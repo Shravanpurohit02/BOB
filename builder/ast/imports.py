@@ -24,7 +24,6 @@ class ImportIndex:
         module_names: dict[str, str] = {}
 
         for module in modules:
-
             module_names[module.name] = module.path
 
             if module.qualified_name:
@@ -33,18 +32,15 @@ class ImportIndex:
         forward: dict[str, list[str]] = defaultdict(list)
 
         for module in modules:
-
             deps: set[str] = set()
 
             for imp in module.imports:
-
                 target = module_names.get(imp)
 
                 if target and target != module.path:
                     deps.add(target)
 
             for imp in module.import_from:
-
                 target = module_names.get(imp)
 
                 if target and target != module.path:
@@ -75,15 +71,10 @@ class ImportIndex:
         forward = self.build(modules)
 
         for source, targets in forward.items():
-
             for target in targets:
                 reverse[target].append(source)
 
-        return {
-            k: sorted(v)
-            for k, v in reverse.items()
-        }
+        return {k: sorted(v) for k, v in reverse.items()}
 
 
 imports = ImportIndex()
-

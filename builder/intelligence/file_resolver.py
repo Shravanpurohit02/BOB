@@ -1,6 +1,7 @@
+import re
 from dataclasses import dataclass, field
 from pathlib import Path
-import re
+from typing import ClassVar
 
 
 @dataclass(slots=True)
@@ -11,16 +12,37 @@ class FileResolutionResult:
 
 
 class FileResolver:
+    STOP_WORDS: ClassVar[frozenset[str]] = frozenset({
+        "add",
+        "create",
+        "delete",
+        "remove",
+        "update",
+        "modify",
+        "change",
+        "replace",
+        "rename",
+        "move",
+        "copy",
+        "fix",
+        "implement",
+        "refactor",
+        "generate",
+        "write",
+        "using",
+        "use",
+        "with",
+        "into",
+        "from",
+        "to",
+        "and",
+        "or",
+        "the",
+        "a",
+        "an",
+    })
 
-    STOP_WORDS = {
-        "add", "create", "delete", "remove", "update", "modify",
-        "change", "replace", "rename", "move", "copy", "fix",
-        "implement", "refactor", "generate", "write", "using",
-        "use", "with", "into", "from", "to", "and", "or",
-        "the", "a", "an",
-    }
-
-    IGNORE = {
+    IGNORE: ClassVar[frozenset[str]] = frozenset({
         ".git",
         ".builder",
         "__pycache__",
@@ -31,7 +53,7 @@ class FileResolver:
         "node_modules",
         "build",
         "dist",
-    }
+    })
 
     def __init__(self):
         self.files = {}
@@ -43,7 +65,6 @@ class FileResolver:
         root = Path(workspace)
 
         for file in root.rglob("*"):
-
             if not file.is_file():
                 continue
 
@@ -74,25 +95,17 @@ class FileResolver:
         seen = set()
 
         for token in self._tokens(query):
-
             for file in self.files.values():
-
                 path = file["path"].lower()
                 name = file["name"].lower()
                 stem = file["stem"].lower()
 
                 if token == name or token == stem:
-
                     if path not in seen:
                         seen.add(path)
                         result.exact.append(file["path"])
 
-                elif (
-                    token in path
-                    or token in name
-                    or token in stem
-                ):
-
+                elif token in path or token in name or token in stem:
                     if path not in seen:
                         seen.add(path)
                         result.partial.append(file["path"])

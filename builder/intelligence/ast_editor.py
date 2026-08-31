@@ -14,7 +14,6 @@ class EditLocation:
 
 
 class _Visitor(ast.NodeVisitor):
-
     def __init__(self, module, relpath):
         self.module = module
         self.relpath = relpath
@@ -54,7 +53,6 @@ class _Visitor(ast.NodeVisitor):
 
 
 class ASTEditor:
-
     def build(self, workspace):
 
         root = Path(workspace)
@@ -72,7 +70,6 @@ class ASTEditor:
         }
 
         for file in root.rglob("*.py"):
-
             if any(p in SKIP for p in file.parts):
                 continue
 
@@ -86,9 +83,7 @@ class ASTEditor:
             except Exception:
                 continue
 
-            module = ".".join(
-                file.relative_to(root).with_suffix("").parts
-            )
+            module = ".".join(file.relative_to(root).with_suffix("").parts)
 
             visitor = _Visitor(module, str(file.relative_to(root)))
             visitor.visit(tree)
@@ -112,7 +107,6 @@ class ASTEditor:
         matches = []
 
         for loc in self.locations:
-
             if loc.symbol != symbol:
                 continue
 

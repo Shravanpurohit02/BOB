@@ -6,7 +6,6 @@ from builder.intelligence.models import ImpactReport
 
 @dataclass(slots=True)
 class EditPlan:
-
     create_files: list[str] = field(default_factory=list)
 
     modify_files: list[str] = field(default_factory=list)
@@ -58,7 +57,6 @@ class Milestone:
 
 @dataclass(slots=True)
 class EngineeringPlan:
-
     id: str = field(default_factory=lambda: uuid4().hex)
 
     objective: str = ""

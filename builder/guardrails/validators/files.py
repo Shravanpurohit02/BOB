@@ -37,7 +37,6 @@ class FileValidator(BaseValidator):
         files = request.patch.get("files", [])
 
         for entry in files:
-
             path = str(entry.get("path", "")).replace("\\", "/")
             content = entry.get("content", "")
 
@@ -65,11 +64,7 @@ class FileValidator(BaseValidator):
                     )
                 )
 
-            forbidden = [
-                part
-                for part in p.parts
-                if part in FORBIDDEN_DIRECTORIES
-            ]
+            forbidden = [part for part in p.parts if part in FORBIDDEN_DIRECTORIES]
 
             if forbidden:
                 issues.append(
@@ -77,10 +72,7 @@ class FileValidator(BaseValidator):
                         validator=self.name,
                         severity=Severity.ERROR,
                         file=path,
-                        message=(
-                            "Forbidden directory: "
-                            + ", ".join(forbidden)
-                        ),
+                        message=("Forbidden directory: " + ", ".join(forbidden)),
                         code="FILE003",
                     )
                 )
@@ -95,8 +87,7 @@ class FileValidator(BaseValidator):
                             severity=Severity.ERROR,
                             file=path,
                             message=(
-                                f"File size exceeds "
-                                f"{DEFAULT_MAX_FILE_SIZE} bytes."
+                                f"File size exceeds {DEFAULT_MAX_FILE_SIZE} bytes."
                             ),
                             code="FILE004",
                         )

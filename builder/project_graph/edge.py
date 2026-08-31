@@ -38,4 +38,3 @@ class ProjectEdge:
 
 
 Edge = ProjectEdge
-

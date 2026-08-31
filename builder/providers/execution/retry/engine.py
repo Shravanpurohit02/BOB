@@ -3,7 +3,6 @@ from builder.providers.execution.retry.policy import policy
 
 
 class RetryEngine:
-
     def attempts(self):
         return policy.max_attempts
 

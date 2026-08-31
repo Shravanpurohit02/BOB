@@ -8,7 +8,6 @@ LOG_DIR.mkdir(parents=True, exist_ok=True)
 logger = logging.getLogger("vidhi_builder")
 
 if not logger.handlers:
-
     logger.setLevel(logging.INFO)
 
     formatter = logging.Formatter(

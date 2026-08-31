@@ -15,7 +15,6 @@ class QueueTask:
 
 
 class ExecutionQueue:
-
     def __init__(self):
         self._tasks: list[QueueTask] = []
 
@@ -26,23 +25,13 @@ class ExecutionQueue:
         self._tasks.extend(tasks)
 
     def pending(self):
-        return [
-            t
-            for t in self._tasks
-            if not t.completed and not t.failed
-        ]
+        return [t for t in self._tasks if not t.completed and not t.failed]
 
     def ready(self):
-        completed = {
-            t.id
-            for t in self._tasks
-            if t.completed
-        }
+        completed = {t.id for t in self._tasks if t.completed}
 
         return [
-            t
-            for t in self.pending()
-            if all(dep in completed for dep in t.dependencies)
+            t for t in self.pending() if all(dep in completed for dep in t.dependencies)
         ]
 
     def complete(self, task_id: str):

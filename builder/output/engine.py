@@ -1,4 +1,4 @@
-from datetime import datetime, UTC
+from datetime import UTC, datetime
 from pathlib import Path
 from uuid import uuid4
 
@@ -7,7 +7,6 @@ from builder.staging import engine as staging_engine
 
 
 class OutputEngine:
-
     def create(
         self,
         objective: str,
@@ -104,7 +103,6 @@ class OutputEngine:
             "artifacts",
             [],
         ):
-
             for directory in artifact.directories:
                 staging_engine.stage_directory(
                     session,

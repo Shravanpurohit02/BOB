@@ -1,7 +1,10 @@
 from .engine import engine
+from .intent import Intent, classifier
 from .request import BuildRequest
 
 __all__ = [
-    "engine",
     "BuildRequest",
+    "Intent",
+    "classifier",
+    "engine",
 ]

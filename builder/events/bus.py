@@ -6,7 +6,6 @@ from .models import Event
 
 
 class EventBus:
-
     def __init__(self):
 
         self._handlers = defaultdict(list)
@@ -58,11 +57,7 @@ class EventBus:
         if topic is None:
             return list(self._history)
 
-        return [
-            e
-            for e in self._history
-            if e.topic == topic
-        ]
+        return [e for e in self._history if e.topic == topic]
 
     def clear(self):
         self._history.clear()

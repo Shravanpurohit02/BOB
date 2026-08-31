@@ -3,7 +3,6 @@ from __future__ import annotations
 from dataclasses import dataclass
 from pathlib import PurePosixPath
 
-
 ALLOWED_ACTIONS = {
     "create",
     "modify",
@@ -17,7 +16,6 @@ class SemanticValidationResult:
 
 
 class SemanticValidator:
-
     def validate(self, obj: dict) -> SemanticValidationResult:
 
         if not isinstance(obj, dict):
@@ -26,7 +24,6 @@ class SemanticValidator:
         seen = set()
 
         for file in obj.get("files", []):
-
             path = file.get("path", "")
             action = file.get("action", "modify")
             content = file.get("content")
@@ -60,7 +57,6 @@ class SemanticValidator:
                 )
 
         for directory in obj.get("directories", []):
-
             path = directory.get("path", "")
 
             if not path:

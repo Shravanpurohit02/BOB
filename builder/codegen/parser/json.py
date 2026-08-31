@@ -3,7 +3,6 @@ import re
 
 
 class JSONParser:
-
     def _extract_json(self, text: str) -> str:
 
         text = text.strip()
@@ -25,7 +24,6 @@ class JSONParser:
         decoder = json.JSONDecoder()
 
         for i, ch in enumerate(text):
-
             if ch != "{":
                 continue
 

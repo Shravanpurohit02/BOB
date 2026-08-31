@@ -1,7 +1,7 @@
 from __future__ import annotations
+from typing import ClassVar
 
 from collections import defaultdict
-from pathlib import Path
 
 from builder.ast.symbols import symbols as ast_symbols
 
@@ -33,7 +33,6 @@ class ReferenceIndex:
         index: dict[str, set[str]] = defaultdict(set)
 
         for module in modules:
-
             rel = module.path.replace("\\", "/")
 
             for symbol in (
@@ -47,10 +46,7 @@ class ReferenceIndex:
             ):
                 index[symbol].add(rel)
 
-        return {
-            key: sorted(value)
-            for key, value in index.items()
-        }
+        return {key: sorted(value) for key, value in index.items()}
 
     def references(
         self,
@@ -76,10 +72,7 @@ class ReferenceIndex:
         workspace: str,
     ) -> list[str]:
 
-        return sorted(
-            self.build(workspace)
-        )
+        return sorted(self.build(workspace))
 
 
 reference_index = ReferenceIndex()
-

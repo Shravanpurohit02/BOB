@@ -4,8 +4,8 @@ from builder.graph.edge import Edge
 from builder.graph.graph import graph
 from builder.graph.node import Node
 
-class GraphBuilder:
 
+class GraphBuilder:
     def build(self, workspace: str):
         previous = None
 
@@ -31,5 +31,6 @@ class GraphBuilder:
             previous = node
 
         return graph
+
 
 builder = GraphBuilder()

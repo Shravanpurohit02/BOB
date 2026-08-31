@@ -1,5 +1,4 @@
 class EngineeringStrategyEngine:
-
     def strategy(
         self,
         decision,
@@ -10,37 +9,41 @@ class EngineeringStrategyEngine:
         steps = []
 
         if decision["strategy"] == "architectural":
-
-            steps.extend([
-                "Analyze repository architecture",
-                "Update shared interfaces",
-                "Apply coordinated multi-file changes",
-                "Run full regression",
-            ])
+            steps.extend(
+                [
+                    "Analyze repository architecture",
+                    "Update shared interfaces",
+                    "Apply coordinated multi-file changes",
+                    "Run full regression",
+                ]
+            )
 
         elif decision["strategy"] == "repository":
-
-            steps.extend([
-                "Analyze affected modules",
-                "Modify repository components",
-                "Validate integration",
-                "Run regression",
-            ])
+            steps.extend(
+                [
+                    "Analyze affected modules",
+                    "Modify repository components",
+                    "Validate integration",
+                    "Run regression",
+                ]
+            )
 
         elif decision["strategy"] == "module":
-
-            steps.extend([
-                "Modify target module",
-                "Validate dependencies",
-                "Run module tests",
-            ])
+            steps.extend(
+                [
+                    "Modify target module",
+                    "Validate dependencies",
+                    "Run module tests",
+                ]
+            )
 
         else:
-
-            steps.extend([
-                "Modify target file",
-                "Run local validation",
-            ])
+            steps.extend(
+                [
+                    "Modify target file",
+                    "Run local validation",
+                ]
+            )
 
         return {
             "strategy": decision["strategy"],

@@ -1,7 +1,7 @@
 from builder.intelligence.index import index
 
-class Analyzer:
 
+class Analyzer:
     def analyze(self, workspace: str):
         ctx = index.build(workspace)
 
@@ -10,5 +10,6 @@ class Analyzer:
             "workspace": ctx.workspace,
             "files": len(ctx.files),
         }
+
 
 analyzer = Analyzer()

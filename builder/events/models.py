@@ -11,7 +11,6 @@ def utc_now() -> str:
 
 @dataclass(slots=True)
 class Event:
-
     id: str = field(default_factory=lambda: uuid4().hex)
 
     topic: str = ""

@@ -1,4 +1,3 @@
-
 from __future__ import annotations
 
 from dataclasses import dataclass, field
@@ -32,8 +31,9 @@ class ContextPipelineResult:
 
 
 class ContextPipeline:
-
-    def build(self, *, workspace: str, objective: str, budget: int = 12000) -> ContextPipelineResult:
+    def build(
+        self, *, workspace: str, objective: str, budget: int = 12000
+    ) -> ContextPipelineResult:
         indexer.build(workspace)
 
         ast = ast_engine.build(workspace)
@@ -64,8 +64,14 @@ class ContextPipeline:
             budget=budget,
         )
 
-        changed = [r.path.replace("\\", "/").split(workspace.rstrip("/").split("/")[-1] + "/", 1)[-1]
-                   if workspace in r.path else r.path for r in ranked]
+        changed = [
+            r.path.replace("\\", "/").split(
+                workspace.rstrip("/").split("/")[-1] + "/", 1
+            )[-1]
+            if workspace in r.path
+            else r.path
+            for r in ranked
+        ]
 
         impact = impact_engine.analyze(graph, changed)
 

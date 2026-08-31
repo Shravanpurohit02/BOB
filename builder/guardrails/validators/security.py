@@ -1,4 +1,5 @@
 from __future__ import annotations
+from typing import ClassVar
 
 import ast
 import re
@@ -21,9 +22,9 @@ class SecurityValidator(BaseValidator):
     name = "security"
     priority = 90
 
-    PYTHON_SUFFIXES = {".py", ".pyi"}
+    PYTHON_SUFFIXES: ClassVar = {".py", ".pyi"}
 
-    SECRET_PATTERNS = [
+    SECRET_PATTERNS: ClassVar = [
         (
             "SEC001",
             re.compile(
@@ -34,7 +35,7 @@ class SecurityValidator(BaseValidator):
         ),
     ]
 
-    DANGEROUS_CALLS = {
+    DANGEROUS_CALLS: ClassVar = {
         ("os", "system"),
         ("os", "popen"),
         ("subprocess", "Popen"),
@@ -44,7 +45,7 @@ class SecurityValidator(BaseValidator):
         ("subprocess", "check_output"),
     }
 
-    DANGEROUS_BUILTINS = {
+    DANGEROUS_BUILTINS: ClassVar = {
         "eval",
         "exec",
         "compile",
@@ -59,7 +60,6 @@ class SecurityValidator(BaseValidator):
         issues: list[ValidationIssue] = []
 
         for entry in request.patch.get("files", []):
-
             path = str(entry.get("path", ""))
 
             if not any(path.endswith(ext) for ext in self.PYTHON_SUFFIXES):
@@ -93,7 +93,6 @@ class SecurityValidator(BaseValidator):
                 continue
 
             for node in ast.walk(tree):
-
                 if not isinstance(node, ast.Call):
                     continue
 
@@ -115,16 +114,13 @@ class SecurityValidator(BaseValidator):
 
                 # os.system(), subprocess.run(), etc.
                 elif isinstance(node.func, ast.Attribute):
-
                     if isinstance(node.func.value, ast.Name):
-
                         key = (
                             node.func.value.id,
                             node.func.attr,
                         )
 
                         if key in self.DANGEROUS_CALLS:
-
                             severity = Severity.ERROR
 
                             if key in {

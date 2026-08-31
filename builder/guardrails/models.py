@@ -50,7 +50,7 @@ class ValidationResult:
         cls,
         validator: str,
         metadata: dict[str, Any] | None = None,
-    ) -> "ValidationResult":
+    ) -> ValidationResult:
         return cls(
             validator=validator,
             status=ValidationStatus.PASS,
@@ -63,7 +63,7 @@ class ValidationResult:
         validator: str,
         issues: list[ValidationIssue],
         metadata: dict[str, Any] | None = None,
-    ) -> "ValidationResult":
+    ) -> ValidationResult:
         return cls(
             validator=validator,
             status=ValidationStatus.FAIL,
@@ -105,7 +105,8 @@ class GuardrailReport:
             issues.extend(
                 issue
                 for issue in result.issues
-                if issue.severity in (
+                if issue.severity
+                in (
                     Severity.ERROR,
                     Severity.CRITICAL,
                 )
@@ -117,9 +118,7 @@ class GuardrailReport:
         issues: list[ValidationIssue] = []
         for result in self.results:
             issues.extend(
-                issue
-                for issue in result.issues
-                if issue.severity is Severity.WARNING
+                issue for issue in result.issues if issue.severity is Severity.WARNING
             )
         return issues
 

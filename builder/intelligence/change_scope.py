@@ -20,7 +20,6 @@ class ChangeScope:
 
 
 class ChangeScopeAnalyzer:
-
     def build(self, workspace: str):
         change_planner.build(workspace)
 

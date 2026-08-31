@@ -10,8 +10,6 @@ __all__ = [
 
 
 from .navigator import navigator
-
-
 from .semantic_engine import engine as semantic_engine
 
 __all__.append("semantic_engine")

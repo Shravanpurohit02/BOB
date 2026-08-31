@@ -31,7 +31,6 @@ class SymbolGraph:
         ownership: dict[str, str] = {}
 
         for module in modules:
-
             path = module.path
 
             symbols = sorted(
@@ -49,7 +48,6 @@ class SymbolGraph:
             exports[path] = list(symbols)
 
             for symbol in symbols:
-
                 references[symbol].append(path)
 
                 ownership.setdefault(
@@ -59,10 +57,7 @@ class SymbolGraph:
 
         return {
             "exports": exports,
-            "references": {
-                key: sorted(value)
-                for key, value in references.items()
-            },
+            "references": {key: sorted(value) for key, value in references.items()},
             "ownership": ownership,
         }
 
@@ -71,27 +66,21 @@ class SymbolGraph:
         modules: list[Module],
     ) -> dict[str, list[str]]:
 
-        return self.build(
-            modules
-        )["exports"]
+        return self.build(modules)["exports"]
 
     def references(
         self,
         modules: list[Module],
     ) -> dict[str, list[str]]:
 
-        return self.build(
-            modules
-        )["references"]
+        return self.build(modules)["references"]
 
     def ownership(
         self,
         modules: list[Module],
     ) -> dict[str, str]:
 
-        return self.build(
-            modules
-        )["ownership"]
+        return self.build(modules)["ownership"]
 
     def find_symbol(
         self,
@@ -99,9 +88,7 @@ class SymbolGraph:
         symbol: str,
     ) -> list[str]:
 
-        return self.references(
-            modules
-        ).get(
+        return self.references(modules).get(
             symbol,
             [],
         )
@@ -112,10 +99,7 @@ class SymbolGraph:
         symbol: str,
     ) -> str | None:
 
-        return self.ownership(
-            modules
-        ).get(symbol)
+        return self.ownership(modules).get(symbol)
 
 
 symbol_graph = SymbolGraph()
-

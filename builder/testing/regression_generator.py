@@ -1,5 +1,4 @@
 class RegressionTestGenerator:
-
     def generate(
         self,
         changed_files,
@@ -8,12 +7,7 @@ class RegressionTestGenerator:
         tests = []
 
         for path in changed_files:
-
-            module = (
-                path
-                .split("/")[-1]
-                .replace(".py", "")
-            )
+            module = path.split("/")[-1].replace(".py", "")
 
             tests.append(
                 {
@@ -33,10 +27,7 @@ class RegressionTestGenerator:
 
         return {
             "generated": len(tests),
-            "modules": [
-                test["module"]
-                for test in tests
-            ],
+            "modules": [test["module"] for test in tests],
         }
 
 

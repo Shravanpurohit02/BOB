@@ -1,3 +1,4 @@
+from typing import ClassVar
 import ast
 from pathlib import Path
 
@@ -8,7 +9,6 @@ from .symbols import (
 
 
 class SymbolIndexer:
-
     EXCLUDED = {
         ".git",
         ".builder",
@@ -31,9 +31,7 @@ class SymbolIndexer:
 
         parts = set(path.parts)
 
-        return bool(
-            parts & self.EXCLUDED
-        )
+        return bool(parts & self.EXCLUDED)
 
     def build(
         self,
@@ -45,14 +43,12 @@ class SymbolIndexer:
         root = Path(workspace)
 
         for file in root.rglob("*.py"):
-
             relative = file.relative_to(root)
 
             if self._excluded(relative):
                 continue
 
             try:
-
                 tree = ast.parse(
                     file.read_text(
                         encoding="utf-8",
@@ -63,14 +59,11 @@ class SymbolIndexer:
             except Exception:
                 continue
 
-            module = ".".join(
-                relative.with_suffix("").parts
-            )
+            module = ".".join(relative.with_suffix("").parts)
 
             index.modules[module] = str(file)
 
             for node in ast.walk(tree):
-
                 if not isinstance(
                     node,
                     (
@@ -81,12 +74,7 @@ class SymbolIndexer:
                 ):
                     continue
 
-                kind = (
-                    type(node)
-                    .__name__
-                    .replace("Def", "")
-                    .lower()
-                )
+                kind = type(node).__name__.replace("Def", "").lower()
 
                 index.symbols.append(
                     Symbol(

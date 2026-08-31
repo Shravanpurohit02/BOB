@@ -1,5 +1,5 @@
-from dataclasses import dataclass, field
-from datetime import datetime, UTC
+from dataclasses import dataclass
+from datetime import UTC, datetime
 
 
 @dataclass(slots=True)
@@ -10,7 +10,6 @@ class RuntimeEvent:
 
 
 class RuntimeHistory:
-
     def __init__(self):
         self._events = []
 

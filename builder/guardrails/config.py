@@ -22,10 +22,7 @@ class GuardrailConfig:
     stop_on_error: bool = DEFAULT_STOP_ON_ERROR
 
     validators: dict[str, ValidatorConfig] = field(
-        default_factory=lambda: {
-            name: ValidatorConfig()
-            for name in VALIDATOR_ORDER
-        }
+        default_factory=lambda: {name: ValidatorConfig() for name in VALIDATOR_ORDER}
     )
 
     def is_enabled(self, validator: str) -> bool:

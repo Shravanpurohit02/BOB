@@ -2,7 +2,6 @@ import ast
 
 
 class PerformanceAnalyzer:
-
     def analyze(
         self,
         source,
@@ -19,7 +18,6 @@ class PerformanceAnalyzer:
         }
 
         for node in ast.walk(tree):
-
             if isinstance(
                 node,
                 (
@@ -27,11 +25,9 @@ class PerformanceAnalyzer:
                     ast.While,
                 ),
             ):
-
                 report["loops"] += 1
 
                 for child in ast.walk(node):
-
                     if child is node:
                         continue
 
@@ -43,9 +39,7 @@ class PerformanceAnalyzer:
                         ),
                     ):
                         report["nested_loops"] += 1
-                        report["issues"].append(
-                            "Nested loop"
-                        )
+                        report["issues"].append("Nested loop")
                         break
 
             elif isinstance(
@@ -57,15 +51,11 @@ class PerformanceAnalyzer:
                     ast.GeneratorExp,
                 ),
             ):
-
                 report["comprehensions"] += 1
 
-        report["score"] -= (
-            report["nested_loops"] * 20
-        )
+        report["score"] -= report["nested_loops"] * 20
 
-        if report["score"] < 0:
-            report["score"] = 0
+        report["score"] = max(report["score"], 0)
 
         return report
 
@@ -74,10 +64,7 @@ class PerformanceAnalyzer:
         report,
     ):
 
-        return (
-            report["nested_loops"] == 0
-            and report["score"] >= 80
-        )
+        return report["nested_loops"] == 0 and report["score"] >= 80
 
 
 engine = PerformanceAnalyzer()

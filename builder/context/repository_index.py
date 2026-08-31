@@ -1,8 +1,8 @@
+from typing import ClassVar
 from pathlib import Path
 
 
 class RepositoryIndex:
-
     IGNORE = {
         ".git",
         ".builder",
@@ -18,10 +18,7 @@ class RepositoryIndex:
 
     def _ignored(self, path):
 
-        return any(
-            part in self.IGNORE
-            for part in Path(path).parts
-        )
+        return any(part in self.IGNORE for part in Path(path).parts)
 
     def build(self, workspace):
 
@@ -35,15 +32,11 @@ class RepositoryIndex:
         }
 
         for item in workspace.rglob("*"):
-
             if self._ignored(item):
                 continue
 
             if item.is_dir():
-
-                index["directories"].append(
-                    str(item)
-                )
+                index["directories"].append(str(item))
 
                 continue
 

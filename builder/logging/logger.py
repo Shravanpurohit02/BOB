@@ -7,6 +7,7 @@ LOGGER_NAME = "vidhi_builder"
 
 logger = logging.getLogger(LOGGER_NAME)
 
+
 def configure_logging() -> logging.Logger:
     if logger.handlers:
         return logger

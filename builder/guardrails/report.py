@@ -18,23 +18,14 @@ class GuardrailReporter:
         return {
             "passed": report.passed,
             "failed": report.failed,
-            "errors": [
-                asdict(issue)
-                for issue in report.errors
-            ],
-            "warnings": [
-                asdict(issue)
-                for issue in report.warnings
-            ],
+            "errors": [asdict(issue) for issue in report.errors],
+            "warnings": [asdict(issue) for issue in report.warnings],
             "results": [
                 {
                     "validator": result.validator,
                     "status": result.status.value,
                     "passed": result.passed,
-                    "issues": [
-                        asdict(issue)
-                        for issue in result.issues
-                    ],
+                    "issues": [asdict(issue) for issue in result.issues],
                     "metadata": result.metadata,
                 }
                 for result in report.results
@@ -88,9 +79,7 @@ class GuardrailReporter:
         lines.append("")
 
         for result in report.results:
-            lines.append(
-                f"[{result.status.value.upper()}] {result.validator}"
-            )
+            lines.append(f"[{result.status.value.upper()}] {result.validator}")
 
             if not result.issues:
                 lines.append("  No issues.")
@@ -104,19 +93,13 @@ class GuardrailReporter:
 
                 if location:
                     lines.append(
-                        f"  - [{issue.severity.value}] "
-                        f"{location} - {issue.message}"
+                        f"  - [{issue.severity.value}] {location} - {issue.message}"
                     )
                 else:
-                    lines.append(
-                        f"  - [{issue.severity.value}] "
-                        f"{issue.message}"
-                    )
+                    lines.append(f"  - [{issue.severity.value}] {issue.message}")
 
                 if issue.suggestion:
-                    lines.append(
-                        f"      Suggestion: {issue.suggestion}"
-                    )
+                    lines.append(f"      Suggestion: {issue.suggestion}")
 
             lines.append("")
 

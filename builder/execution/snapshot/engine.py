@@ -7,7 +7,6 @@ from .storage import storage
 
 
 class SnapshotEngine:
-
     def create(
         self,
         *,
@@ -33,9 +32,7 @@ class SnapshotEngine:
         snapshot,
     ):
 
-        snapshot.updated_at = (
-            datetime.now(UTC).isoformat()
-        )
+        snapshot.updated_at = datetime.now(UTC).isoformat()
 
         storage.save(snapshot)
 
@@ -79,9 +76,7 @@ class SnapshotEngine:
 
         snapshot.status = "completed"
 
-        snapshot.completed_at = (
-            datetime.now(UTC).isoformat()
-        )
+        snapshot.completed_at = datetime.now(UTC).isoformat()
 
         self.save(snapshot)
 

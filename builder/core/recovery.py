@@ -6,7 +6,6 @@ QUEUE_FILE = Path(".builder/state/queue.json")
 
 
 class RecoveryManager:
-
     def recover(self):
 
         if not TASK_FILE.exists():
@@ -18,7 +17,6 @@ class RecoveryManager:
         recovered = 0
 
         for task in tasks:
-
             if task.get("status") == "running":
                 task["status"] = "pending"
                 recovered += 1

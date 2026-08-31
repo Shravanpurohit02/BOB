@@ -119,22 +119,15 @@ class Module:
             self.absolute_path = self.path
 
         if not self.parent_directory:
-            self.parent_directory = str(
-                Path(self.path).parent
-            ).replace("\\", "/")
+            self.parent_directory = str(Path(self.path).parent).replace("\\", "/")
 
         if not self.qualified_name:
             self.qualified_name = (
-                self.relative_path[:-3]
-                .replace("/", ".")
-                .replace("\\", ".")
+                self.relative_path[:-3].replace("/", ".").replace("\\", ".")
             )
 
         if not self.package:
-            self.package = (
-                Path(self.qualified_name).parent.as_posix()
-                .replace("/", ".")
-            )
+            self.package = Path(self.qualified_name).parent.as_posix().replace("/", ".")
 
         self.refresh()
 
@@ -144,30 +137,16 @@ class Module:
 
         self.function_count = len(self.functions)
 
-        self.async_function_count = len(
-            self.async_functions
-        )
+        self.async_function_count = len(self.async_functions)
 
-        self.method_count = (
-            len(self.methods)
-            + len(self.async_methods)
-        )
+        self.method_count = len(self.methods) + len(self.async_methods)
 
-        self.import_count = (
-            len(self.imports)
-            + len(self.import_from)
-        )
+        self.import_count = len(self.imports) + len(self.import_from)
 
-        self.global_count = len(
-            self.global_variables
-        )
+        self.global_count = len(self.global_variables)
 
         if not self.exports:
-            self.exports = (
-                self.classes
-                + self.functions
-                + self.async_functions
-            )
+            self.exports = self.classes + self.functions + self.async_functions
 
         self.all_symbols = sorted(
             set(
@@ -182,9 +161,7 @@ class Module:
             )
         )
 
-        self.symbol_count = len(
-            self.all_symbols
-        )
+        self.symbol_count = len(self.all_symbols)
 
     @property
     def symbols(self) -> list[str]:
@@ -196,21 +173,15 @@ class Module:
 
     @property
     def has_docstring(self) -> bool:
-        return bool(
-            self.docstring.strip()
-        )
+        return bool(self.docstring.strip())
 
     @property
     def has_errors(self) -> bool:
-        return bool(
-            self.parser_errors
-        )
+        return bool(self.parser_errors)
 
     @property
     def has_warnings(self) -> bool:
-        return bool(
-            self.parser_warnings
-        )
+        return bool(self.parser_warnings)
 
     def add_import(
         self,
@@ -232,10 +203,7 @@ class Module:
         self,
         name: str,
     ) -> None:
-        if (
-            name
-            and name not in self.async_functions
-        ):
+        if name and name not in self.async_functions:
             self.async_functions.append(name)
             self.refresh()
 
@@ -246,7 +214,6 @@ class Module:
         if name and name not in self.classes:
             self.classes.append(name)
             self.refresh()
-
 
     def add_method(
         self,
@@ -260,10 +227,7 @@ class Module:
         self,
         name: str,
     ) -> None:
-        if (
-            name
-            and name not in self.async_methods
-        ):
+        if name and name not in self.async_methods:
             self.async_methods.append(name)
             self.refresh()
 
@@ -271,10 +235,7 @@ class Module:
         self,
         name: str,
     ) -> None:
-        if (
-            name
-            and name not in self.global_variables
-        ):
+        if name and name not in self.global_variables:
             self.global_variables.append(name)
             self.refresh()
 
@@ -282,10 +243,7 @@ class Module:
         self,
         name: str,
     ) -> None:
-        if (
-            name
-            and name not in self.constants
-        ):
+        if name and name not in self.constants:
             self.constants.append(name)
             self.refresh()
 
@@ -293,10 +251,7 @@ class Module:
         self,
         name: str,
     ) -> None:
-        if (
-            name
-            and name not in self.assignments
-        ):
+        if name and name not in self.assignments:
             self.assignments.append(name)
             self.refresh()
 
@@ -304,20 +259,14 @@ class Module:
         self,
         name: str,
     ) -> None:
-        if (
-            name
-            and name not in self.decorators
-        ):
+        if name and name not in self.decorators:
             self.decorators.append(name)
 
     def add_export(
         self,
         name: str,
     ) -> None:
-        if (
-            name
-            and name not in self.exports
-        ):
+        if name and name not in self.exports:
             self.exports.append(name)
             self.refresh()
 
@@ -359,7 +308,6 @@ class Module:
         if tag and tag not in self.tags:
             self.tags.append(tag)
 
-
     def clear_symbols(self) -> None:
         self.classes.clear()
         self.functions.clear()
@@ -375,7 +323,7 @@ class Module:
 
     def merge(
         self,
-        other: "Module",
+        other: Module,
     ) -> None:
 
         for value in other.imports:
@@ -441,16 +389,13 @@ class Module:
     def from_dict(
         cls,
         data: dict[str, Any],
-    ) -> "Module":
+    ) -> Module:
         module = cls(**data)
         module.refresh()
         return module
 
-    def copy(self) -> "Module":
-        return Module.from_dict(
-            self.to_dict()
-        )
-
+    def copy(self) -> Module:
+        return Module.from_dict(self.to_dict())
 
     def __len__(self) -> int:
         return self.symbol_count
@@ -477,11 +422,7 @@ class Module:
         if not isinstance(other, Module):
             return NotImplemented
 
-        return (
-            self.relative_path or self.path
-        ) == (
-            other.relative_path or other.path
-        )
+        return (self.relative_path or self.path) == (other.relative_path or other.path)
 
     def summary(self) -> dict[str, Any]:
         self.refresh()
@@ -522,4 +463,3 @@ class Module:
             f"symbols={self.symbol_count}, "
             f"imports={self.import_count})"
         )
-

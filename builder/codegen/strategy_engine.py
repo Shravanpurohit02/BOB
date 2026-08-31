@@ -1,5 +1,4 @@
 class CodeGenerationStrategyEngine:
-
     def strategy(
         self,
         objective,
@@ -10,7 +9,6 @@ class CodeGenerationStrategyEngine:
         actions = []
 
         for item in plan:
-
             actions.append(
                 {
                     "file": item["file"],
@@ -34,11 +32,11 @@ class CodeGenerationStrategyEngine:
     ):
 
         mapping = {
-            "modify":"patch",
-            "extend-planning":"extend",
-            "extend-execution":"extend",
-            "extend-validation":"extend",
-            "update-tests":"test",
+            "modify": "patch",
+            "extend-planning": "extend",
+            "extend-execution": "extend",
+            "extend-validation": "extend",
+            "update-tests": "test",
         }
 
         return mapping.get(

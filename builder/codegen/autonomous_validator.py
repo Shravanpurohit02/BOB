@@ -1,5 +1,4 @@
 class AutonomousCodeValidator:
-
     REQUIRED_KEYS = (
         "file",
         "mode",
@@ -15,11 +14,7 @@ class AutonomousCodeValidator:
         results = []
 
         for output in outputs:
-
-            passed = all(
-                key in output
-                for key in self.REQUIRED_KEYS
-            )
+            passed = all(key in output for key in self.REQUIRED_KEYS)
 
             results.append(
                 {
@@ -40,10 +35,7 @@ class AutonomousCodeValidator:
 
         total = len(results)
 
-        passed = sum(
-            item["passed"]
-            for item in results
-        )
+        passed = sum(item["passed"] for item in results)
 
         return {
             "total": total,

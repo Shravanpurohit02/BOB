@@ -3,7 +3,6 @@ from dataclasses import dataclass
 
 @dataclass(slots=True)
 class CancellationToken:
-
     cancelled: bool = False
 
     reason: str = ""

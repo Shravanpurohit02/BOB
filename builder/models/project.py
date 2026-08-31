@@ -46,7 +46,7 @@ class Project:
         }
 
     @classmethod
-    def from_dict(cls, data: dict[str, Any]) -> "Project":
+    def from_dict(cls, data: dict[str, Any]) -> Project:
         return cls(
             root=Path(data["root"]),
             name=data["name"],

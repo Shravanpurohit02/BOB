@@ -26,15 +26,9 @@ class RuntimeIntrospection:
 
         manifest.metadata.update(
             {
-                "classes": len(
-                    query.classes(workspace)
-                ),
-                "functions": len(
-                    query.functions(workspace)
-                ),
-                "symbols": len(
-                    query.symbols(workspace)
-                ),
+                "classes": len(query.classes(workspace)),
+                "functions": len(query.functions(workspace)),
+                "symbols": len(query.symbols(workspace)),
             }
         )
 
@@ -45,10 +39,7 @@ class RuntimeIntrospection:
         workspace: str,
     ) -> dict:
 
-        return self.inspect(
-            workspace
-        ).to_dict()
+        return self.inspect(workspace).to_dict()
 
 
 introspection = RuntimeIntrospection()
-

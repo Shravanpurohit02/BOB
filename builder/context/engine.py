@@ -1,11 +1,10 @@
 from builder.context.cache import cache
-from builder.context.pipeline import pipeline
 from builder.context.engineering_adapter import adapter as engineering_adapter
+from builder.context.pipeline import pipeline
 from builder.project import indexer, registry
 
 
 class ContextEngine:
-
     def create(
         self,
         workspace: str,

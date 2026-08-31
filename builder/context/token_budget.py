@@ -1,5 +1,4 @@
 class TokenBudgetManager:
-
     DEFAULT_BUDGET = 120000
 
     PROVIDER_LIMITS = {

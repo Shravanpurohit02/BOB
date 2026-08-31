@@ -4,7 +4,6 @@ from uuid import uuid4
 
 @dataclass(slots=True)
 class AutonomousTask:
-
     id: str = field(default_factory=lambda: uuid4().hex)
 
     objective: str = ""

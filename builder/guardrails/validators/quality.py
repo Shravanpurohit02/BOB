@@ -1,4 +1,5 @@
 from __future__ import annotations
+from typing import ClassVar
 
 import ast
 
@@ -20,16 +21,16 @@ class QualityValidator(BaseValidator):
     name = "quality"
     priority = 80
 
-    PYTHON_SUFFIXES = {".py", ".pyi"}
+    PYTHON_SUFFIXES: ClassVar = {".py", ".pyi"}
 
-    FORBIDDEN_TEXT = {
+    FORBIDDEN_TEXT: ClassVar = {
         "TODO": "TODO comment found.",
         "FIXME": "FIXME comment found.",
         "XXX": "XXX marker found.",
         "HACK": "HACK marker found.",
     }
 
-    FORBIDDEN_CALLS = {
+    FORBIDDEN_CALLS: ClassVar = {
         "print",
         "breakpoint",
     }
@@ -43,7 +44,6 @@ class QualityValidator(BaseValidator):
         issues: list[ValidationIssue] = []
 
         for entry in request.patch.get("files", []):
-
             path = str(entry.get("path", ""))
 
             if not any(path.endswith(ext) for ext in self.PYTHON_SUFFIXES):
@@ -55,7 +55,6 @@ class QualityValidator(BaseValidator):
                 continue
 
             for marker, message in self.FORBIDDEN_TEXT.items():
-
                 if marker in source:
                     issues.append(
                         ValidationIssue(
@@ -74,7 +73,6 @@ class QualityValidator(BaseValidator):
                 continue
 
             for node in ast.walk(tree):
-
                 if isinstance(node, ast.Pass):
                     issues.append(
                         ValidationIssue(
@@ -90,7 +88,6 @@ class QualityValidator(BaseValidator):
                     )
 
                 elif isinstance(node, ast.Call):
-
                     func = node.func
 
                     if isinstance(func, ast.Name):

@@ -11,7 +11,6 @@ def utc_now() -> str:
 
 @dataclass(slots=True)
 class ExecutionCheckpoint:
-
     stage: str = ""
 
     status: str = "pending"
@@ -25,7 +24,6 @@ class ExecutionCheckpoint:
 
 @dataclass(slots=True)
 class ExecutionSnapshot:
-
     id: str = field(default_factory=lambda: uuid4().hex)
 
     transaction_id: str = ""
@@ -85,9 +83,7 @@ class ExecutionSnapshot:
     ):
 
         for cp in reversed(self.checkpoints):
-
             if cp.stage == stage:
-
                 cp.status = "completed"
 
                 cp.completed_at = utc_now()

@@ -1,4 +1,5 @@
 from __future__ import annotations
+from typing import ClassVar
 
 import ast
 
@@ -23,7 +24,7 @@ class ImportValidator(BaseValidator):
     name = "imports"
     priority = 50
 
-    PYTHON_SUFFIXES = {
+    PYTHON_SUFFIXES: ClassVar = {
         ".py",
         ".pyi",
     }
@@ -37,7 +38,6 @@ class ImportValidator(BaseValidator):
         issues: list[ValidationIssue] = []
 
         for entry in request.patch.get("files", []):
-
             path = str(entry.get("path", ""))
 
             if not any(path.endswith(ext) for ext in self.PYTHON_SUFFIXES):
@@ -58,11 +58,8 @@ class ImportValidator(BaseValidator):
             imported: set[str] = set()
 
             for node in ast.walk(tree):
-
                 if isinstance(node, ast.Import):
-
                     for alias in node.names:
-
                         name = alias.name.strip()
 
                         if name in imported:
@@ -81,7 +78,6 @@ class ImportValidator(BaseValidator):
                         imported.add(name)
 
                 elif isinstance(node, ast.ImportFrom):
-
                     module = node.module or ""
 
                     if node.level < 0:

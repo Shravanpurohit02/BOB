@@ -4,7 +4,6 @@ from builder.autopatch.resolver import resolver
 
 
 class AutoPatch:
-
     def patch(
         self,
         workspace,
@@ -15,17 +14,9 @@ class AutoPatch:
 
         context = context or {}
 
-        filename = (
-            filename
-            or context.get("filename")
-            or context.get("target_file")
-        )
+        filename = filename or context.get("filename") or context.get("target_file")
 
-        objective = (
-            objective
-            or context.get("objective")
-            or "Automatic repair"
-        )
+        objective = objective or context.get("objective") or "Automatic repair"
 
         if not filename:
             return {

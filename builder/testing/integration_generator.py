@@ -1,5 +1,4 @@
 class IntegrationTestGenerator:
-
     def generate(
         self,
         plan,
@@ -8,15 +7,10 @@ class IntegrationTestGenerator:
         tests = []
 
         for item in plan:
-
             if item["type"] != "integration":
                 continue
 
-            module = (
-                item["file"]
-                .split("/")[-1]
-                .replace(".py", "")
-            )
+            module = item["file"].split("/")[-1].replace(".py", "")
 
             tests.append(
                 {
@@ -40,10 +34,7 @@ class IntegrationTestGenerator:
 
         return {
             "generated": len(tests),
-            "modules": [
-                test["module"]
-                for test in tests
-            ],
+            "modules": [test["module"] for test in tests],
         }
 
 

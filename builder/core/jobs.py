@@ -6,8 +6,8 @@ from builder.models.job import Job
 
 JOB_FILE = Path(".builder/state/jobs.json")
 
-class JobManager:
 
+class JobManager:
     def __init__(self):
         self._jobs = {}
         self._load()
@@ -51,5 +51,6 @@ class JobManager:
 
     def all(self):
         return list(self._jobs.values())
+
 
 jobs = JobManager()

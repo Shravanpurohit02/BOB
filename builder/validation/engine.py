@@ -2,18 +2,13 @@ from builder.validation.project import project
 
 
 class ValidationEngine:
-
     def _summary(self, results):
 
         return {
             "files": len(results),
             "passed": sum(r.success for r in results),
             "failed": sum(not r.success for r in results),
-            "errors": [
-                r
-                for r in results
-                if not r.success
-            ],
+            "errors": [r for r in results if not r.success],
         }
 
     def validate(
@@ -22,9 +17,7 @@ class ValidationEngine:
         transaction=None,
     ):
 
-        result = self._summary(
-            project.validate(workspace)
-        )
+        result = self._summary(project.validate(workspace))
 
         if (
             transaction is not None
@@ -43,9 +36,7 @@ class ValidationEngine:
         transaction=None,
     ):
 
-        result = self._summary(
-            project.validate_files(paths)
-        )
+        result = self._summary(project.validate_files(paths))
 
         if (
             transaction is not None

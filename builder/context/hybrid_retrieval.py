@@ -2,7 +2,6 @@ from builder.context.semantic_search import engine as semantic
 
 
 class HybridRetrieval:
-
     def retrieve(
         self,
         modules,
@@ -20,7 +19,6 @@ class HybridRetrieval:
         scores = {}
 
         for module in ranked:
-
             score = 100
 
             score += (

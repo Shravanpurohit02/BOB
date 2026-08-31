@@ -25,10 +25,7 @@ class ReflectionCallGraph:
             for call in calls:
                 reverse[call].add(module)
 
-        return {
-            key: sorted(value)
-            for key, value in reverse.items()
-        }
+        return {key: sorted(value) for key, value in reverse.items()}
 
     def callees(self, workspace: str, module: str) -> list[str]:
         return self.build(workspace).get(module, [])

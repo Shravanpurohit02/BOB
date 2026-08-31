@@ -38,55 +38,37 @@ class ASTParser:
 
         module = Module(path=path)
 
-        module.absolute_path = str(
-            Path(path).resolve()
-        )
+        module.absolute_path = str(Path(path).resolve())
 
         module.relative_path = path.replace(
             "\\",
             "/",
         )
 
-        module.parent_directory = str(
-            Path(path).parent
-        )
+        module.parent_directory = str(Path(path).parent)
 
         module.name = Path(path).stem
 
-        module.package = (
-            Path(path)
-            .parent
-            .as_posix()
-            .replace("/", ".")
-        )
+        module.package = Path(path).parent.as_posix().replace("/", ".")
 
         module.qualified_name = (
-            module.relative_path[:-3]
-            .replace("/", ".")
-            .replace("\\", ".")
+            module.relative_path[:-3].replace("/", ".").replace("\\", ".")
         )
 
-        module.line_count = len(
-            source.splitlines()
-        )
+        module.line_count = len(source.splitlines())
 
         module.blank_line_count = sum(
-            1
-            for line in source.splitlines()
-            if not line.strip()
+            1 for line in source.splitlines() if not line.strip()
         )
 
         module.code_line_count = sum(
             1
             for line in source.splitlines()
-            if line.strip()
-            and not line.lstrip().startswith("#")
+            if line.strip() and not line.lstrip().startswith("#")
         )
 
         module.comment_line_count = sum(
-            1
-            for line in source.splitlines()
-            if line.lstrip().startswith("#")
+            1 for line in source.splitlines() if line.lstrip().startswith("#")
         )
 
         try:
@@ -95,15 +77,10 @@ class ASTParser:
                 filename=path,
             )
         except SyntaxError as exc:
-            module.add_parser_error(
-                str(exc)
-            )
+            module.add_parser_error(str(exc))
             return module
 
-        module.docstring = (
-            ast.get_docstring(tree)
-            or ""
-        )
+        module.docstring = ast.get_docstring(tree) or ""
 
         self._visit(
             tree,
@@ -121,9 +98,7 @@ class ASTParser:
     ) -> None:
 
         for node in ast.walk(tree):
-
             if isinstance(node, ast.ClassDef):
-
                 module.add_class(node.name)
 
                 for dec in node.decorator_list:
@@ -132,7 +107,6 @@ class ASTParser:
                         module.add_decorator(name)
 
                 for item in node.body:
-
                     if isinstance(
                         item,
                         ast.FunctionDef,
@@ -143,20 +117,16 @@ class ASTParser:
                         item,
                         ast.AsyncFunctionDef,
                     ):
-                        module.add_async_method(
-                            item.name
-                        )
+                        module.add_async_method(item.name)
 
             elif isinstance(
                 node,
                 ast.FunctionDef,
             ):
-
                 if not isinstance(
                     getattr(node, "parent", None),
                     ast.ClassDef,
                 ):
-
                     module.add_function(node.name)
 
                 for dec in node.decorator_list:
@@ -168,15 +138,11 @@ class ASTParser:
                 node,
                 ast.AsyncFunctionDef,
             ):
-
                 if not isinstance(
                     getattr(node, "parent", None),
                     ast.ClassDef,
                 ):
-
-                    module.add_async_function(
-                        node.name
-                    )
+                    module.add_async_function(node.name)
 
                 for dec in node.decorator_list:
                     name = self._decorator_name(dec)
@@ -187,7 +153,6 @@ class ASTParser:
                 node,
                 ast.Import,
             ):
-
                 for alias in node.names:
                     module.add_import(alias.name)
 
@@ -195,48 +160,30 @@ class ASTParser:
                 node,
                 ast.ImportFrom,
             ):
-
                 if node.module:
-                    module.import_from.append(
-                        node.module
-                    )
+                    module.import_from.append(node.module)
 
                 for alias in node.names:
-
-                    module.imported_symbols.append(
-                        alias.name
-                    )
+                    module.imported_symbols.append(alias.name)
 
                     if alias.name == "*":
-                        module.wildcard_imports.append(
-                            node.module or ""
-                        )
+                        module.wildcard_imports.append(node.module or "")
 
             elif isinstance(
                 node,
                 ast.Assign,
             ):
-
                 for target in node.targets:
-
                     if isinstance(
                         target,
                         ast.Name,
                     ):
-
-                        module.add_assignment(
-                            target.id
-                        )
+                        module.add_assignment(target.id)
 
                         if target.id.isupper():
-                            module.add_constant(
-                                target.id
-                            )
+                            module.add_constant(target.id)
                         else:
-                            module.add_global(
-                                target.id
-                            )
-
+                            module.add_global(target.id)
 
         self._attach_parents(tree)
 
@@ -270,9 +217,7 @@ class ASTParser:
             decorator,
             ast.Call,
         ):
-            return self._decorator_name(
-                decorator.func
-            )
+            return self._decorator_name(decorator.func)
 
         return ""
 
@@ -284,19 +229,13 @@ class ASTParser:
         modules: list[Module] = []
 
         for path in paths:
-
             try:
-                modules.append(
-                    self.parse(path)
-                )
+                modules.append(self.parse(path))
 
             except Exception as exc:
-
                 module = Module(path=path)
 
-                module.add_parser_error(
-                    str(exc)
-                )
+                module.add_parser_error(str(exc))
 
                 modules.append(module)
 
@@ -309,13 +248,7 @@ class ASTParser:
 
         root = Path(workspace)
 
-        return self.parse_many(
-            sorted(
-                str(file)
-                for file in root.rglob("*.py")
-            )
-        )
+        return self.parse_many(sorted(str(file) for file in root.rglob("*.py")))
 
 
 parser = ASTParser()
-

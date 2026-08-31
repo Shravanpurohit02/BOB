@@ -18,13 +18,9 @@ class Provider:
 
     priority: int = 100
 
-    capabilities: set[str] = field(
-        default_factory=set
-    )
+    capabilities: set[str] = field(default_factory=set)
 
-    metadata: dict[str, Any] = field(
-        default_factory=dict
-    )
+    metadata: dict[str, Any] = field(default_factory=dict)
 
     def supports(
         self,
@@ -78,5 +74,3 @@ class Provider:
             "capabilities": sorted(self.capabilities),
             "metadata": dict(self.metadata),
         }
-
-

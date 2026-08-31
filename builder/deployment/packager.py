@@ -1,8 +1,8 @@
-from pathlib import Path
 import tarfile
+from pathlib import Path
+
 
 class Packager:
-
     def build(self, workspace: str):
 
         workspace = Path(workspace)
@@ -20,5 +20,6 @@ class Packager:
             )
 
         return archive
+
 
 packager = Packager()

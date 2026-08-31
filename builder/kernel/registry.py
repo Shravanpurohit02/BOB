@@ -54,18 +54,13 @@ class KernelRegistry:
         self,
     ) -> list[str]:
 
-        return sorted(
-            self._kernels.keys()
-        )
+        return sorted(self._kernels.keys())
 
     def kernels(
         self,
     ) -> list[Kernel]:
 
-        return [
-            self._kernels[name]
-            for name in self.names()
-        ]
+        return [self._kernels[name] for name in self.names()]
 
     def count(
         self,
@@ -75,4 +70,3 @@ class KernelRegistry:
 
 
 registry = KernelRegistry()
-

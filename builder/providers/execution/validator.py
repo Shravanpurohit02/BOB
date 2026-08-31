@@ -3,7 +3,6 @@ from __future__ import annotations
 import json
 from dataclasses import dataclass
 
-
 REQUIRED_KEYS = {
     "schema",
     "directories",
@@ -19,7 +18,6 @@ class ValidationResult:
 
 
 class ResponseValidator:
-
     SCHEMA = "vidhi-builder/v1"
 
     def validate(self, text: str) -> ValidationResult:

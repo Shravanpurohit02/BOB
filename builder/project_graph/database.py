@@ -84,4 +84,3 @@ class ProjectGraphDatabase:
 
 
 database = ProjectGraphDatabase()
-

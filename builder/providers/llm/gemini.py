@@ -1,9 +1,8 @@
 from builder.providers.base import BaseProvider
-from builder.providers.response import ProviderResponse
 from builder.providers.config import config
 
-class GeminiProvider(BaseProvider):
 
+class GeminiProvider(BaseProvider):
     name = "gemini"
 
     def available(self):

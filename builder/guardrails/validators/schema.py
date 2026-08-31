@@ -1,4 +1,5 @@
 from __future__ import annotations
+from typing import ClassVar
 
 from collections.abc import Mapping
 
@@ -24,12 +25,12 @@ class SchemaValidator(BaseValidator):
     name = "schema"
     priority = 10
 
-    REQUIRED_TOP_LEVEL = {
+    REQUIRED_TOP_LEVEL: ClassVar = {
         "version",
         "files",
     }
 
-    REQUIRED_FILE_FIELDS = {
+    REQUIRED_FILE_FIELDS: ClassVar = {
         "path",
         "operation",
     }
@@ -100,7 +101,6 @@ class SchemaValidator(BaseValidator):
         seen_paths: set[str] = set()
 
         for index, entry in enumerate(files):
-
             if not isinstance(entry, Mapping):
                 issues.append(
                     ValidationIssue(
@@ -120,8 +120,7 @@ class SchemaValidator(BaseValidator):
                         validator=self.name,
                         severity=Severity.ERROR,
                         message=(
-                            f"files[{index}] missing fields: "
-                            f"{sorted(missing_fields)}"
+                            f"files[{index}] missing fields: {sorted(missing_fields)}"
                         ),
                         code="SCHEMA006",
                     )
@@ -157,10 +156,7 @@ class SchemaValidator(BaseValidator):
                     ValidationIssue(
                         validator=self.name,
                         severity=Severity.ERROR,
-                        message=(
-                            f"Invalid operation '{operation}' "
-                            f"for '{path}'."
-                        ),
+                        message=(f"Invalid operation '{operation}' for '{path}'."),
                         code="SCHEMA009",
                     )
                 )
@@ -174,8 +170,7 @@ class SchemaValidator(BaseValidator):
                             validator=self.name,
                             severity=Severity.ERROR,
                             message=(
-                                f"'content' is required for "
-                                f"{operation} operation."
+                                f"'content' is required for {operation} operation."
                             ),
                             code="SCHEMA010",
                         )

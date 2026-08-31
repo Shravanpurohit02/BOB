@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from datetime import datetime, UTC
+from datetime import UTC, datetime
 from uuid import uuid4
 
 
@@ -18,9 +18,7 @@ class StagedFile:
 @dataclass(slots=True)
 class StagingSession:
     id: str = field(default_factory=lambda: uuid4().hex)
-    created_at: str = field(
-        default_factory=lambda: datetime.now(UTC).isoformat()
-    )
+    created_at: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
     root: str = ""
     files: list[StagedFile] = field(default_factory=list)
     directories: list[StagedDirectory] = field(default_factory=list)

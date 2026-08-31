@@ -17,7 +17,6 @@ class TransactionResult:
 
 
 class TransactionalPatchEngine:
-
     @staticmethod
     def _indent_of(text: str) -> str:
         for line in text.splitlines():

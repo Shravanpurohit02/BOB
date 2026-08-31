@@ -1,9 +1,9 @@
+from typing import ClassVar
 import ast
 from pathlib import Path
 
 
 class Analyzer:
-
     EXCLUDED = {
         "__pycache__",
         ".git",
@@ -21,9 +21,7 @@ class Analyzer:
         text = path.as_posix()
 
         return any(
-            text.startswith(item)
-            or f"/{item}/" in text
-            for item in self.EXCLUDED
+            text.startswith(item) or f"/{item}/" in text for item in self.EXCLUDED
         )
 
     def analyze(
@@ -36,12 +34,10 @@ class Analyzer:
         root = Path(workspace)
 
         for path in root.rglob("*.py"):
-
             if self._excluded(path.relative_to(root)):
                 continue
 
             try:
-
                 source = path.read_text(
                     encoding="utf-8",
                     errors="ignore",
@@ -59,14 +55,10 @@ class Analyzer:
                 )
 
             try:
-
                 tree = ast.parse(source)
 
                 for node in ast.walk(tree):
-
-                    if (
-                        isinstance(node, ast.Pass)
-                    ):
+                    if isinstance(node, ast.Pass):
                         issues.append(
                             (
                                 str(path),

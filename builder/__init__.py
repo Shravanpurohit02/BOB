@@ -1,7 +1,7 @@
-from .version import __title__, __version__, __api_version__
+from .version import __api_version__, __title__, __version__
 
 __all__ = [
+    "__api_version__",
     "__title__",
     "__version__",
-    "__api_version__",
 ]

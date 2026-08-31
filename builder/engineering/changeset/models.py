@@ -1,6 +1,10 @@
 from dataclasses import dataclass, field
-from datetime import datetime, UTC
+from datetime import UTC, datetime
 from uuid import uuid4
+
+from builder.intelligence.models import ImpactReport
+from builder.planning.models import EngineeringPlan
+from builder.reflection.semantic_models import SemanticRepository
 
 from .approval import Approval
 from .report import EngineeringReport
@@ -8,10 +12,6 @@ from .repository import RepositoryAnalysis
 from .risk import Risk
 from .rollback import RollbackPlan
 from .validation import ValidationSummary
-
-from builder.reflection.semantic_models import SemanticRepository
-from builder.planning.models import EngineeringPlan
-from builder.intelligence.models import ImpactReport
 
 
 @dataclass(slots=True)
@@ -23,12 +23,9 @@ class ChangeFile:
 
 @dataclass(slots=True)
 class EngineeringChangeSet:
-
     id: str = field(default_factory=lambda: uuid4().hex)
 
-    created_at: str = field(
-        default_factory=lambda: datetime.now(UTC).isoformat()
-    )
+    created_at: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
 
     objective: str = ""
 
@@ -36,29 +33,17 @@ class EngineeringChangeSet:
 
     files: list[ChangeFile] = field(default_factory=list)
 
-    repository: RepositoryAnalysis = field(
-        default_factory=RepositoryAnalysis
-    )
+    repository: RepositoryAnalysis = field(default_factory=RepositoryAnalysis)
 
-    validation: ValidationSummary = field(
-        default_factory=ValidationSummary
-    )
+    validation: ValidationSummary = field(default_factory=ValidationSummary)
 
-    report: EngineeringReport = field(
-        default_factory=EngineeringReport
-    )
+    report: EngineeringReport = field(default_factory=EngineeringReport)
 
-    approval: Approval = field(
-        default_factory=Approval
-    )
+    approval: Approval = field(default_factory=Approval)
 
-    rollback: RollbackPlan = field(
-        default_factory=RollbackPlan
-    )
+    rollback: RollbackPlan = field(default_factory=RollbackPlan)
 
     risks: list[Risk] = field(default_factory=list)
-
-
 
     semantic: SemanticRepository | None = None
 
@@ -67,6 +52,5 @@ class EngineeringChangeSet:
     impact: ImpactReport | None = None
 
     testing: dict = field(default_factory=dict)
-
 
     metadata: dict = field(default_factory=dict)

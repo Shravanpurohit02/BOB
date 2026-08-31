@@ -2,7 +2,6 @@ import ast
 
 
 class RefactoringAdvisor:
-
     def analyze(
         self,
         source,
@@ -13,18 +12,15 @@ class RefactoringAdvisor:
         suggestions = []
 
         for node in ast.walk(tree):
-
             if isinstance(
                 node,
                 ast.FunctionDef,
             ):
-
                 if len(node.body) > 20:
-
                     suggestions.append(
                         {
-                            "type":"extract-method",
-                            "target":node.name,
+                            "type": "extract-method",
+                            "target": node.name,
                         }
                     )
 
@@ -32,7 +28,6 @@ class RefactoringAdvisor:
                 node,
                 ast.ClassDef,
             ):
-
                 methods = [
                     n
                     for n in node.body
@@ -43,17 +38,16 @@ class RefactoringAdvisor:
                 ]
 
                 if len(methods) > 10:
-
                     suggestions.append(
                         {
-                            "type":"split-class",
-                            "target":node.name,
+                            "type": "split-class",
+                            "target": node.name,
                         }
                     )
 
         return {
-            "suggestions":suggestions,
-            "count":len(suggestions),
+            "suggestions": suggestions,
+            "count": len(suggestions),
         }
 
     def priority(

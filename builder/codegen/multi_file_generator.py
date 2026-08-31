@@ -1,5 +1,4 @@
 class MultiFileCodeGenerator:
-
     def generate(
         self,
         strategy,
@@ -8,7 +7,6 @@ class MultiFileCodeGenerator:
         outputs = []
 
         for action in strategy["actions"]:
-
             outputs.append(
                 {
                     "file": action["file"],
@@ -39,10 +37,7 @@ class MultiFileCodeGenerator:
 
         return {
             "files": len(outputs),
-            "generated": sum(
-                item["generated"]
-                for item in outputs
-            ),
+            "generated": sum(item["generated"] for item in outputs),
         }
 
 

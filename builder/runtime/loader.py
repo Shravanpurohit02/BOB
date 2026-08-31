@@ -84,10 +84,7 @@ class RuntimeLoader:
             )
         )
 
-        return RuntimeManifest.from_dict(
-            data
-        )
+        return RuntimeManifest.from_dict(data)
 
 
 loader = RuntimeLoader()
-

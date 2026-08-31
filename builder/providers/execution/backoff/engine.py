@@ -5,7 +5,6 @@ import time
 
 
 class BackoffEngine:
-
     def __init__(
         self,
         base_delay: float = 1.0,

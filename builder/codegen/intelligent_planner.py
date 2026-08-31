@@ -1,5 +1,4 @@
 class IntelligentCodePlanner:
-
     def plan(
         self,
         objective,
@@ -13,7 +12,6 @@ class IntelligentCodePlanner:
             impacted_files,
             start=1,
         ):
-
             phases.append(
                 {
                     "order": order,
@@ -54,12 +52,7 @@ class IntelligentCodePlanner:
 
         return {
             "files": len(plan),
-            "actions": sorted(
-                {
-                    item["action"]
-                    for item in plan
-                }
-            ),
+            "actions": sorted({item["action"] for item in plan}),
         }
 
 

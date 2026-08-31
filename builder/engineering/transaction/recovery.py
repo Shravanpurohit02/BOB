@@ -1,35 +1,31 @@
 from __future__ import annotations
 
 from datetime import UTC, datetime
+from typing import ClassVar
 
 from .storage import storage
 
 
 class TransactionRecovery:
-
-    ACTIVE = {
+    ACTIVE: ClassVar[frozenset[str]] = frozenset({
         "created",
         "running",
         "checkpoint",
-    }
+    })
 
-    TERMINAL = {
+    TERMINAL: ClassVar[frozenset[str]] = frozenset({
         "completed",
         "failed",
         "rolled_back",
         "abandoned",
-    }
+    })
 
     def list(self):
         return storage.list()
 
     def find_incomplete(self):
 
-        return [
-            tx
-            for tx in storage.list()
-            if tx.get("status") in self.ACTIVE
-        ]
+        return [tx for tx in storage.list() if tx.get("status") in self.ACTIVE]
 
     def latest_incomplete(self):
 
@@ -61,9 +57,7 @@ class TransactionRecovery:
         )
 
         tx["metadata"]["resumed"] = True
-        tx["metadata"]["resumed_at"] = (
-            datetime.now(UTC).isoformat()
-        )
+        tx["metadata"]["resumed_at"] = datetime.now(UTC).isoformat()
 
         storage.save(tx)
 
@@ -85,11 +79,7 @@ class TransactionRecovery:
             "artifacts",
         )
 
-        missing = [
-            field
-            for field in required
-            if field not in tx
-        ]
+        missing = [field for field in required if field not in tx]
 
         return {
             "valid": len(missing) == 0,
@@ -128,9 +118,7 @@ class TransactionRecovery:
             {},
         )
 
-        tx["metadata"]["abandoned_at"] = (
-            datetime.now(UTC).isoformat()
-        )
+        tx["metadata"]["abandoned_at"] = datetime.now(UTC).isoformat()
 
         storage.save(tx)
 

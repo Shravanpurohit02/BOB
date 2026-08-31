@@ -2,7 +2,6 @@ from collections import deque
 
 
 class PlanScheduler:
-
     def schedule(self, plan):
 
         queue = deque()

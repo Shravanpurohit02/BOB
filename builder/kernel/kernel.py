@@ -82,5 +82,3 @@ class Kernel:
         self.state.clear()
         self.context.clear()
         self.services.clear()
-
-

@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from enum import Enum
+from typing import ClassVar
 
 from .operation_planner import OperationType
 
@@ -19,8 +20,7 @@ class DispatchResult:
 
 
 class EditOperationRouter:
-
-    HANDLERS = {
+    HANDLERS: ClassVar[dict[OperationType, str]] = {
         OperationType.REPLACE_SYMBOL: "replace_symbol",
         OperationType.INSERT_SYMBOL: "insert_symbol",
         OperationType.DELETE_SYMBOL: "delete_symbol",

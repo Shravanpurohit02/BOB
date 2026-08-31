@@ -2,9 +2,9 @@ from __future__ import annotations
 
 from pathlib import Path
 
+from builder.context.compression import compressor
 from builder.context.file_context import context as file_context
 from builder.context.repository_audit import audit_repository
-from builder.context.compression import compressor
 from builder.intelligence.engineering_context import (
     engineering_context_builder,
 )
@@ -78,7 +78,6 @@ class EngineeringContextAdapter:
         shown = 0
 
         for rel in ctx.resolved_files:
-
             if shown >= self.MAX_FILES:
                 break
 
@@ -89,12 +88,14 @@ class EngineeringContextAdapter:
             if not info:
                 continue
 
-            parts.extend([
-                f"FILE: {rel}",
-                "-" * 60,
-                info["source"],
-                "",
-            ])
+            parts.extend(
+                [
+                    f"FILE: {rel}",
+                    "-" * 60,
+                    info["source"],
+                    "",
+                ]
+            )
 
             shown += 1
 

@@ -1,7 +1,7 @@
 from builder.models.agent import Agent
 
-class AgentRegistry:
 
+class AgentRegistry:
     def __init__(self):
         self._agents = {}
 
@@ -28,5 +28,6 @@ class AgentRegistry:
         agent = self._agents[name]
         agent.status = "idle"
         return agent
+
 
 agents = AgentRegistry()

@@ -1,14 +1,12 @@
-from builder.reflection.navigator import navigator
-
 from builder.intelligence.models import (
     ImpactModule,
     ImpactReport,
     ImpactSymbol,
 )
+from builder.reflection.navigator import navigator
 
 
 class ImpactAnalyzer:
-
     def analyze(
         self,
         workspace: str,
@@ -39,15 +37,9 @@ class ImpactAnalyzer:
             )
         ]
 
-        affected = {
-            ref["module"]
-            for ref in report.references
-        }
+        affected = {ref["module"] for ref in report.references}
 
-        report.modules = [
-            ImpactModule(name=module)
-            for module in sorted(affected)
-        ]
+        report.modules = [ImpactModule(name=module) for module in sorted(affected)]
 
         report.validation_scope = sorted(affected)
 

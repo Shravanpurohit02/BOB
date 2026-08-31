@@ -51,5 +51,3 @@ class BaseProvider(ABC):
     ) -> None:
 
         self.enabled = False
-
-

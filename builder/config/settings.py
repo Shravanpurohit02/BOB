@@ -5,6 +5,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 ROOT = Path(__file__).resolve().parents[2]
 
+
 class Settings(BaseSettings):
     project_name: str = Field(default="Vidhi Builder")
     environment: str = Field(default="development")
@@ -17,5 +18,6 @@ class Settings(BaseSettings):
         env_prefix="VIDHI_",
         extra="ignore",
     )
+
 
 settings = Settings()

@@ -3,7 +3,6 @@ from dataclasses import dataclass, field
 
 @dataclass(slots=True)
 class RepositoryAnalysis:
-
     project: str = ""
 
     python_files: int = 0
