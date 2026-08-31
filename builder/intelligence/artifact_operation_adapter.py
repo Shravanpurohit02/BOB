@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 
+from .operation_types import OperationType
+
 
 class ArtifactOperationError(ValueError):
     """Raised when a generated artifact cannot be mapped safely."""
@@ -51,6 +53,7 @@ class ArtifactOperationAdapter:
     ACTION_TO_OPERATIONS = {
         "create": {
             "create_file",
+            "create_project",
         },
         "modify": {
             "modify_file",
@@ -103,9 +106,48 @@ class ArtifactOperationAdapter:
                 "Execution plan contains no operations."
             )
 
+        # A project-level operation has no concrete file path yet.
+        # The generated artifact set is the authoritative source for
+        # the concrete files of the new project.
+        project_operations = [
+            operation
+            for operation in operations
+            if str(
+                getattr(
+                    operation.operation,
+                    "value",
+                    operation.operation,
+                )
+            ) == OperationType.CREATE_PROJECT.value
+        ]
+
+        if project_operations:
+            if len(project_operations) != 1:
+                raise ArtifactOperationError(
+                    "Only one CREATE_PROJECT operation is supported "
+                    "per generation request."
+                )
+
+            if len(operations) != 1:
+                raise ArtifactOperationError(
+                    "CREATE_PROJECT cannot be combined with other "
+                    "planned operations."
+                )
+
         operation_by_file = {}
 
         for operation in operations:
+            operation_name = str(
+                getattr(
+                    operation.operation,
+                    "value",
+                    operation.operation,
+                )
+            )
+
+            if operation_name == OperationType.CREATE_PROJECT.value:
+                continue
+
             file = str(operation.file)
 
             if file in operation_by_file:
@@ -171,6 +213,37 @@ class ArtifactOperationAdapter:
 
             operation = operation_by_file.get(file)
 
+            if operation is None and project_operations:
+                project_operation = project_operations[0]
+
+                if action != "create":
+                    raise ArtifactOperationError(
+                        "CREATE_PROJECT generation may only produce "
+                        f"create artifacts: {file}"
+                    )
+
+                project_operation = project_operations[0]
+
+                from .change_executor import EditOperation, OperationStatus
+
+                materialized = EditOperation(
+                    order=len(plan.operations) + 1,
+                    file=file,
+                    operation=OperationType.CREATE_FILE.value,
+                    symbols=[],
+                    impacts=[],
+                    status=OperationStatus.READY,
+                    metadata={
+                        "action": OperationType.CREATE_FILE.value,
+                        "target_exists": False,
+                        "project_creation": True,
+                    },
+                )
+
+                plan.operations.append(materialized)
+                operation_by_file[file] = materialized
+                operation = materialized
+
             if operation is None:
                 raise ArtifactOperationError(
                     f"Generated artifact is outside the engineering plan: {file}"
@@ -234,18 +307,50 @@ class ArtifactOperationAdapter:
                 )
             )
 
-        # Every planned operation must have a corresponding artifact.
+        # Every planned concrete operation must have a corresponding
+        # generated artifact.
         mapped_files = {
             mapping.file
             for mapping in report.mappings
         }
 
-        for operation in operations:
+        for operation in plan.operations:
+            operation_name = str(
+                getattr(
+                    operation.operation,
+                    "value",
+                    operation.operation,
+                )
+            )
+
+            # CREATE_PROJECT is a semantic planning operation only.
+            # It has already been expanded into concrete CREATE_FILE
+            # operations above and must never reach the filesystem
+            # execution boundary.
+            if operation_name == OperationType.CREATE_PROJECT.value:
+                continue
+
             if operation.file not in mapped_files:
                 raise ArtifactOperationError(
                     "Generation did not produce an artifact for "
                     f"planned operation: {operation.file}"
                 )
+
+        # CREATE_PROJECT has served its purpose as the semantic
+        # generation boundary. Remove it only after every generated
+        # artifact has been successfully validated and materialized.
+        if project_operations:
+            plan.operations = [
+                operation
+                for operation in plan.operations
+                if str(
+                    getattr(
+                        operation.operation,
+                        "value",
+                        operation.operation,
+                    )
+                ) != OperationType.CREATE_PROJECT.value
+            ]
 
         return report
 

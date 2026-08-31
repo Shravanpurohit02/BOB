@@ -1,4 +1,4 @@
-from pathlib import Path
+from builder.config import settings
 
 NAME = "Output"
 CATEGORY = "Foundation"
@@ -8,7 +8,7 @@ DESCRIPTION = "Validates Builder output artifacts."
 def run() -> bool:
 
     try:
-        output = Path(".builder/output")
+        output = settings.resolve_output_directory()
 
         if not output.exists():
             return False

@@ -1,3 +1,4 @@
+from builder.config import settings
 import typer
 
 from builder.core import environment, queue, state
@@ -44,8 +45,8 @@ def status():
     import json
     from pathlib import Path
 
-    task_file = Path(".builder/state/tasks.json")
-    change_dir = Path(".builder/state/changesets")
+    task_file = settings.resolve_state_directory() / "tasks.json"
+    change_dir = settings.resolve_state_directory() / "changesets"
 
     tasks = []
 

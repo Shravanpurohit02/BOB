@@ -49,13 +49,55 @@ from builder.context import engine as context_engine
 from builder.context.selector import selector as context_selector
 from builder.providers.execution import ExecutionRequest, engine
 from builder.providers.runtime.context_budget import context_budget as budget_engine
+from builder.providers.runtime import router as runtime_router
 
 
 class CodeGenerator:
     def generate(self, request):
+        requested_provider = str(
+            getattr(request, "provider", "") or ""
+        ).strip().lower()
+
+        if requested_provider:
+            registry = runtime_router._registry()
+
+            if not registry.exists(requested_provider):
+                raise RuntimeError(
+                    f"Requested provider is not registered: "
+                    f"{requested_provider}"
+                )
+
+            resolved_provider = registry.get(
+                requested_provider
+            )
+
+            if not resolved_provider.enabled:
+                raise RuntimeError(
+                    f"Requested provider is disabled: "
+                    f"{requested_provider}"
+                )
+
+        else:
+            resolved_provider = runtime_router.default()
+
+            if resolved_provider is None:
+                raise RuntimeError(
+                    "No AI provider is available for automatic selection."
+                )
+
+        resolved_provider_name = str(
+            resolved_provider.name
+        ).strip().lower()
+
+        print("=" * 80)
+        print("CODEGEN PROVIDER RESOLUTION")
+        print("=" * 80)
+        print("requested :", requested_provider or "(auto)")
+        print("resolved  :", resolved_provider_name)
+        print("=" * 80)
 
         budget = budget_engine.build(
-            provider="gemini",
+            provider=resolved_provider_name,
             workspace=request.workspace,
             objective=request.instruction,
         )
@@ -216,7 +258,10 @@ Preserve existing architecture.
         print("=" * 80)
 
         execution = ExecutionRequest(
-            
+            provider=resolved_provider_name,
+            model=str(
+                getattr(request, "model", "") or ""
+            ).strip(),
             messages=messages,
         )
 

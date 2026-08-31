@@ -13,3 +13,8 @@ workspace/
 __pycache__/
 *.pyc
 .pytest_cache/
+.builder/cache/
+.builder/staging/
+.builder/state/
+.builder/logs/
+.builder/phase22_backups/

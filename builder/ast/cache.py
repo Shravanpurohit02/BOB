@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from builder.config import settings
 import json
 import os
 from dataclasses import asdict
@@ -12,7 +13,7 @@ from builder.engineering.transaction.serializer import serializer
 
 class ASTCache:
     def __init__(self, root=None):
-        self.root = Path(root) if root else Path(".builder") / "ast"
+        self.root = Path(root) if root else settings.resolve_runtime_directory() / "ast"
         self.root.mkdir(parents=True, exist_ok=True)
         self.metadata_file = self.root / "metadata.json"
         self.modules_file = self.root / "modules.json"

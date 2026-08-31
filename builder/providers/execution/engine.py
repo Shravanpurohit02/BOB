@@ -14,11 +14,32 @@ from builder.providers.execution.validator import validator
 class ExecutionEngine:
     def execute(self, request):
 
-        providers = failover.providers(adapter)
+        requested_provider = str(
+            getattr(request, "provider", "") or ""
+        ).strip().lower()
 
-        if not providers:
+        providers = failover.providers(request)
+
+        # AUTO mode preserves the existing default-provider fallback.
+        # MANUAL mode is strict and must never silently switch providers.
+        if not providers and not requested_provider:
             provider, _ = adapter.client()
             providers = [provider]
+
+        if not providers and requested_provider:
+            return ExecutionResponse(
+                success=False,
+                provider=requested_provider,
+                model=str(
+                    getattr(request, "model", "") or ""
+                ),
+                text="",
+                usage={},
+                raw={
+                    "error": "manual_provider_unavailable",
+                    "provider": requested_provider,
+                },
+            )
 
         failures = failover.new_failures()
 

@@ -1,8 +1,0 @@
-{
-  "id": "3af37884f5dd4a649a0709875efeb708",
-  "builder_version": "0.1.0-alpha.1",
-  "objective": "Runtime Regression",
-  "workspace": ".",
-  "created_at": "2026-07-31T17:08:44.684223+00:00",
-  "pipeline": "started"
-}

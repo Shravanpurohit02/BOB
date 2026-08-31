@@ -1,1 +1,0 @@
-Analyze the current repository. Refactor the mathlib package by adding type hints, comprehensive docstrings, and replacing shape strings in geometry.py with an Enum while preserving all existing functionality.

@@ -1,7 +1,8 @@
 import json
 from pathlib import Path
 
-STATE = Path.cwd() / ".builder" / "state" / "changesets"
+from builder.config import settings
+STATE = settings.resolve_state_directory() / "changesets"
 
 
 class Storage:

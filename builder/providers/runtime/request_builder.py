@@ -1,5 +1,5 @@
-
 from __future__ import annotations
+
 from builder.providers.runtime.context_budget import context_budget
 
 
@@ -13,7 +13,6 @@ class RequestBuilder:
         objective: str,
         system_prompt: str = "",
     ) -> dict:
-
         report = context_budget.build(
             provider=provider,
             workspace=workspace,

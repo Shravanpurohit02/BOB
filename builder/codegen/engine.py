@@ -102,9 +102,29 @@ class CodeEngine:
         allowed = set(request.resolved_files)
 
         operation_names = {
-            str(getattr(op, "operation", "")).lower()
+            str(
+                getattr(
+                    op,
+                    "operation",
+                    "",
+                )
+            ).lower()
             for op in request.operations
         }
+
+        project_creation = (
+            "create_project" in operation_names
+        )
+
+        # CREATE_PROJECT is a semantic project-root operation.
+        # It deliberately does not resolve concrete files before
+        # generation. Generated artifacts therefore become the
+        # concrete file set, subject to workspace-boundary validation.
+        workspace_root = Path(
+            request.workspace
+        ).resolve()
+
+        workspace_name = workspace_root.name
 
         print("=" * 80)
         print("PLANNED OPERATIONS")
@@ -139,13 +159,77 @@ class CodeEngine:
         for artifact in artifacts:
             for file in artifact.files:
 
-                if allowed and file.path not in allowed:
+                # All generated artifact paths are workspace-relative.
+                # Absolute paths are never permitted.
+                raw_path = str(
+                    file.path
+                ).strip()
+
+                if not raw_path:
+                    raise ValueError(
+                        "Generator returned an empty artifact path."
+                    )
+
+                candidate = Path(raw_path)
+
+                if candidate.is_absolute():
+                    raise ValueError(
+                        "Generator returned an absolute artifact path: "
+                        f"{raw_path}"
+                    )
+
+                # Some models incorrectly echo the temporary workspace
+                # directory name. Since that directory is the actual
+                # execution root, normalize only that exact leading
+                # component. Do not normalize arbitrary path prefixes.
+                parts = candidate.parts
+
+                if (
+                    project_creation
+                    and parts
+                    and parts[0] == workspace_name
+                ):
+                    normalized = Path(
+                        *parts[1:]
+                    )
+
+                    if not normalized.parts:
+                        raise ValueError(
+                            "Generator returned the workspace root "
+                            "as a file artifact."
+                        )
+
+                    file.path = normalized.as_posix()
+                else:
+                    file.path = candidate.as_posix()
+
+                normalized_path = (
+                    workspace_root / file.path
+                ).resolve()
+
+                try:
+                    normalized_path.relative_to(
+                        workspace_root
+                    )
+                except ValueError as exc:
+                    raise ValueError(
+                        "Generator attempted to escape the workspace: "
+                        f"{file.path}"
+                    ) from exc
+
+                if (
+                    not project_creation
+                    and allowed
+                    and file.path not in allowed
+                ):
                     raise ValueError(
                         "Generator attempted unauthorized file: "
                         f"{file.path}"
                     )
 
-                action = str(file.action).strip().lower()
+                action = str(
+                    file.action
+                ).strip().lower()
 
                 if action not in {
                     "create",
@@ -178,6 +262,7 @@ class CodeEngine:
                 if (
                     action == "create"
                     and file.path in allowed
+                    and not project_creation
                     and "create_file" not in operation_names
                 ):
                     raise ValueError(

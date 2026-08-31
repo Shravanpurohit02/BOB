@@ -1,12 +1,13 @@
 from __future__ import annotations
 
+from builder.config import settings
 import json
 import tempfile
 from pathlib import Path
 
 from .serializer import serializer
 
-STATE = Path.cwd() / ".builder" / "state" / "execution" / "snapshots"
+STATE = settings.resolve_state_directory() / "execution" / "snapshots"
 
 
 class SnapshotStorage:

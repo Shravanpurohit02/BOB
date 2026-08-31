@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from builder.config import settings
 import hashlib
 import json
 import time
@@ -9,7 +10,7 @@ from pathlib import Path
 class ContextCache:
     def __init__(self):
         self._cache = {}
-        self._root = Path(".builder") / "cache"
+        self._root = settings.resolve_cache_directory()
         self._root.mkdir(parents=True, exist_ok=True)
 
     def _canonical_workspace(self, workspace):

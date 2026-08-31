@@ -195,6 +195,7 @@ class Orchestrator:
 
             execution_report = change_executor.execute(
                 change_plan,
+                transaction=changeset,
             )
 
             if not execution_report.success:

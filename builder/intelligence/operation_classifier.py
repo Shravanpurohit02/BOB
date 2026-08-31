@@ -11,6 +11,7 @@ class OperationClassifier:
         "add",
         "generate",
         "new",
+        "build",
     })
 
     DELETE_WORDS: ClassVar[frozenset[str]] = frozenset({
@@ -72,6 +73,18 @@ class OperationClassifier:
             return OperationType.DELETE_SYMBOL
 
         if any(word in text for word in self.CREATE_WORDS):
+            # Project-level creation is a semantic operation whose
+            # concrete files are determined by code generation.
+            project_words = (
+                "project",
+                "application",
+                "app",
+            )
+
+            if any(word in text for word in project_words):
+                if not has_files:
+                    return OperationType.CREATE_PROJECT
+
             # Adding a symbol to an existing/resolved file is an
             # insertion operation, not file creation.
             if has_files:

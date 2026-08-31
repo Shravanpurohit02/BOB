@@ -225,6 +225,34 @@ class OperationPlanner:
                     create_operation
                 )
 
+        # Project creation is intentionally represented before
+        # generation because the concrete file set does not exist yet.
+        # The artifact adapter expands this semantic operation into
+        # concrete CREATE_FILE operations after generation.
+        if not plan.operations:
+            operation = classifier.classify(
+                query,
+                has_files=False,
+                has_symbols=False,
+            )
+
+            if operation is OperationType.CREATE_PROJECT:
+                plan.operations.append(
+                    PlannedOperation(
+                        file=".",
+                        operation=OperationType.CREATE_PROJECT,
+                        symbols=[],
+                        impacts=[],
+                        metadata={
+                            "action": OperationType.CREATE_PROJECT.value,
+                            "symbol_count": 0,
+                            "impact_count": 0,
+                            "target_exists": False,
+                            "project_creation": True,
+                        },
+                    )
+                )
+
         return plan
 
 

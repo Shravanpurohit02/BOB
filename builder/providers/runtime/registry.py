@@ -4,70 +4,84 @@ from builder.providers.runtime.config import ProviderRuntime
 
 
 class ProviderRegistry:
+    """Registry for loaded provider runtime configurations."""
+
     def __init__(self):
         self._providers: dict[str, ProviderRuntime] = {}
 
-    def register(self, profile: ProviderProfile) -> ProviderRuntime:
-        self._providers[profile.name.lower()] = profile
-        return profile
+    def register(self, runtime: ProviderRuntime) -> ProviderRuntime:
+        self._providers[runtime.name.lower()] = runtime
+        return runtime
 
-    def get(self, provider: str) -> ProviderRuntime:
-        return self._providers[provider.lower()]
+    def get(
+        self,
+        provider: str = "",
+        model: str = "",
+    ) -> ProviderRuntime | None:
+        if provider:
+            runtime = self._providers.get(provider.strip().lower())
+            if runtime is not None:
+                return runtime
+
+        if model:
+            normalized_model = model.strip().lower()
+            for runtime in self._providers.values():
+                if runtime.model.strip().lower() == normalized_model:
+                    return runtime
+
+        return None
 
     def exists(self, provider: str) -> bool:
-        return provider.lower() in self._providers
+        return provider.strip().lower() in self._providers
 
     def providers(self) -> list[str]:
         return sorted(self._providers)
 
-    def all(self) -> list[ProviderProfile]:
+    def all(self) -> list[ProviderRuntime]:
         return sorted(
             self._providers.values(),
-            key=lambda p: p.priority,
+            key=lambda runtime: runtime.priority,
         )
 
-    def enabled(self) -> list[ProviderProfile]:
+    def enabled(self) -> list[ProviderRuntime]:
         return [
-            p
-            for p in self.all()
-            if p.enabled
+            runtime
+            for runtime in self.all()
+            if runtime.enabled
         ]
 
-    def healthy(self) -> list[ProviderProfile]:
+    def healthy(self) -> list[ProviderRuntime]:
         return [
-            p
-            for p in self.enabled()
-            if p.healthy
+            runtime
+            for runtime in self.enabled()
+            if runtime.healthy
         ]
 
-    def free(self) -> list[ProviderProfile]:
+    def free(self) -> list[ProviderRuntime]:
         return [
-            p
-            for p in self.enabled()
-            if p.free_tier
+            runtime
+            for runtime in self.enabled()
+            if runtime.free_tier
         ]
 
-    def supports(self, capability: str) -> list[ProviderProfile]:
+    def supports(self, capability: str) -> list[ProviderRuntime]:
         key = f"supports_{capability}"
-
         return [
-            p
-            for p in self.enabled()
-            if bool(getattr(p, key, False))
+            runtime
+            for runtime in self.enabled()
+            if bool(getattr(runtime, key, False))
         ]
 
-    def compatible(self, api_type: str) -> list[ProviderProfile]:
+    def compatible(self, api_type: str) -> list[ProviderRuntime]:
         return [
-            p
-            for p in self.enabled()
-            if p.api_type == api_type
+            runtime
+            for runtime in self.enabled()
+            if runtime.api_type == api_type
         ]
 
-    def best_order(self) -> list[ProviderProfile]:
+    def best_order(self) -> list[ProviderRuntime]:
         healthy = self.healthy()
-        if healthy:
-            return healthy
-        return self.enabled()
+        return healthy if healthy else self.enabled()
 
     def highest_priority(self) -> ProviderRuntime | None:
         providers = self.enabled()
@@ -77,5 +91,8 @@ class ProviderRegistry:
         providers = self.best_order()
         return providers[0] if providers else None
 
+
+# Backward/forward-compatible public API name used by runtime tests.
+RuntimeRegistry = ProviderRegistry
 
 registry = ProviderRegistry()

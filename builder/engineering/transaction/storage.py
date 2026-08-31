@@ -1,10 +1,11 @@
 from __future__ import annotations
+from builder.config import settings
 
 import json
 import tempfile
 from pathlib import Path
 
-STATE = Path.cwd() / ".builder" / "state" / "transactions"
+STATE = settings.resolve_state_directory() / "transactions"
 
 
 class TransactionStorage:

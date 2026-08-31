@@ -3,8 +3,9 @@ from dataclasses import asdict
 from pathlib import Path
 
 from builder.events.models import Event
+from builder.config import settings
 
-EVENT_FILE = Path(".builder/state/events.json")
+EVENT_FILE = settings.resolve_state_directory() / "events.json"
 
 
 class EventBus:

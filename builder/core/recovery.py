@@ -1,8 +1,9 @@
 import json
 from pathlib import Path
 
-TASK_FILE = Path(".builder/state/tasks.json")
-QUEUE_FILE = Path(".builder/state/queue.json")
+from builder.config import settings
+TASK_FILE = settings.resolve_state_directory() / "tasks.json"
+QUEUE_FILE = settings.resolve_state_directory() / "queue.json"
 
 
 class RecoveryManager:

@@ -4,7 +4,8 @@ from pathlib import Path
 
 from builder.models.plan import Plan
 
-PLAN_FILE = Path(".builder/state/plans.json")
+from builder.config import settings
+PLAN_FILE = settings.resolve_state_directory() / "plans.json"
 
 
 class PlanManager:

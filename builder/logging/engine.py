@@ -1,8 +1,9 @@
+from builder.config import settings
 import logging
 from logging.handlers import RotatingFileHandler
 from pathlib import Path
 
-LOG_DIR = Path(".builder/logs")
+LOG_DIR = settings.resolve_log_directory()
 LOG_DIR.mkdir(parents=True, exist_ok=True)
 
 logger = logging.getLogger("vidhi_builder")

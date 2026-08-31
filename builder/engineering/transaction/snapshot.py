@@ -1,11 +1,12 @@
 from __future__ import annotations
 
+from builder.config import settings
 import hashlib
 import shutil
 from datetime import UTC, datetime
 from pathlib import Path
 
-SNAPSHOT_ROOT = Path.cwd() / ".builder" / "state" / "transactions" / "snapshots"
+SNAPSHOT_ROOT = settings.resolve_state_directory() / "transactions" / "snapshots"
 
 
 class SnapshotEngine:
