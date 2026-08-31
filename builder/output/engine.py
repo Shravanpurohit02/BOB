@@ -1,3 +1,4 @@
+from builder.config import settings
 from datetime import UTC, datetime
 from pathlib import Path
 from uuid import uuid4
@@ -17,7 +18,7 @@ class OutputEngine:
 
         run_id = uuid4().hex
 
-        root = Path(".builder/output") / run_id
+        root = settings.resolve_output_directory() / run_id
         root.mkdir(
             parents=True,
             exist_ok=True,
@@ -55,7 +56,7 @@ class OutputEngine:
             objective,
         )
 
-        latest = Path(".builder/output/latest")
+        latest = settings.resolve_output_directory() / "latest"
 
         latest.mkdir(
             parents=True,

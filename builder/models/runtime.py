@@ -6,7 +6,7 @@ from pathlib import Path
 from typing import Any
 from uuid import uuid4
 
-from builder.models.project import Project
+from builder.project.model import Project
 
 
 @dataclass(slots=True)

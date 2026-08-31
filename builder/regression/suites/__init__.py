@@ -16,6 +16,9 @@ from .autonomous_engineering import run as autonomous_engineering
 from .autonomous_review import run as autonomous_review
 from .autonomous_testing import run as autonomous_testing
 from .cli import run as cli
+from .code_library_ingestion import run as code_library_ingestion
+from .code_library_retrieval import run as code_library_retrieval
+from .code_library_composition import run as code_library_composition
 from .context_intelligence import run as context_intelligence
 from .decision_engine import run as decision_engine
 from .dependency_graph import run as dependency_graph
@@ -45,6 +48,8 @@ from .snapshot import run as snapshot
 from .transaction import run as transaction
 from .worker_pool import run as worker_pool
 from .worker_recovery import run as worker_recovery
+from .validation_pipeline_contract import run as validation_pipeline_contract
+from .code_library_application_composition import run as code_library_application_composition
 
 SUITES = OrderedDict(
     [
@@ -79,9 +84,14 @@ SUITES = OrderedDict(
         ("Context Intelligence", context_intelligence),
         ("Semantic Repository", semantic_repository),
         ("Repository Intelligence", repository_intelligence),
+        ("Code Library Ingestion", code_library_ingestion),
+        ("Code Library Retrieval", code_library_retrieval),
+        ("Code Library Composition", code_library_composition),
+        ("Code Library Application Composition", code_library_application_composition),
         ("Autonomous Engineering", autonomous_engineering),
         ("Autonomous Code Generation", autonomous_code_generation),
         ("Autonomous Review", autonomous_review),
+        ("Validation Pipeline Contract", validation_pipeline_contract),
         ("Autonomous Testing", autonomous_testing),
     ]
 )

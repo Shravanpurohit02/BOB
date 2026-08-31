@@ -1,7 +1,10 @@
+from __future__ import annotations
+
 from builder.autopatch import engine as autopatch
 
 
 class RepairEngine:
+
     def repair(
         self,
         workspace: str,
@@ -9,11 +12,28 @@ class RepairEngine:
         context: dict | None = None,
     ):
 
-        context = context or {}
+        context = dict(context or {})
 
-        # ------------------------------------------------------------------
-        # Backward-compatible single repair
-        # ------------------------------------------------------------------
+        learned_context = context.get(
+            "learned_context",
+            [],
+        )
+
+        if not isinstance(
+            learned_context,
+            list,
+        ):
+            learned_context = []
+
+        context["learned_context"] = [
+            dict(item)
+            for item in learned_context
+            if isinstance(item, dict)
+        ]
+
+        context["knowledge_count"] = len(
+            context["learned_context"]
+        )
 
         if not paths:
             try:
@@ -23,7 +43,9 @@ class RepairEngine:
                 )
 
             except TypeError:
-                return autopatch.patch(workspace)
+                return autopatch.patch(
+                    workspace
+                )
 
             except Exception:
                 return {
@@ -31,19 +53,24 @@ class RepairEngine:
                     "patched": 0,
                 }
 
-        # ------------------------------------------------------------------
-        # Selective repair
-        # ------------------------------------------------------------------
-
         results = []
 
         for path in paths:
+            local_context = dict(context)
+
+            local_context["filename"] = path
+            local_context["target_file"] = path
+
             try:
                 results.append(
                     autopatch.patch(
                         workspace=workspace,
                         filename=path,
-                        context=context,
+                        objective=local_context.get(
+                            "objective",
+                            "Automatic repair",
+                        ),
+                        context=local_context,
                     )
                 )
 
@@ -57,9 +84,20 @@ class RepairEngine:
                 )
 
         return {
-            "success": all(r.get("success", False) for r in results),
-            "patched": sum(1 for r in results if r.get("success")),
+            "success": bool(results)
+            and all(
+                r.get("success", False)
+                for r in results
+            ),
+            "patched": sum(
+                1
+                for r in results
+                if r.get("success")
+            ),
             "results": results,
+            "knowledge_count": len(
+                context["learned_context"]
+            ),
         }
 
 

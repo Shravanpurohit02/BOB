@@ -1,6 +1,6 @@
+
+
 from __future__ import annotations
-
-
 class ResponseNormalizer:
     """
     Normalizes responses from multiple LLM providers into a common format.
@@ -20,6 +20,16 @@ class ResponseNormalizer:
             data = response.json()
         except Exception:
             data = {}
+
+        if not isinstance(data, dict):
+            data = {
+                "error": str(data),
+            }
+
+        if not isinstance(data, dict):
+            data = {
+                "error": str(data),
+            }
 
         text = ""
 

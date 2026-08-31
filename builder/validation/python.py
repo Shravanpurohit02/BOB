@@ -1,11 +1,20 @@
 import ast
 from pathlib import Path
 
-from builder.validation.result import ValidationResult
+from builder.guardrails.models import (
+    Severity,
+    ValidationIssue,
+    ValidationResult,
+)
 
 
 class PythonValidator:
-    def validate(self, path: Path):
+    NAME = "python"
+
+    def validate(
+        self,
+        path: Path,
+    ) -> ValidationResult:
 
         try:
             source = path.read_text(
@@ -18,6 +27,7 @@ class PythonValidator:
             path_str = str(path).replace("\\", "/")
 
             for node in ast.walk(tree):
+
                 if isinstance(node, ast.Import):
                     names = [n.name for n in node.names]
 
@@ -28,31 +38,55 @@ class PythonValidator:
                     continue
 
                 if "/backend/" in path_str:
-                    if any(n.startswith("frontend") for n in names):
-                        return ValidationResult(
-                            path=str(path),
-                            success=False,
-                            message="Backend cannot import frontend modules.",
+                    if any(name.startswith("frontend") for name in names):
+                        return ValidationResult.failure(
+                            validator=self.NAME,
+                            issues=[
+                                ValidationIssue(
+                                    validator=self.NAME,
+                                    severity=Severity.ERROR,
+                                    message="Backend cannot import frontend modules.",
+                                    file=str(path),
+                                    line=getattr(node, "lineno", 0),
+                                    column=getattr(node, "col_offset", 0),
+                                )
+                            ],
                         )
 
                 if "/frontend/" in path_str:
-                    if any(n.startswith("backend") for n in names):
-                        return ValidationResult(
-                            path=str(path),
-                            success=False,
-                            message="Frontend cannot import backend modules.",
+                    if any(name.startswith("backend") for name in names):
+                        return ValidationResult.failure(
+                            validator=self.NAME,
+                            issues=[
+                                ValidationIssue(
+                                    validator=self.NAME,
+                                    severity=Severity.ERROR,
+                                    message="Frontend cannot import backend modules.",
+                                    file=str(path),
+                                    line=getattr(node, "lineno", 0),
+                                    column=getattr(node, "col_offset", 0),
+                                )
+                            ],
                         )
 
-            return ValidationResult(
-                path=str(path),
-                success=True,
+            return ValidationResult.success(
+                validator=self.NAME,
+                metadata={
+                    "file": str(path),
+                },
             )
 
         except Exception as exc:
-            return ValidationResult(
-                path=str(path),
-                success=False,
-                message=str(exc),
+            return ValidationResult.failure(
+                validator=self.NAME,
+                issues=[
+                    ValidationIssue(
+                        validator=self.NAME,
+                        severity=Severity.ERROR,
+                        message=str(exc),
+                        file=str(path),
+                    )
+                ],
             )
 
 

@@ -92,31 +92,31 @@ class ASTEditor:
 
     def find_symbol(self, qualified):
 
-        parts = qualified.split(".")
-        symbol = parts[-1]
+        qualified = str(qualified).strip()
 
-        cls = None
-        module = None
-
-        if len(parts) >= 2:
-            cls = parts[-2]
-
-        if len(parts) >= 3:
-            module = ".".join(parts[:-2])
+        if not qualified:
+            return []
 
         matches = []
 
         for loc in self.locations:
-            if loc.symbol != symbol:
+            if loc.symbol != qualified.split(".")[-1]:
                 continue
 
-            if cls and (loc.cls or "").split(".")[-1] != cls:
-                continue
+            location_parts = [loc.module]
 
-            if module and loc.module != module:
-                continue
+            if loc.cls:
+                location_parts.extend(loc.cls.split("."))
 
-            matches.append(loc)
+            location_parts.append(loc.symbol)
+
+            location_qualified = ".".join(
+                part for part in location_parts
+                if part
+            )
+
+            if location_qualified == qualified:
+                matches.append(loc)
 
         return matches
 

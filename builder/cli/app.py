@@ -1,3 +1,4 @@
+from builder.config import settings
 import typer
 
 from builder.core import environment, queue, state
@@ -16,9 +17,9 @@ def root():
     print(f"Session     : {runtime.session_id}")
     print(f"Workspace   : {runtime.workspace}")
     print(f"Project     : {runtime.project.name}")
-    print(f"Detected    : {runtime.project.detected}")
-    print(f"PyProject   : {runtime.project.pyproject is not None}")
-    print(f"Git         : {runtime.project.git is not None}")
+    print(f"Detected    : {runtime.project.metadata.get('detected', False)}")
+    print(f"PyProject   : {runtime.project.metadata.get('pyproject', False)}")
+    print(f"Git         : {runtime.project.metadata.get('git', False)}")
     print(f"Python      : {environment.python_version}")
     print(f"Platform    : {environment.platform_name}")
     print(f"Termux      : {environment.termux}")
@@ -44,8 +45,8 @@ def status():
     import json
     from pathlib import Path
 
-    task_file = Path(".builder/state/tasks.json")
-    change_dir = Path(".builder/state/changesets")
+    task_file = settings.resolve_state_directory() / "tasks.json"
+    change_dir = settings.resolve_state_directory() / "changesets"
 
     tasks = []
 
@@ -70,8 +71,8 @@ def status():
     print("Python         :", environment.python_version)
     print("Platform       :", environment.platform_name)
     print("Termux         :", environment.termux)
-    print("Git            :", runtime.project.git is not None)
-    print("PyProject      :", runtime.project.pyproject is not None)
+    print("Git            :", runtime.project.metadata.get("git", False))
+    print("PyProject      :", runtime.project.metadata.get("pyproject", False))
     print("-" * 70)
     print("Queue          :", len(queue))
     print("Tasks          :", total)

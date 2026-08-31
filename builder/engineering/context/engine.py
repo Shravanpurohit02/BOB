@@ -1,7 +1,7 @@
 from .models import EngineeringContext
 
 
-class ContextEngine:
+class EngineeringContextEngine:
     def create(
         self,
         objective: str,
@@ -46,4 +46,4 @@ class ContextEngine:
             context.symbols.append(symbol)
 
 
-engine = ContextEngine()
+engine = EngineeringContextEngine()

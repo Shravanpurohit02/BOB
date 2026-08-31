@@ -33,7 +33,7 @@ dependencies = [
 vidhi-builder = "builder.__main__:main"
 
 [tool.setuptools]
-package-dir = {""="builder"}
+package-dir = {""="."}
 
 [tool.setuptools.packages.find]
-where=["builder"]
+where=["."]

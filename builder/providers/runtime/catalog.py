@@ -30,6 +30,8 @@ class ProviderCatalogEntry:
 PROVIDERS = (
     ProviderCatalogEntry(
         name="gemini",
+        default_model="gemini-2.5-pro",
+        default_base_url="https://generativelanguage.googleapis.com",
         display_name="Google Gemini",
         env_prefix="GEMINI",
         api_type="gemini",
@@ -42,6 +44,8 @@ PROVIDERS = (
     ),
     ProviderCatalogEntry(
         name="anthropic",
+        default_model="claude-sonnet-4-5",
+        default_base_url="https://api.anthropic.com",
         display_name="Anthropic",
         env_prefix="ANTHROPIC",
         api_type="anthropic",
@@ -54,6 +58,8 @@ PROVIDERS = (
     ),
     ProviderCatalogEntry(
         name="openai",
+        default_model="gpt-4.1-mini",
+        default_base_url="https://api.openai.com/v1",
         display_name="OpenAI",
         env_prefix="OPENAI",
         api_type="openai",
@@ -66,6 +72,8 @@ PROVIDERS = (
     ),
     ProviderCatalogEntry(
         name="groq",
+        default_model="llama-3.3-70b-versatile",
+        default_base_url="https://api.groq.com/openai/v1",
         display_name="Groq",
         env_prefix="GROQ",
         api_type="openai",
@@ -77,6 +85,8 @@ PROVIDERS = (
     ),
     ProviderCatalogEntry(
         name="openrouter",
+        default_model="openai/gpt-oss-120b",
+        default_base_url="https://openrouter.ai/api/v1",
         display_name="OpenRouter",
         env_prefix="OPENROUTER",
         api_type="openai",
@@ -88,6 +98,8 @@ PROVIDERS = (
     ),
     ProviderCatalogEntry(
         name="cerebras",
+        default_model="llama-3.3-70b",
+        default_base_url="https://api.cerebras.ai/v1",
         display_name="Cerebras",
         env_prefix="CEREBRAS",
         api_type="openai",
@@ -98,6 +110,8 @@ PROVIDERS = (
     ),
     ProviderCatalogEntry(
         name="nvidia",
+        default_model="meta/llama-3.3-70b-instruct",
+        default_base_url="https://integrate.api.nvidia.com/v1",
         display_name="NVIDIA NIM",
         env_prefix="NVIDIA",
         api_type="openai",
@@ -108,6 +122,8 @@ PROVIDERS = (
     ),
     ProviderCatalogEntry(
         name="mistral",
+        default_model="mistral-large-latest",
+        default_base_url="https://api.mistral.ai/v1",
         display_name="Mistral",
         env_prefix="MISTRAL",
         api_type="openai",
@@ -118,6 +134,8 @@ PROVIDERS = (
     ),
     ProviderCatalogEntry(
         name="huggingface",
+        default_model="Qwen/Qwen3-Coder-480B-A35B-Instruct",
+        default_base_url="https://router.huggingface.co/v1",
         display_name="Hugging Face",
         env_prefix="HUGGINGFACE",
         api_type="openai",

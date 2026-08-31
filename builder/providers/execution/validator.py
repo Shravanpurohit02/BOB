@@ -1,5 +1,5 @@
-from __future__ import annotations
 
+from __future__ import annotations
 import json
 from dataclasses import dataclass
 
@@ -12,7 +12,7 @@ REQUIRED_KEYS = {
 
 
 @dataclass(slots=True)
-class ValidationResult:
+class ProviderValidationResult:
     valid: bool
     reason: str = ""
 
@@ -20,71 +20,71 @@ class ValidationResult:
 class ResponseValidator:
     SCHEMA = "vidhi-builder/v1"
 
-    def validate(self, text: str) -> ValidationResult:
+    def validate(self, text: str) -> ProviderValidationResult:
 
         if not isinstance(text, str):
-            return ValidationResult(False, "response_not_string")
+            return ProviderValidationResult(False, "response_not_string")
 
         text = text.strip()
 
         if not text:
-            return ValidationResult(False, "empty_response")
+            return ProviderValidationResult(False, "empty_response")
 
         try:
             text.encode("utf-8")
         except UnicodeError:
-            return ValidationResult(False, "invalid_utf8")
+            return ProviderValidationResult(False, "invalid_utf8")
 
         try:
             obj = json.loads(text)
         except Exception:
-            return ValidationResult(False, "invalid_json")
+            return ProviderValidationResult(False, "invalid_json")
 
         if not isinstance(obj, dict):
-            return ValidationResult(False, "root_not_object")
+            return ProviderValidationResult(False, "root_not_object")
 
         if obj.get("schema") != self.SCHEMA:
-            return ValidationResult(False, "invalid_schema")
+            return ProviderValidationResult(False, "invalid_schema")
 
         missing = REQUIRED_KEYS - obj.keys()
 
         if missing:
-            return ValidationResult(
+            return ProviderValidationResult(
                 False,
                 f"missing_keys:{','.join(sorted(missing))}",
             )
 
         if not isinstance(obj["directories"], list):
-            return ValidationResult(False, "directories_not_list")
+            return ProviderValidationResult(False, "directories_not_list")
 
         if not isinstance(obj["files"], list):
-            return ValidationResult(False, "files_not_list")
+            return ProviderValidationResult(False, "files_not_list")
 
         if not isinstance(obj["warnings"], list):
-            return ValidationResult(False, "warnings_not_list")
+            return ProviderValidationResult(False, "warnings_not_list")
 
         for item in obj["directories"]:
             if not isinstance(item, dict):
-                return ValidationResult(False, "directory_not_object")
+                return ProviderValidationResult(False, "directory_not_object")
 
             if "path" not in item:
-                return ValidationResult(False, "directory_missing_path")
+                return ProviderValidationResult(False, "directory_missing_path")
 
         for item in obj["files"]:
             if not isinstance(item, dict):
-                return ValidationResult(False, "file_not_object")
+                return ProviderValidationResult(False, "file_not_object")
 
             for key in (
                 "path",
                 "content",
             ):
                 if key not in item:
-                    return ValidationResult(
+                    return ProviderValidationResult(
                         False,
                         f"file_missing_{key}",
                     )
 
-        return ValidationResult(True)
+        return ProviderValidationResult(True)
 
 
 validator = ResponseValidator()

@@ -15,6 +15,9 @@ from builder.execution.context import ExecutionContext
 from builder.execution.executor import executor
 from builder.execution.scheduler import scheduler, worker_pool
 from builder.intelligence.change_executor import change_executor
+from builder.intelligence.artifact_operation_adapter import (
+    artifact_operation_adapter,
+)
 from builder.output.engine import engine as output_engine
 from builder.pipeline.engine import engine as pipeline
 from builder.project import analyzer, indexer, registry
@@ -103,7 +106,7 @@ class Orchestrator:
 
         if intent is Intent.IMPLEMENT:
             change_executor.build(str(workspace))
-            _ = change_executor.create_plan(
+            change_plan = change_executor.create_plan(
                 request.objective,
             )
 
@@ -143,6 +146,7 @@ class Orchestrator:
 
         if intent is Intent.IMPLEMENT:
 
+
             generation = codegen.generate(
                 CodeGenerationRequest(
                     instruction=request.objective,
@@ -152,39 +156,68 @@ class Orchestrator:
 
                     resolved_files=[
                         op.file
-                        for op in _.operations
+                        for op in change_plan.operations
                     ],
 
                     resolved_symbols=[
                         s
-                        for op in _.operations
+                        for op in change_plan.operations
                         for s in op.symbols
                     ],
 
-                    operations=list(_.operations),
+                    operations=list(change_plan.operations),
 
                     execution_order=[
                         op.file
-                        for op in _.operations
+                        for op in change_plan.operations
                     ],
 
                     impacts=[
                         i
-                        for op in _.operations
+                        for op in change_plan.operations
                         for i in op.impacts
                     ],
 
-                    risk=getattr(_, "risk", "low"),
+                    risk=getattr(change_plan, "risk", "low"),
                 )
             )
 
+            if not generation.success:
+                raise RuntimeError(
+                    "Code generation failed."
+                )
+
+            artifact_adaptation = artifact_operation_adapter.adapt(
+                change_plan,
+                generation,
+                write=True,
+            )
+
+            execution_report = change_executor.execute(
+                change_plan,
+                transaction=changeset,
+            )
+
+            if not execution_report.success:
+                failed = [
+                    {
+                        "file": operation.file,
+                        "operation": operation.operation,
+                        "error": operation.error,
+                    }
+                    for operation in execution_report.operations
+                    if operation.status.value == "failed"
+                ]
+
+                raise RuntimeError(
+                    f"Change execution failed: {failed}"
+                )
+
+            generation.execution = execution_report
+            generation.artifact_adaptation = artifact_adaptation
+
         else:
             generation = analysis
-
-        generation = output_engine.apply_generation(
-            str(workspace),
-            generation,
-        )
 
         for path in generation.generated_files:
             ecs.add_file(

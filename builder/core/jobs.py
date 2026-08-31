@@ -4,7 +4,8 @@ from pathlib import Path
 
 from builder.models.job import Job
 
-JOB_FILE = Path(".builder/state/jobs.json")
+from builder.config import settings
+JOB_FILE = settings.resolve_state_directory() / "jobs.json"
 
 
 class JobManager:

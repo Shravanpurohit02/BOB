@@ -4,10 +4,11 @@ from dataclasses import asdict
 from pathlib import Path
 
 from builder.autonomous_runtime import engine as runtime_engine
-from builder.models.task import Task
+from builder.planning.models import Task
+from builder.config import settings
 
-TASK_FILE = Path(".builder/state/tasks.json")
-QUEUE_FILE = Path(".builder/state/queue.json")
+TASK_FILE = settings.resolve_state_directory() / "tasks.json"
+QUEUE_FILE = settings.resolve_state_directory() / "queue.json"
 
 
 class TaskQueue:

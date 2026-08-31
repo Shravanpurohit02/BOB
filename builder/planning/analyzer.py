@@ -127,10 +127,9 @@ class PlanAnalyzer:
                 added.add(path)
 
         if transaction is not None:
-            try:
-                plan.metadata["transaction"] = transaction.id
-            except Exception:
-                pass
+            transaction_id = getattr(transaction, "id", None)
+            if transaction_id:
+                plan.metadata["transaction"] = transaction_id
 
         return plan
 

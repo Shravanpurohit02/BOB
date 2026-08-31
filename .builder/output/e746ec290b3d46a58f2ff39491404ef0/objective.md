@@ -1,1 +1,0 @@
-Analyze this repository. Produce a complete engineering report describing the project architecture, directory structure, public APIs, module dependencies, testing strategy, potential design issues, and recommended improvements. Do not modify any files.

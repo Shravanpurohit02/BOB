@@ -1,3 +1,5 @@
+analysis
+application
 ast
 autonomous
 autonomous_runtime
@@ -10,12 +12,14 @@ context
 core
 dependency
 deployment
+domain
 engineering
 events
 exceptions
 execution
 filesystem
 graph
+guardrails
 intelligence
 kernel
 knowledge
@@ -37,6 +41,7 @@ runtime
 self_improvement
 staging
 testing
+tools
 utils
 validation
 workspace

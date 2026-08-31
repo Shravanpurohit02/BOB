@@ -2,15 +2,12 @@ import ast
 from dataclasses import dataclass, field
 from pathlib import Path
 
+from builder.domain.symbol import Symbol
+
 
 @dataclass(slots=True)
-class QualifiedSymbol:
-    id: str
-    name: str
-    module: str
-    cls: str | None
-    kind: str
-    line: int
+class QualifiedSymbol(Symbol):
+    cls: str | None = None
 
 
 @dataclass(slots=True)
@@ -42,6 +39,8 @@ class _Visitor(ast.NodeVisitor):
             cls=cls,
             kind=kind,
             line=node.lineno,
+            qualified_name=sid,
+            file=self.module.replace(".", "/") + ".py",
         )
 
         self.index.symbols.append(sym)

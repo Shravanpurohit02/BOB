@@ -4,60 +4,112 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from builder.intelligence.handlers.base import BaseHandler
-from builder.intelligence.handlers.models import HandlerResult, HandlerStatus
+from builder.intelligence.workspace_path import resolve_workspace_path
+
+from builder.intelligence.handlers.models import (
+    HandlerContext,
+    HandlerResult,
+    HandlerStatus,
+)
 from builder.intelligence.source_editor import source_editor
-from builder.intelligence.transactional_patch import transactional_patch_engine
+from builder.patch.engine import engine as patch_engine
 
 
 @dataclass(slots=True)
 class ReplaceExceptionHandlerRequest:
     file: str
     old: str = "except Exception:"
-    new: str = "except (KeyboardInterrupt, SystemExit):\n            raise\n\n        except Exception:  # noqa: BLE001"
+    new: str = (
+        "except (KeyboardInterrupt, SystemExit):\n"
+        "            raise\n\n"
+        "        except Exception:  # noqa: BLE001"
+    )
     write: bool = False
 
 
 class ReplaceExceptionHandler(BaseHandler):
+
     operation = "replace_exception_handler"
 
-    def _execute(self, request, context) -> HandlerResult:
+    def _execute(
+        self,
+        request,
+        context: HandlerContext,
+    ) -> HandlerResult:
+
         if isinstance(request, dict):
             metadata = request.get("metadata", {})
             request = ReplaceExceptionHandlerRequest(
-                file=request["file"],
+                file=request.get("file", ""),
                 old=metadata.get("old", "except Exception:"),
-                new=metadata.get("new", ReplaceExceptionHandlerRequest.new),
+                new=metadata.get(
+                    "new",
+                    ReplaceExceptionHandlerRequest.new,
+                ),
                 write=metadata.get("write", False),
             )
 
-        path = Path(request.file)
-        if not path.exists():
-            return HandlerResult(False, HandlerStatus.FAILED, self.operation, request.file, message="File not found.")
-
-        before = path.read_text(encoding="utf-8", errors="ignore")
-
-        edit = source_editor.replace_text(before, request.old, request.new, count=1)
-
-        if not edit.success:
-            return HandlerResult(False, HandlerStatus.FAILED, self.operation, request.file, message=edit.message)
-
-        commit = transactional_patch_engine.commit_source(
-            file=request.file,
-            before=before,
-            updated=edit.after,
-            write=request.write,
-            transaction=context.transaction,
+        path = resolve_workspace_path(
+            context.workspace,
+            request.file,
         )
 
+        if not path.exists():
+            return HandlerResult(
+                success=False,
+                status=HandlerStatus.FAILED,
+                operation=self.operation,
+                file=request.file,
+                message="File not found.",
+            )
+
+        before = path.read_text(
+            encoding="utf-8",
+            errors="ignore",
+        )
+
+        edit = source_editor.replace_text(
+            source=before,
+            old=request.old,
+            new=request.new,
+            count=1,
+        )
+
+        if not edit.success:
+            return HandlerResult(
+                success=False,
+                status=HandlerStatus.FAILED,
+                operation=self.operation,
+                file=request.file,
+                message=edit.message,
+            )
+
+        patch = patch_engine.create(
+            path=request.file,
+            updated=edit.after,
+        )
+
+        diff = patch_engine.preview(patch)
+
+        if request.write:
+            patch_engine.commit(
+                patch,
+                transaction=context.transaction,
+            )
+
         return HandlerResult(
-            success=commit.success,
-            status=HandlerStatus.SUCCESS if commit.success else HandlerStatus.FAILED,
+            success=True,
+            status=HandlerStatus.SUCCESS,
             operation=self.operation,
             file=request.file,
-            message=commit.message,
-            diff=commit.diff,
-            patch_id=commit.backup,
-            metadata={"replacement": "BLE001"},
+            message="Exception handler replaced."
+            if request.write
+            else "Preview generated.",
+            patch_id=patch.id,
+            diff=diff,
+            metadata={
+                "preview": not request.write,
+            },
         )
 
 

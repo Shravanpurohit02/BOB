@@ -17,7 +17,6 @@ def bootstrap() -> None:
     state.boot_count += 1
     state.project = settings.workspace.name
     state.workspace = str(settings.workspace)
-    state.environment = settings.environment
 
     save_state(state)
 

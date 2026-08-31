@@ -1,11 +1,14 @@
-from __future__ import annotations
 
+from __future__ import annotations
 from dataclasses import dataclass
 from pathlib import PurePosixPath
 
 ALLOWED_ACTIONS = {
     "create",
     "modify",
+    "delete",
+    "rename",
+    "move",
 }
 
 

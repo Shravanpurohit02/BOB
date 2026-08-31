@@ -1,1 +1,0 @@
-Modify calculator.py by adding modulus(x, y) and power(x, y) functions while preserving all existing functions.

@@ -4,7 +4,8 @@ from pathlib import Path
 
 from builder.models.checkpoint import Checkpoint
 
-CHECKPOINT_DIR = Path(".builder/checkpoints")
+from builder.config import settings
+CHECKPOINT_DIR = settings.resolve_runtime_directory() / "checkpoints"
 
 
 def create_checkpoint(name: str, description: str = "") -> Checkpoint:

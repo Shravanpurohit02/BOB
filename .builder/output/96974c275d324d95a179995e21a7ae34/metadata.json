@@ -1,8 +1,0 @@
-{
-  "id": "96974c275d324d95a179995e21a7ae34",
-  "builder_version": "0.1.0-alpha.1",
-  "objective": "Create a file named builder_test.txt containing the text 'Vidhi Builder Pipeline Test'",
-  "workspace": "/data/data/com.termux/files/home/Projects/BOB/builder",
-  "created_at": "2026-08-01T06:13:36.140558+00:00",
-  "pipeline": "started"
-}

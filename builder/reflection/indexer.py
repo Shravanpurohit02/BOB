@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from builder.ast.symbols import symbols as ast_symbols
+from builder.ast.module_indexer import module_indexer as ast_module_indexer
 from builder.reflection.database import database
 from builder.reflection.module import Module
 from builder.reflection.symbol import Symbol
@@ -16,7 +16,7 @@ class ReflectionIndexer:
     def build(self, workspace: str):
         database.clear()
 
-        modules = ast_symbols.build(workspace)
+        modules = ast_module_indexer.build(workspace)
 
         for ast_module in modules:
             module_path = str(ast_module.path)

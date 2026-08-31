@@ -1,7 +1,7 @@
 import re
 
 
-class SemanticSearch:
+class ModuleSemanticSearch:
     def _tokens(self, module):
 
         values = (
@@ -77,4 +77,4 @@ class SemanticSearch:
         return [m for m in ranked if self._score(m, query) > 0][:limit]
 
 
-engine = SemanticSearch()
+engine = ModuleSemanticSearch()

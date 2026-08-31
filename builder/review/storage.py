@@ -5,8 +5,9 @@ from pathlib import Path
 from builder.review.models import ReviewTask
 
 
+from builder.config import settings
 class ReviewStorage:
-    FILE = Path(".builder/state/review_queue.json")
+    FILE = settings.resolve_state_directory() / "review_queue.json"
 
     def load(self):
 

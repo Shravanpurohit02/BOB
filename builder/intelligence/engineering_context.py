@@ -51,7 +51,10 @@ class EngineeringContextBuilder:
         # Symbol Resolution
         # --------------------------------------------------
 
-        resolved = symbol_resolver.resolve(query)
+        resolved = symbol_resolver.resolve(
+            query,
+            files=ctx.resolved_files or None,
+        )
 
         seen = set()
 
@@ -94,7 +97,13 @@ class EngineeringContextBuilder:
 
         processed = set()
 
-        for symbol in ctx.resolved_symbols + ctx.related_symbols:
+        symbols = (
+            ctx.resolved_symbols
+            if ctx.resolved_symbols
+            else ctx.related_symbols
+        )
+
+        for symbol in symbols:
             if symbol.id in processed:
                 continue
 

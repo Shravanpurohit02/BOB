@@ -53,19 +53,45 @@ class StagingEngine:
             )
         )
         committed = []
+
         for item in session.files:
+
             destination = workspace / item.path
+
             if item.action == "delete":
                 destination.unlink(missing_ok=True)
                 committed.append(str(destination))
                 continue
-            destination.parent.mkdir(parents=True, exist_ok=True)
+
+            destination.parent.mkdir(
+                parents=True,
+                exist_ok=True,
+            )
+
+            content = Path(item.source).read_text(
+                encoding="utf-8",
+            )
+
+            action = item.action
+
+            #
+            # Resolve the correct filesystem operation.
+            #
+
+            if action == "create" and destination.exists():
+                action = "modify"
+
+            elif action == "modify" and not destination.exists():
+                action = "create"
+
             patch_engine.apply(
                 path=str(destination),
-                updated=Path(item.source).read_text(encoding="utf-8"),
-                action=item.action,
+                updated=content,
+                action=action,
             )
+
             committed.append(str(destination))
+
         return committed
 
     def discard(self, session):

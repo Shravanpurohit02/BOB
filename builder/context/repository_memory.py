@@ -1,3 +1,4 @@
+from builder.config import settings
 import json
 from pathlib import Path
 
@@ -5,7 +6,7 @@ from pathlib import Path
 class RepositoryMemory:
     def __init__(self):
 
-        self.root = Path(".builder") / "memory"
+        self.root = settings.resolve_memory_directory()
 
         self.root.mkdir(
             parents=True,

@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from builder.ast.symbols import symbols as ast_symbols
+from builder.ast.module_indexer import module_indexer as ast_symbols
 from builder.project_graph.database import database
 from builder.project_graph.edge import ProjectEdge
 from builder.project_graph.node import ProjectNode
@@ -18,7 +18,7 @@ class ProjectGraphIndexer:
 
         database.clear()
 
-        modules = ast_symbols.build(workspace)
+        modules = ast_module_indexer.build(workspace)
 
         paths = {module.name: module.path for module in modules}
 

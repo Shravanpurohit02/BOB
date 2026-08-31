@@ -1,101 +1,98 @@
-from builder.providers.health import engine as health_engine
-from builder.providers.health.circuit import engine as circuit_engine
+from __future__ import annotations
+
+from builder.providers.runtime.config import ProviderRuntime
 
 
-class RuntimeRegistry:
+class ProviderRegistry:
+    """Registry for loaded provider runtime configurations."""
+
     def __init__(self):
-        self.providers = {}
+        self._providers: dict[str, ProviderRuntime] = {}
 
-    #
-    # Existing API
-    #
+    def register(self, runtime: ProviderRuntime) -> ProviderRuntime:
+        self._providers[runtime.name.lower()] = runtime
+        return runtime
 
-    def register(self, provider):
-        self.providers[provider.name] = provider
+    def get(
+        self,
+        provider: str = "",
+        model: str = "",
+    ) -> ProviderRuntime | None:
+        if provider:
+            runtime = self._providers.get(provider.strip().lower())
+            if runtime is not None:
+                return runtime
 
-    def get(self, name):
-        return self.providers.get(name)
+        if model:
+            normalized_model = model.strip().lower()
+            for runtime in self._providers.values():
+                if runtime.model.strip().lower() == normalized_model:
+                    return runtime
 
-    def all(self):
-        return list(self.providers.values())
+        return None
 
-    #
-    # Capability Queries
-    #
+    def exists(self, provider: str) -> bool:
+        return provider.strip().lower() in self._providers
 
-    def enabled(self):
-        return [p for p in self.providers.values() if p.enabled]
+    def providers(self) -> list[str]:
+        return sorted(self._providers)
 
-    def healthy(self):
-        return [p for p in self.enabled() if p.healthy]
+    def all(self) -> list[ProviderRuntime]:
+        return sorted(
+            self._providers.values(),
+            key=lambda runtime: runtime.priority,
+        )
 
-    def free(self):
-        return [p for p in self.enabled() if p.free_tier]
-
-    def compatible(self, api_type):
-        return [p for p in self.enabled() if p.api_type == api_type]
-
-    def supports(self, capability):
-
-        attribute = f"supports_{capability}"
-
+    def enabled(self) -> list[ProviderRuntime]:
         return [
-            p
-            for p in self.enabled()
-            if getattr(
-                p,
-                attribute,
-                False,
-            )
+            runtime
+            for runtime in self.all()
+            if runtime.enabled
         ]
 
-    #
-    # Selection
-    #
+    def healthy(self) -> list[ProviderRuntime]:
+        return [
+            runtime
+            for runtime in self.enabled()
+            if runtime.healthy
+        ]
 
-    def highest_priority(self):
+    def free(self) -> list[ProviderRuntime]:
+        return [
+            runtime
+            for runtime in self.enabled()
+            if runtime.free_tier
+        ]
 
-        providers = sorted(
-            self.enabled(),
-            key=lambda p: p.priority,
-        )
+    def supports(self, capability: str) -> list[ProviderRuntime]:
+        key = f"supports_{capability}"
+        return [
+            runtime
+            for runtime in self.enabled()
+            if bool(getattr(runtime, key, False))
+        ]
 
+    def compatible(self, api_type: str) -> list[ProviderRuntime]:
+        return [
+            runtime
+            for runtime in self.enabled()
+            if runtime.api_type == api_type
+        ]
+
+    def best_order(self) -> list[ProviderRuntime]:
+        healthy = self.healthy()
+        return healthy if healthy else self.enabled()
+
+    def highest_priority(self) -> ProviderRuntime | None:
+        providers = self.enabled()
         return providers[0] if providers else None
 
-    def best(self):
-
-        providers = [p for p in self.healthy() if circuit_engine.allow(p.name)]
-
-        if not providers:
-            return None
-
-        ranking = {p.provider: p.score for p in health_engine.ranking()}
-
-        providers.sort(
-            key=lambda p: (
-                -ranking.get(p.name, 100.0),
-                p.priority,
-                not p.free_tier,
-            )
-        )
-
-        return providers[0]
-
-    def best_order(self):
-
-        providers = [p for p in self.healthy() if circuit_engine.allow(p.name)]
-
-        ranking = {p.provider: p.score for p in health_engine.ranking()}
-
-        providers.sort(
-            key=lambda p: (
-                -ranking.get(p.name, 100.0),
-                p.priority,
-                not p.free_tier,
-            )
-        )
-
-        return providers
+    def best(self) -> ProviderRuntime | None:
+        providers = self.best_order()
+        return providers[0] if providers else None
 
 
-registry = RuntimeRegistry()
+# Backward/forward-compatible public API name used by runtime tests.
+RuntimeRegistry = ProviderRegistry
+
+registry = ProviderRegistry()

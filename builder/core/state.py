@@ -4,7 +4,7 @@ from dataclasses import asdict
 from builder.config import settings
 from builder.models.state import BuilderState
 
-STATE_FILE = settings.state_directory / "builder_state.json"
+STATE_FILE = settings.resolve_state_directory() / "builder_state.json"
 
 
 def load_state() -> BuilderState:

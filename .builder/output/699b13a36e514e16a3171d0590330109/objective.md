@@ -1,1 +1,0 @@
-Create a calculator.py with add, subtract, multiply and divide functions.

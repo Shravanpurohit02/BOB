@@ -3,11 +3,13 @@ from __future__ import annotations
 from dataclasses import dataclass
 from pathlib import Path
 
-from builder.intelligence.handlers.base import (
-    BaseHandler,
-)
+from builder.intelligence.handlers.base import BaseHandler
+from builder.intelligence.workspace_path import resolve_workspace_path
+
 from builder.intelligence.handlers.models import (
+    HandlerContext,
     HandlerResult,
+    HandlerStatus,
 )
 
 
@@ -19,50 +21,59 @@ class RenameFileRequest:
 
 
 class RenameFileHandler(BaseHandler):
+
     operation = "rename_file"
 
     def _execute(
         self,
         request,
-        context,
+        context: HandlerContext,
     ) -> HandlerResult:
 
         if isinstance(request, dict):
-            metadata = request.get(
-                "metadata",
-                {},
-            )
+
+            metadata = request.get("metadata", {})
 
             request = RenameFileRequest(
-                source=request["file"],
-                destination=metadata.get(
-                    "destination",
-                    "",
-                ),
-                write=metadata.get(
-                    "write",
-                    False,
-                ),
+                source=request.get("file", ""),
+                destination=metadata.get("destination", ""),
+                write=metadata.get("write", False),
             )
 
-        source = Path(request.source)
-        destination = Path(request.destination)
+        source = resolve_workspace_path(
+            context.workspace,
+            request.source,
+        )
+
+        destination = resolve_workspace_path(
+            context.workspace,
+            request.destination,
+        )
 
         if not source.exists():
             return HandlerResult(
                 success=False,
+                status=HandlerStatus.FAILED,
+                operation=self.operation,
+                file=str(source),
                 message="Source file does not exist.",
             )
 
         if not request.destination:
             return HandlerResult(
                 success=False,
+                status=HandlerStatus.FAILED,
+                operation=self.operation,
+                file=str(source),
                 message="Destination path not supplied.",
             )
 
         if destination.exists():
             return HandlerResult(
                 success=False,
+                status=HandlerStatus.FAILED,
+                operation=self.operation,
+                file=str(source),
                 message="Destination already exists.",
             )
 
@@ -73,12 +84,13 @@ class RenameFileHandler(BaseHandler):
                 exist_ok=True,
             )
 
-            source.rename(
-                destination,
-            )
+            source.rename(destination)
 
             return HandlerResult(
                 success=True,
+                status=HandlerStatus.SUCCESS,
+                operation=self.operation,
+                file=str(destination),
                 message="File renamed.",
                 metadata={
                     "source": str(source),
@@ -88,10 +100,14 @@ class RenameFileHandler(BaseHandler):
 
         return HandlerResult(
             success=True,
+            status=HandlerStatus.SUCCESS,
+            operation=self.operation,
+            file=str(source),
             message="Rename operation prepared.",
             metadata={
                 "source": str(source),
                 "destination": str(destination),
+                "preview": True,
             },
         )
 

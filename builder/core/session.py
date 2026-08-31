@@ -3,8 +3,9 @@ from pathlib import Path
 
 from builder.filesystem import scanner
 from builder.models.runtime import RuntimeContext
+from builder.config import settings
 
-SESSION_FILE = Path(".builder/state/session.json")
+SESSION_FILE = settings.resolve_state_directory() / "session.json"
 
 
 def create_runtime() -> RuntimeContext:
